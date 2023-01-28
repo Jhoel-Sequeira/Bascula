@@ -1,0 +1,31 @@
+.fondo{
+    background-image: url('../img/FondoLogin.jpg');
+    backdrop-filter: blur(10px);
+}
+.input-wrapper {
+    position: relative;
+  }
+  
+.input {
+    box-sizing: border-box;
+    color: #191919;
+    padding: 15px 15px 15px 35px;
+  }
+.input.password {
+    padding: 15px 35px 15px 15px;
+  }
+  
+  .input-icon {
+    color: #191919;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .input-icon.password {
+    left: unset;
+    right: 12px;
+  }
