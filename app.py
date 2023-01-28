@@ -32,7 +32,9 @@ app.config['MYSQL_DB'] = 'verificacion'
 @app.route('/')
 def Index():
    
-    return url_for('login')
+    return render_template('login.html')
+
+
 
 # Aqui comienza el login 
 
@@ -53,9 +55,11 @@ def login():
             if len(results) == 0 or not check_password_hash(results[2], Contraseña):
                 return render_template('index.html', errorlogin=1)
             else:
-                    # # Recordar el usuario y rol que se logeo
+                   
+                    # Recordar el usuario y rol que se logeo
                     session["user"] = results[1]
                     session["userrole"] = results[3]
+                    #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
                     #CONSULTA PARA LOS PROVEEDORES
                     cur = mysql.connection.cursor()
                     cur.execute("select * from tb_proveedor Where IdEstado = 1")
@@ -76,13 +80,39 @@ def login():
                     cur = mysql.connection.cursor()
                     cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
                     digitador = cur.fetchall()
-                    return render_template('index.html',result = results,Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
+                    return render_template('home.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
+           
     return render_template('index.html') 
             
         
-            
-           
-    return render_template('index.html')
+@app.route('/home')
+def home():
+    #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
+    #CONSULTA PARA LOS PROVEEDORES
+    cur = mysql.connection.cursor()
+    cur.execute("select * from tb_proveedor Where IdEstado = 1")
+    Proveedores = cur.fetchall()
+    #CONSULTA PARA LOS PUNTOS DE COMPRA
+    cur = mysql.connection.cursor()
+    cur.execute("select * from tb_puntocompra Where IdEstado = 1")
+    punto = cur.fetchall()
+    #CONSULTA PARA LOS MATERIALES
+    cur = mysql.connection.cursor()
+    cur.execute("select * from tb_material Where Id_Estado = 1")
+    material = cur.fetchall()
+    #CONSULTA PARA LOS VERIFICADORES
+    cur = mysql.connection.cursor()
+    cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+    verificador = cur.fetchall()
+    #CONSULTA PARA LOS DIGITADOR
+    cur = mysql.connection.cursor()
+    cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+    digitador = cur.fetchall()
+    print(digitador)
+   
+    return render_template('home.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
+                    
+
 
 
 if __name__ == '__main__':
