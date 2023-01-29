@@ -1,4 +1,6 @@
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{%for verifi in verificacion%}
+
+<div class="modal fade" id="detalleVerificacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,13 +13,9 @@
                         <div class="row mt-2">
                             <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="form3Example3">Proveedor</label>
-                                    <select class="form-select" id="proveedor" aria-label="Default select example">
-                                        <option selected="selected" disabled hidden>Seleccionar Proveedor</option>
-                                        {% for i in Proveedores %}
-                                        <option value="{{ i[1] }}">{{ i[1] }}</option>
-                                        {% endfor %}
-                                    </select>
+                                    <label class="form-label" for="proveedor">Proveedor</label>
+                                    <input type="text" id="proveedor" name="proveedor" placeholder="PO"
+                                        required="required" class="form-control" disabled value="{{verifi[6]}}" />
                                 </div>
 
                             </div>
@@ -26,9 +24,9 @@
                                 <div class="form-outline">
                                     <label class="form-label" for="form3Example3">Punto de Compra</label>
                                     <select class="form-select" id="puntoCompra" aria-label="Default select example">
-                                        <option selected="selected" disabled hidden>Seleccionar Punto</option>
-                                        {% for i in Punto %}
-                                        <option value="{{ i[0] }}">{{ i[1] }}</option>
+                                        <option selected="selected" hidden>Seleccionar Punto</option>
+                                        {% for punto in Punto %}
+                                        <option value="{{ punto[0] }}">{{ punto[1] }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -82,8 +80,8 @@
                                 <div class="col-3">
                                     <div class="form-outline">
                                         <label class="form-label" for="form3Example1">Fecha</label>
-                                        <input type="date" id="fecha" name="nombre" placeholder="nombres"
-                                            required="required" class="form-control" />
+                                        <input type="text" id="fecha" disabled name="nombre" placeholder="nombres"
+                                            required="required" class="form-control" value="{{verifi[1]}}" />
                                         <!-- <label id="mensaje_error_input" class="control-label col-md-12 text-danger"
                                                                                                                                                                                                                                                                                                                     style="display: block;">Las
                                                                                                                                                                                                                                                                                                                     constraseñas no coinciden</label> -->
@@ -272,3 +270,6 @@
         </div>
     </div>
 </div>
+
+
+{%endfor%}

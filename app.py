@@ -151,11 +151,39 @@ def listaProveedores():
             cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s",[session["userId"]])
             verificaciones = cur.fetchall()
             mysql.connection.commit()
+            
             print(verificaciones)
             return render_template('tablas/tabla-proveedores.html',verificaciones = verificaciones)
    else:
         return "No"
-
+#DETALLE VERIFICACION
+@app.route('/detalleVerificacion', methods =["POST","GET"])
+def detalleVerificacion():
+   if request.method == "POST":
+        id = request.form['id']
+        cur = mysql.connection.cursor()
+        cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
+        verificacion = cur.fetchall()
+        mysql.connection.commit()
+        #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
+        #CONSULTA PARA LOS PUNTOS DE COMPRA
+        cur = mysql.connection.cursor()
+        cur.execute("select * from tb_puntocompra Where IdEstado = 1")
+        punto = cur.fetchall()
+        #CONSULTA PARA LOS MATERIALES
+        cur = mysql.connection.cursor()
+        cur.execute("select * from tb_material Where Id_Estado = 1")     
+        material = cur.fetchall()
+        #CONSULTA PARA LOS VERIFICADORES
+        cur = mysql.connection.cursor() 
+        cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+        verificador = cur.fetchall()
+        #CONSULTA PARA LOS DIGITADOR
+        cur = mysql.connection.cursor()
+        cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+        digitador = cur.fetchall()        
+        print(verificacion)
+        return render_template('modal/verificaciones-modal.html',verificacion = verificacion,Punto = punto,Material = material,Verificador = verificador,Digitador = digitador)
 
 
 
