@@ -1,0 +1,12 @@
+/* Ocultar el elemento */
+.element {
+    visibility: hidden;
+    /* Otros estilos */
+}
+
+/* Mostrar el elemento con una transición */
+.element.show {
+    visibility: visible;
+    transition: visibility 2s ease-in-out;
+    /* Otros estilos */
+}
