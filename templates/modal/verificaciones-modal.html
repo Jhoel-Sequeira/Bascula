@@ -267,7 +267,11 @@
 
                                 },
                                 success: function (response) {
-                                    alert("se modifico")
+                                    Swal.fire({ icon: 'success', title: 'Exito', confirmButtonText: 'Ok', text: 'Verificacion registrada exitosamente' }).then((result) => { /* Read more about isConfirmed, isDenied below */
+                                        if (result.isConfirmed) {
+
+                                        }
+                                    })
                                 },
                                 error: function (error) {
                                     //console.log(error);
@@ -305,7 +309,8 @@
                     });
 
                     function bloquear() {
-                        if ($("#proveedor option:selected").val() != "Seleccionar Proveedor" && $("#puntoCompra option:selected").val() != "Seleccionar Punto" && $("#verificador option:selected").val() != "Seleccionar Verificador" && $("#digitador option:selected").val() != "Seleccionar Digitador" && $("#po").val() != "" && $("#fecha").val() != "" && $("#nboleta").val() != "" && $("#bahia option:selected").val() != "Seleccionar Bahia" && flagbloquear == 0 && $("#id").val() == "") {
+                        if ($("#proveedor option:selected").val() != "Seleccionar Proveedor" && $("#puntoCompra option:selected").val() != "Seleccionar Punto" && $("#verificador option:selected").val() != "Seleccionar Verificador" && $("#digitador option:selected").val() != "Seleccionar Digitador" && $("#po").val() != "" && $("#fecha").val() != "" && $("#nboleta").val() != "" && $("#bahia option:selected").val() != "Seleccionar Bahia" && flagbloquear == 0 && $("#id").val() != "") {
+
                             $('#proveedor').attr('disabled', 'true');
                             $("#puntoCompra").attr('disabled', 'true');
                             $("#verificador").attr('disabled', 'true');
@@ -334,13 +339,17 @@
 
                                 },
                                 success: function (response) {
-                                    alert("se modifico")
+                                    Swal.fire({ icon: 'success', title: 'Exito', confirmButtonText: 'Ok', text: 'Verificacion registrada exitosamente' }).then((result) => { /* Read more about isConfirmed, isDenied below */
+                                        if (result.isConfirmed) {
+
+                                        }
+                                    })
                                 },
                                 error: function (error) {
                                     //console.log(error);
                                 },
                             });
-                        } else if ($('#id').val() != "" && $("#po").val() != "") {
+                        } else if ($('#id').val() != "" && $("#po").val() != "" && flagbloquear == 1) {
                             $('#proveedor').attr('disabled', 'true');
                             $("#puntoCompra").attr('disabled', 'true');
                             $("#verificador").attr('disabled', 'true');
