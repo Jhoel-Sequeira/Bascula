@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}
+    Administracion
+{% endblock %}
+
+{% block
+encabezado %}
+    <div class="row">
+        <div class="col">
+            <h1>Administración</h1>
+        </div>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="container ">
+        <div class="container d-flex flex-wrap mt-2">
+
+            <div class="col-12 mb-3 mb-lg-0" role="search">
+                <select name="" id="filtro" class="form-control">
+                    <option selected="selected" hidden>Seleccionar Tabla</option>
+                    <option value="1">Usuarios</option>
+                    <option value="2">Proveedores</option>
+                    <option value="3">verificaciones (Pendientes)</option>
+                    <option value="4">verificaciones (Terminadas)</option>
+
+                </select>
+            </div>
+
+        </div>
+
+        <div class="row justify-content-md-center">
+            <div class="col mt-3 overflow-auto rounded bg-light" id="tabla-prov" style="height: 70vh;"></div>
+        </div>
+        <script>
+            $(document).on('change', '#filtro', function (event) {
+                valor = $("#proveedor option:selected").val();
+
+
+            });
+        </script>
+    </div>
+{% endblock %}

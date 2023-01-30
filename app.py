@@ -377,5 +377,11 @@ def finalizarVerificacion():
    else:
         return "No"
 
+#MODULO DE ADMINISTRACION 
+@app.route('/administracion')
+def administracion():
+
+    return render_template('administracion.html')
+ 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
