@@ -5,69 +5,95 @@
 
 </head>
 <div class="div-verpdf">
-    <!-- /.card-header -->
-    <div id="app" class="col-12">
-
-        <h2>Factura comercial</h2>
-
-        <div class="row my-3">
-            <div class="col-10">
-                <h1>Veterinaria el buen productor </h1>
-                <p>Terminal de buses san carlos, mercado hernesto fernandez 20 varas oeste</p>
-                <p>Masaya, Nicaragua</p>
-
-            </div>
-            <div class="col-2">
-                <img src="" />
+    <div class="container" >
+        <div class="row justify-content-md-center">
+          <div class="col col-lg" style="margin-left: 66px;">
+            <img src="../../static/img/CRN.ico" width="50" height="50" alt="" srcset="">
+          </div>
+        </div>
+        <div class="row justify-content-md-center" >
+            <div class="col col-lg" >
+              <p style="font-size: 5px; margin-left: 53px;"><strong>COMPAÑIA RECICLADORA DE</strong><br>
+                <strong style="margin-left: 15px;">NICARAGUA, S.A</strong><br>
+                <strong style="margin-left: 3px;">KM 3.5 CARRETERA NORTE</strong> <br>
+                <strong style="margin-left: 10px;">Managua, Nicaragua</strong><br>
+                <a style="margin-left: 3px;">Fecha de factura: 30/01/2023</a></p>
             </div>
         </div>
-
-        <hr />
-
-        <div class="row fact-info mt-3">
-            <div class="col-3">
-                <h5>Facturar a</h5>
-                <p>
-                    Nombre de la persona
-                </p>
+        <div class="row justify-content-md-center" >
+            <div class="col col-lg" >
+              <p style="font-size: 6px; margin-left: 41px;"><strong>ULISES DAVID CORDOBA ORTEGA</strong><br>
+              <strong style="margin-left: 7px;">FCOMP/2023/0000156403</strong><br>
+              <strong style="margin-left: 28px;">PO0164880</strong></p>
             </div>
         </div>
-    </div>
-    <div class="row" style="padding: 50px;">
-        <table class="table table-sm" id="fact">
-            <thead>
-                <tr>
-
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unidad</th>
-                    <th style="width: 40px"></th>
-                </tr>
-            </thead>
-            <tbody>
-
-
-
-                {%for list in info%}
-
-
-                <tr>
-                    <td>{{list.Nombre}}</td>
-                    <td>
-                        {{list.Cantidad}}
-                    </td>
-                    <td>{{list.Precio}}</td>
-                </tr>
-                {%endfor%}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th>Total </th>
-                    <th>C$ {{total}}</th>
-                </tr>
-            </tfoot>
-        </table>
+        <div class="row justify-content-md-center" style="margin-left: -25px;" >
+            <div class="col col-lg " >
+              <table class="table table-borderless">
+                <thead style="font-size: 8px;">
+                    <th>DESCRIPCION</th>
+                    <th>CANT</th>
+                    <th>PU</th>
+                    <th>IMPORTE</th>
+                </thead>
+                <tbody style="font-size: 7px; padding: none;">
+                    <tr>
+                        <td>PET</td>
+                        <td>1,407.08 <br>Libra(s)</td>
+                        <td>6.00</td>
+                        <td>C$ 8,428.29</td>
+                    </tr>
+                    <tr>
+                        <td>PET</td>
+                        <td>1,407.08 <br>Libra(s)</td>
+                        <td>6.00</td>
+                        <td>C$ 8,428.29</td>
+                    </tr>
+                    <tr>
+                        <td>PET</td>
+                        <td>1,407.08 <br>Libra(s)</td>
+                        <td>6.00</td>
+                        <td>C$ 8,428.29</td>
+                    </tr>
+                </tbody>
+                <thead style="font-size: 7px;">
+                    <tr>
+                        <th colspan="2">Monto en letra</th>
+                        <th>Subtotal</th>
+                        <td>C$ 8,410</td>
+                    </tr>
+                </thead>
+                <tbody style="font-size: 7px; padding: none;">
+                    <tr>
+                        <td colspan="2">Ocho Mil</td>
+                        <th>Total</th>
+                        <td>C$ 9,474.88</td>
+                    </tr>
+                </tbody>
+                <tbody style="font-size: 7px; padding: none;">
+                    <tr></tr>
+                    <tr>
+                        <th>Pagado en</th>
+                        <td>30/01/2023</td>
+                        <td colspan="2">C$ 9,474.80</td>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 6px;">
+                            Importe vencido
+                        </th>
+                        <td>C$ 0.00</td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+        <div class="row justify-content-md-center" >
+            <div class="col col-lg" >
+              <p style="font-size: 6px; margin-left: 41px;"><strong>_______________________________________</strong><br>
+              <a style="margin-left: 25px;">Firma del proveedor<br>
+              <a style="margin-left: 13px;">Elaborado por ESTHER LARA</p>
+            </div>
+        </div>
+        
     </div>
 </div>
