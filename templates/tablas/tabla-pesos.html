@@ -18,11 +18,11 @@
     <tbody>
         {%for i in pesos%}
         <tr>
-            <td>d</td>
-            <td align="center" style="padding-right: 100px">80</td>
-            <td align="center" style="padding-right: 100px">20</td>
-            <td align="center" style="padding-right: 100px">2</td>
-            <td align="center" style="padding-right: 100px">58</td>
+            <td>{{i[2]}}</td>
+            <td align="center" style="padding-right: 100px">{{i[3]}}</td>
+            <td align="center" style="padding-right: 100px">{{i[4]}}</td>
+            <td align="center" style="padding-right: 100px">{{i[5]}}</td>
+            <td align="center" style="padding-right: 100px">{{i[6]}}</td>
             <td>
                 <button type="button" name="orientacion" style="border: none" value=""
                     class="btn btn-outline-secondary">
@@ -37,16 +37,16 @@
                 <strong>Total</strong>
             </td>
             <td colspan="1" align="center">
-                <strong>180 Lb</strong>
+                <strong>{{sumaBruto[0]}} Lb</strong>
             </td>
             <td colspan="1" align="center">
-                <strong>180 Lb</strong>
+                <strong>{{sumaTara[0]}} Lb</strong>
             </td>
             <td colspan="1" align="center">
-                <strong>180 Lb</strong>
+                <strong>{{sumaDestare[0]}} Lb</strong>
             </td>
             <td colspan="1" align="center">
-                <strong>180 Lb</strong>
+                <strong>{{sumaNeto[0]}} Lb</strong>
             </td>
         </tr>
     </tbody>

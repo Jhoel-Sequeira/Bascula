@@ -218,18 +218,39 @@ def datosGeneralesVerificacion():
 #CARGAR LOS PESOS DE LAS VERIFICACIONES
 @app.route('/listaPesos', methods =["POST","GET"])
 def listaPesos():
-   if request.method == "POST":
+    if request.method == "POST":
         id = request.form['id']
         if id != "":
             #LLamar la verificacion de ese proveedor
             cur = mysql.connection.cursor()
             cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_material as m ON dt.IdMaterial = m.Id_Material Where dt.IdVerificacion = %s",[id])
             pesos = cur.fetchall()
-            return render_template('tablas/tabla-pesos.html',pesos = pesos)
+            #HACEMOS LOA SUMA DE CADA COLUMNA
+            #  SUMA DE LA COLUMNA PESOS BRUTOS
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT SUM(PesoBruto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+            sumaBruto = cur.fetchone()
+            mysql.connection.commit()
+            #  SUMA DE LA COLUMNA PESOS TARA
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT SUM(PesoTara) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+            sumaTara = cur.fetchone()
+            #  SUMA DE LA COLUMNA PESOS DESTARE
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT SUM(Destare) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+            sumaDestare = cur.fetchone()
+            mysql.connection.commit()
+            #  SUMA DE LA COLUMNA PESOS NETO
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT SUM(PesoNeto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+            sumaNeto = cur.fetchone()
+            mysql.connection.commit()
+            print(pesos)
+            return render_template('tablas/tabla-pesos.html',pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
         else:
-            
-            return render_template('tablas/tabla-proveedores.html')
-   else:
+            pesos =""
+            return render_template('tablas/tabla-pesos.html',pesos = pesos)
+    else:
         return "No"
 
 #BUSCAMOS MATERIALES
@@ -242,6 +263,61 @@ def buscarMaterial():
         materiales = cur.fetchall()
         print(materiales)
         return render_template('otros/material-busqueda.html',materiales = materiales)
+   else:
+        return "No"
+
+#INSERTAMOS LOS PESOS DEL MATERIALE SELECCIONADO
+@app.route('/insertarPesos', methods =["POST","GET"])
+def insertarPesos():
+   if request.method == "POST":
+        id = request.form['id']
+        material = request.form['material']
+        destare = request.form['destare']
+        pBruto = request.form['pBruto']
+        pTara = request.form['pTara']
+        
+        
+        #MANDAMOS A LLAMAR EL ID DEL MATERIAL QUE SELECCIONO EL USUARIO
+        cur = mysql.connection.cursor()
+        cur.execute("select * from tb_material Where Id_Estado = 1 AND NombreMaterial like %s",[material+'%'])
+        materiales = cur.fetchone()
+
+        print(destare)
+        print(pBruto)
+        print(pTara)
+        print(materiales[0])
+        #CREAMOS EL DETALLE VERIFICACION AÑADIENDO LOS PESOS QUE EL USUARIO INGRESO 
+        pNeto = float(float(pBruto)-float(pTara)-float(destare))
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO tb_detalleverificacion (IdVerificacion,IdMaterial,PesoBruto,PesoTara,PesoNeto,Destare) VALUES (%s,%s,%s,%s,%s,%s)",(id,materiales[0],pBruto,pTara,pNeto,destare))
+        mysql.connection.commit()
+        #MANDAMOS A LLAMAR TODA LA TABLA DE DETALLE VERIFICACION CON LOS NUEVOS DATOS REGISTRADOS
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_material as m ON dt.IdMaterial = m.Id_Material Where dt.IdVerificacion = %s",[id])
+        pesos = cur.fetchall()
+        mysql.connection.commit() 
+        #HACEMOS LOA SUMA DE CADA COLUMNA
+        #  SUMA DE LA COLUMNA PESOS BRUTOS
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT SUM(PesoBruto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+        sumaBruto = cur.fetchone()
+        mysql.connection.commit()
+        #  SUMA DE LA COLUMNA PESOS TARA
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT SUM(PesoTara) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+        sumaTara = cur.fetchone()
+        #  SUMA DE LA COLUMNA PESOS DESTARE
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT SUM(Destare) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+        sumaDestare = cur.fetchone()
+        mysql.connection.commit()
+        #  SUMA DE LA COLUMNA PESOS NETO
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT SUM(PesoNeto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+        sumaNeto = cur.fetchone()
+        mysql.connection.commit()
+
+        return render_template('tablas/tabla-pesos.html',pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
    else:
         return "No"
 
