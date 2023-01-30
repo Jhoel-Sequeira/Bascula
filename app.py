@@ -162,9 +162,22 @@ def detalleVerificacion():
    if request.method == "POST":
         id = request.form['id']
         cur = mysql.connection.cursor()
-        cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
-        verificacion = cur.fetchall()
+        cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
+        nueva = cur.fetchall()
         mysql.connection.commit()
+        if nueva:
+            cur = mysql.connection.cursor()
+            cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
+            verificacion = cur.fetchall()
+            mysql.connection.commit()
+        else:
+            cur = mysql.connection.cursor()
+            cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
+            verificacion = cur.fetchall()
+            mysql.connection.commit()
+
+
+        
         #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
         #CONSULTA PARA LOS PUNTOS DE COMPRA
         cur = mysql.connection.cursor()
@@ -184,6 +197,23 @@ def detalleVerificacion():
         digitador = cur.fetchall()        
         print(verificacion)
         return render_template('modal/verificaciones-modal.html',verificacion = verificacion,Punto = punto,Material = material,Verificador = verificador,Digitador = digitador)
+
+#GUARDAR DATOS GENERALES DE LAS VERIFICACIONES CREADAS
+@app.route('/datosGeneralesVerificacion', methods =["POST","GET"])
+def datosGeneralesVerificacion():
+   if request.method == "POST":
+        id = request.form['id']
+        puntoCompra = request.form['puntoCompra']
+        verificador = request.form['verificador']
+        digitador = request.form['digitador']
+        po = request.form['po']
+        nboleta = request.form['nboleta']
+        bahia = request.form['bahia']
+        cur = mysql.connection.cursor()
+        cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s where Id_Verificacion = %s', (po,nboleta,verificador,digitador,puntoCompra,bahia,id))
+        digitador = cur.fetchall()
+        mysql.connection.commit()
+        return "done" 
 
 
 

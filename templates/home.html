@@ -38,6 +38,9 @@ encabezado %}
 </div>
 <script>
     $(document).ready(function () {
+        cargarLista();
+    });
+    function cargarLista() {
         $.ajax({
             url: "/listaProveedores",
             type: "POST",
@@ -53,7 +56,7 @@ encabezado %}
                 //console.log(error);
             },
         });
-    });
+    }
     function crearVerificacion() {
         var proveedor = $('#buscar').val();
         if (proveedor != "") {
