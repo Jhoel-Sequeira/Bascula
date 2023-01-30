@@ -215,6 +215,38 @@ def datosGeneralesVerificacion():
         mysql.connection.commit()
         return "done" 
 
+#CARGAR LOS PESOS DE LAS VERIFICACIONES
+@app.route('/listaPesos', methods =["POST","GET"])
+def listaPesos():
+   if request.method == "POST":
+        id = request.form['id']
+        if id == "":
+            
+            #LLamar la verificacion de ese proveedor
+            cur = mysql.connection.cursor()
+            cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s",[session["userId"]])
+            verificaciones = cur.fetchall()
+            return render_template('tablas/tabla-proveedores.html',verificaciones = verificaciones)
+        else:
+            #SELECCIONAR EL ID DEL PROVEEDOR
+            cur = mysql.connection.cursor()
+            cur.execute("select * from tb_proveedor Where NombreProveedor = %s",[proveedor])
+            proveedornuevo = cur.fetchone()
+            #INSERTAMOS LA VERIFICACION
+            fecha = datetime.date(hi)
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO tb_verificacion (Fecha,IdProveedor,IdPuntoCompra,IdEstado,IdUsuarioCreacion) VALUES (%s,%s,%s,%s,%s)",(fecha,proveedornuevo[0],5,3,session["userId"]))
+            proveedornuevo = cur.fetchone()
+            #LLAMAMOS LAS VERIFICACIONES DEL USUARIO
+            cur = mysql.connection.cursor()
+            cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s",[session["userId"]])
+            verificaciones = cur.fetchall()
+            mysql.connection.commit()
+            
+            print(verificaciones)
+            return render_template('tablas/tabla-proveedores.html',verificaciones = verificaciones)
+   else:
+        return "No"
 
 
 
