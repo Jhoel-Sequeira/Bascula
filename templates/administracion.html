@@ -29,12 +29,27 @@ encabezado %}
         </div>
 
         <div class="row justify-content-md-center">
-            <div class="col mt-3 overflow-auto rounded bg-light" id="tabla-prov" style="height: 70vh;"></div>
+            <div class="col mt-3 overflow-auto rounded bg-light" id="tabla-adm" style="height: 70vh;"></div>
         </div>
         <script>
             $(document).on('change', '#filtro', function (event) {
-                valor = $("#proveedor option:selected").val();
+                opc = $("#filtro option:selected").val();
+                
+                $.ajax({
+                    url: "/valorTablaAdmin",
+                    type: "POST",
+                    data: {
+                        valor: opc
 
+                    },
+                    success: function (response) {
+                        alert("sss")
+                        $('#tabla-adm').html(response);
+                        $('#tabla-adm').append(response.htmlresponse);
+                    },
+                    error: function (error) { // console.log(error);
+                    }
+                });
 
             });
         </script>
