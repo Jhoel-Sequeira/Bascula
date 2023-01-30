@@ -4,96 +4,85 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 </head>
-<div class="div-verpdf" style="font-family: Arial, Helvetica, sans-serif;">
+<div class="div-verpdf" style="font-family: Arial, Helvetica, sans-serif; width: 100%;">
+    {%for ver in verificacion%}
     <div class="container" >
         <div class="row justify-content-md-center">
-          <div class="col col-lg" style="margin-left: 105px;">
-            <img src="../../static/img/CRN.ico" width="100" height="100" alt="" srcset="">
+          <div class="col col-lg" style="margin-left: 65px;">
+            <img src="../../static/img/CRN.ico" width="150" height="150" alt="" srcset="">
           </div>
         </div>
         <div class="row justify-content-md-center" >
             <div class="col col-lg" >
-              <p style="font-size: 19px; margin-left: 0px;"><strong>COMPAÑIA RECICLADORA DE</strong><br>
+              <p style="font-size: 15px; margin-left: 35px;"><strong>COMPAÑIA RECICLADORA DE</strong><br>
                 <strong style="margin-left: 40px;">NICARAGUA, S.A</strong><br>
                 <strong style="margin-left: 6px;">KM 3.5 CARRETERA NORTE</strong> <br>
                 <strong style="margin-left: 17px;">Managua, Nicaragua</strong><br>
-                <a style="margin-left: 3px;">Fecha de factura: 30/01/2023</a></p>
+                <a style="margin-left: 3px; font-size: 10px;">Fecha de verificacion: {{fechaEmision[0]}}</a></p>
             </div>
         </div>
         <div class="row justify-content-md-center" >
             <div class="col col-lg" >
-              <p style="font-size: 10px; margin-left: 55px;"><strong>ULISES DAVID CORDOBA ORTEGA</strong><br>
-              <strong style="margin-left: 15px;">FCOMP/2023/0000156403</strong><br>
-              <strong style="margin-left: 50px;">PO0164880</strong></p>
+              <p style="font-size: 12px;">Proveedor:<strong style="margin-left: 30px;">{{ ver[6] }}</strong><br>
+                Digitador:<strong style="margin-left: 30px;">{{ver[7]}}</strong><br>
+              Verificador: <strong style="margin-left: 30px;">{{ver[8]}}</strong><br>
+              PO:<strong style="margin-left: 70px;">{{ver[2]}}</strong></p>
             </div>
         </div>
-        <div class="row justify-content-md-center" style="margin-left: -25px;" >
+        <div class="row justify-content-md-center" style="margin-left: -20px;" >
             <div class="col col-lg " >
-              <table class="table table-borderless">
-                <thead style="font-size: 12px;">
-                    <th>DESCRIPCION</th>
-                    <th>CANT</th>
-                    <th>PU</th>
-                    <th>IMPORTE</th>
+              <table class=" table-borderless" style="border-spacing: 3px;">
+                <thead style="font-size: 11px;">
+                    <th>Material</th>
+                    <th>Peso Bruto</th>
+                    <th>Peso Tara</th>
+                    <th>Destare</th>
+                    <th>Peso Neto</th>
                 </thead>
                 <tbody style="font-size: 10px; padding: none;">
+                    {%for i in pesos%}
                     <tr>
-                        <td>PET</td>
-                        <td>1,407.08 <br>Libra(s)</td>
-                        <td>6.00</td>
-                        <td>C$ 8,428.29</td>
+                        <td>{{i[2]}}</td>
+                        <td>{{i[3]}}<br>Lb</td>
+                        <td>{{i[4]}}<br>Lb</td>
+                        <td>{{i[5]}}<br>Lb</td>
+                        <td>{{i[6]}}<br>Lb</td>
                     </tr>
-                    <tr>
-                        <td>PET</td>
-                        <td>1,407.08 <br>Libra(s)</td>
-                        <td>6.00</td>
-                        <td>C$ 8,428.29</td>
-                    </tr>
-                    <tr>
-                        <td>PET</td>
-                        <td>1,407.08 <br>Libra(s)</td>
-                        <td>6.00</td>
-                        <td>C$ 8,428.29</td>
-                    </tr>
+                    {%endfor%}
+                   
                 </tbody>
+                
                 <thead style="font-size: 12px;">
                     <tr>
-                        <th colspan="2">Monto en letra</th>
-                        <th>Subtotal</th>
-                        <td>C$ 8,410</td>
+                        <td colspan="1" align="center" style="margin-right: 100px">
+                            <strong>Total</strong>
+                        </td>
+                        <td colspan="1" align="center">
+                            <strong>{{sumaBruto[0]}} Lb</strong>
+                        </td>
+                        <td colspan="1" align="center">
+                            <strong>{{sumaTara[0]}} Lb</strong>
+                        </td>
+                        <td colspan="1" align="center">
+                            <strong>{{sumaDestare[0]}} Lb</strong>
+                        </td>
+                        <td colspan="1" align="center">
+                            <strong>{{sumaNeto[0]}} Lb</strong>
+                        </td>
                     </tr>
                 </thead>
-                <tbody style="font-size: 12px; padding: none;">
-                    <tr>
-                        <td colspan="2">Ocho Mil</td>
-                        <th>Total</th>
-                        <td>C$ 9,474.88</td>
-                    </tr>
-                </tbody>
-                <tbody style="font-size: 12px; padding: none;">
-                    <tr></tr>
-                    <tr>
-                        <th>Pagado en</th>
-                        <td>30/01/2023</td>
-                        <td colspan="2">C$ 9,474.80</td>
-                    </tr>
-                    <tr>
-                        <th style="font-size: 12px;">
-                            Importe vencido
-                        </th>
-                        <td>C$ 0.00</td>
-                    </tr>
-                </tbody>
+                
+                
               </table>
             </div>
         </div>
         <div class="row justify-content-md-center mt-2" >
             <div class="col col-lg" >
-              <p style="font-size: 12px; margin-left: 41px;"><strong>_______________________________________</strong><br>
-              <a style="margin-left: 30px;">Firma del proveedor<br>
-              <a style="margin-left: 13px;">Elaborado por ESTHER LARA</p>
+              <p style="font-size: 14px; margin-left: 41px;"><strong>___________</strong><br>
+              <a style="margin-left: 05px; font-size: 10px;">Elaborado por {{usuario[0]}}</p>
             </div>
         </div>
         
     </div>
+    {%endfor%}
 </div>
