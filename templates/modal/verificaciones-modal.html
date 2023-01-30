@@ -273,11 +273,69 @@
 
                 <!-- INICIO DE LA FUNCIONALIDAD DE LOS BOTONES CON JQUERY  DE LA PRIMERA PANTALLA-->
                 <script>
+                    flagbloquear = 0;
+                    inicio = 1
                     $(document).ready(function () {
 
-                        bloquear();
+                        if ($("#proveedor option:selected").val() != "Seleccionar Proveedor" && $("#puntoCompra option:selected").val() != "Seleccionar Punto" && $("#verificador option:selected").val() != "Seleccionar Verificador" && $("#digitador option:selected").val() != "Seleccionar Digitador" && $("#po").val() != "" && $("#fecha").val() != "" && $("#nboleta").val() != "" && $("#bahia option:selected").val() != "Seleccionar Bahia" && flagbloquear == 0 && $("#id").val() == "") {
+                            $('#proveedor').attr('disabled', 'true');
+                            $("#puntoCompra").attr('disabled', 'true');
+                            $("#verificador").attr('disabled', 'true');
+                            $("#digitador").attr('disabled', 'true');
+                            $("#po").attr('disabled', 'true');
+                            $("#fecha").attr('disabled', 'true');
+                            $("#nboleta").attr('disabled', 'true');
+                            $("#bahia").attr('disabled', 'true');
+                            $("#material").removeAttr("disabled");
+                            $("#destare").removeAttr("disabled");
+                            $("#bruto").removeAttr("disabled");
+                            $("#tara").removeAttr("disabled");
+                            $("#agregar").removeAttr("disabled");
+                            flagbloquear = 1;
+                            $.ajax({
+                                url: "/datosGeneralesVerificacion",
+                                type: "POST",
+                                data: {
+                                    id: $("#id").val(),
+                                    puntoCompra: $("#puntoCompra").val(),
+                                    verificador: $("#verificador").val(),
+                                    digitador: $("#digitador").val(),
+                                    po: $("#po").val(),
+                                    nboleta: $("#nboleta").val(),
+                                    bahia: $("#bahia").val(),
+
+                                },
+                                success: function (response) {
+                                    alert("se modifico")
+                                },
+                                error: function (error) {
+                                    //console.log(error);
+                                },
+                            });
+                        } else if ($('#id').val() != "" && $("#po").val() != "") {
+                            $('#proveedor').attr('disabled', 'true');
+                            $("#puntoCompra").attr('disabled', 'true');
+                            $("#verificador").attr('disabled', 'true');
+                            $("#digitador").attr('disabled', 'true');
+                            $("#po").attr('disabled', 'true');
+                            $("#fecha").attr('disabled', 'true');
+                            $("#nboleta").attr('disabled', 'true');
+                            $("#bahia").attr('disabled', 'true');
+                            $("#material").removeAttr("disabled");
+                            $("#destare").removeAttr("disabled");
+                            $("#bruto").removeAttr("disabled");
+                            $("#tara").removeAttr("disabled");
+                            $("#agregar").removeAttr("disabled");
+                        } else if (!($("#proveedor option:selected").val() != "Seleccionar Proveedor" && $("#puntoCompra option:selected").val() != "Seleccionar Punto" && $("#verificador option:selected").val() != "Seleccionar Verificador" && $("#digitador option:selected").val() != "Seleccionar Digitador" && $("#po").val() != "" && $("#fecha").val() != "" && $("#nboleta").val() != "" && $("#bahia option:selected").val() != "Seleccionar Bahia" && flagbloquear != 0) && inicio == 2) {
+                            Swal.fire({ icon: 'error', title: 'Datos faltantes', confirmButtonText: 'Ok', text: 'Debe Añadir los datos faltantes' }).then((result) => { /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+
+                                }
+                            })
+                        }
+
                     });
-                    flagbloquear = 0;
+
                     $(document).on('change', '#proveedor', function (event) {
                         valor = $("#proveedor option:selected").val();
 
@@ -332,7 +390,7 @@
                             $("#bruto").removeAttr("disabled");
                             $("#tara").removeAttr("disabled");
                             $("#agregar").removeAttr("disabled");
-                        } else if ($("#nboleta").val() != "" && flagbloquear == 0) {
+                        } else if (!($("#proveedor option:selected").val() != "Seleccionar Proveedor" && $("#puntoCompra option:selected").val() != "Seleccionar Punto" && $("#verificador option:selected").val() != "Seleccionar Verificador" && $("#digitador option:selected").val() != "Seleccionar Digitador" && $("#po").val() != "" && $("#fecha").val() != "" && $("#nboleta").val() != "" && $("#bahia option:selected").val() != "Seleccionar Bahia" && flagbloquear != 0)) {
                             Swal.fire({ icon: 'error', title: 'Datos faltantes', confirmButtonText: 'Ok', text: 'Debe Añadir los datos faltantes' }).then((result) => { /* Read more about isConfirmed, isDenied below */
                                 if (result.isConfirmed) {
 
