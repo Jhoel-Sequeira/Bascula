@@ -389,13 +389,13 @@ def valorTablaAdmin():
     if request.method == "POST":
         opc = request.form['valor']
         if opc == 3:
-            #LLAMAMOS LAS VERIFICACIONES DEL USUARIO
-            cur = mysql.connection.cursor()
-            cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3")
-            verificaciones = cur.fetchall()
-            mysql.connection.commit()
+            # #LLAMAMOS LAS VERIFICACIONES DEL USUARIO
+            # cur = mysql.connection.cursor()
+            # cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3")
+            # verificaciones = cur.fetchall()
+            # mysql.connection.commit()
             
-            return render_template('tablas/tabla-proveedores.html',verificaciones = verificaciones)
+            return render_template('factura.html')
 
 
 
