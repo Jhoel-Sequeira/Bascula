@@ -1,0 +1,73 @@
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+<div class="div-verpdf">
+    <!-- /.card-header -->
+    <div id="app" class="col-12">
+
+        <h2>Factura comercial</h2>
+
+        <div class="row my-3">
+            <div class="col-10">
+                <h1>Veterinaria el buen productor </h1>
+                <p>Terminal de buses san carlos, mercado hernesto fernandez 20 varas oeste</p>
+                <p>Masaya, Nicaragua</p>
+
+            </div>
+            <div class="col-2">
+                <img src="" />
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row fact-info mt-3">
+            <div class="col-3">
+                <h5>Facturar a</h5>
+                <p>
+                    Nombre de la persona
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding: 50px;">
+        <table class="table table-sm" id="fact">
+            <thead>
+                <tr>
+
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unidad</th>
+                    <th style="width: 40px"></th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+
+                {%for list in info%}
+
+
+                <tr>
+                    <td>{{list.Nombre}}</td>
+                    <td>
+                        {{list.Cantidad}}
+                    </td>
+                    <td>{{list.Precio}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Total </th>
+                    <th>C$ {{total}}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

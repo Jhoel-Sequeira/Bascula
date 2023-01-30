@@ -451,6 +451,10 @@
                             success: function (response) {
                                 $('#tabla-peso').html(response);
                                 $('#tabla-peso').append(response.htmlresponse);
+                                $('#buscarmat').val("");
+                                $('#bruto').val("");
+                                $('#tara').val("");
+                                
                             },
                             error: function (error) {
                                 //console.log(error);

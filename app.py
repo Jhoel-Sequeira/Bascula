@@ -282,10 +282,7 @@ def insertarPesos():
         cur.execute("select * from tb_material Where Id_Estado = 1 AND NombreMaterial like %s",[material+'%'])
         materiales = cur.fetchone()
 
-        print(destare)
-        print(pBruto)
-        print(pTara)
-        print(materiales[0])
+        
         #CREAMOS EL DETALLE VERIFICACION AÑADIENDO LOS PESOS QUE EL USUARIO INGRESO 
         pNeto = float(float(pBruto)-float(pTara)-float(destare))
         cur = mysql.connection.cursor()
