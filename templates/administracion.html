@@ -15,15 +15,20 @@ encabezado %}
     <div class="container ">
         <div class="container d-flex flex-wrap mt-2">
 
-            <div class="col-12 mb-3 mb-lg-0" role="search">
+            <div class="col-12 mb-3 mb-lg-0" id="filtros" role="search">
                 <select name="" id="filtro" class="form-control">
-                    <option selected="selected" hidden>Seleccionar Tabla</option>
                     <option value="1">Usuarios</option>
                     <option value="2">Proveedores</option>
                     <option value="3">verificaciones (Pendientes)</option>
-                    <option value="4">verificaciones (Terminadas)</option>
+                    <option value="4" selected="selected">verificaciones (Terminadas)</option>
 
                 </select>
+            </div>
+            <div class="col-4 mb-3 ml-1 mb-lg-0" id="buscador" role="search">
+                <input type="text" id="buscarAdmin" name="buscarAdmin" placeholder="Buscar..." required="required" class="form-control"/>
+                <div style="background-color:#fff; position:relative; height: 70%; width: 81%; margin-left: 15px;" id="contenerLista">
+                    <div class="info" id="listaProv"></div>
+                </div>
             </div>
 
         </div>
@@ -32,9 +37,10 @@ encabezado %}
             <div class="col mt-3 overflow-auto rounded bg-light" id="tabla-adm" style="height: 70vh;"></div>
         </div>
         <script>
-            $(document).on('change', '#filtro', function (event) {
-                opc = $("#filtro option:selected").val();
-                
+            $(document).ready(function () {
+                $("#buscador").hide();
+                $('#listaProv').hide();
+                opc = $("#filtro option:selected").text();
                 $.ajax({
                     url: "/valorTablaAdmin",
                     type: "POST",
@@ -43,13 +49,150 @@ encabezado %}
 
                     },
                     success: function (response) {
-                        alert("sss")
                         $('#tabla-adm').html(response);
                         $('#tabla-adm').append(response.htmlresponse);
                     },
                     error: function (error) { // console.log(error);
                     }
                 });
+
+            });
+            $(document).on('change', '#filtro', function (event) {
+                opc = $("#filtro option:selected").text();
+                if (opc == "Usuarios") {
+                    $('#filtros').removeClass('col-12').addClass('col-8')
+                    $("#buscador").show();
+                    $('#contenerLista').hide();
+                    var buscar = function () {
+                        var proveedor = $('#buscarAdmin').val();
+
+                        if (proveedor != "") {
+                            $.ajax({
+                                url: "/buscarUsuario",
+                                type: "POST",
+                                data: {
+                                    proveedor: proveedor
+
+                                },
+                                success: function (response) {
+                                    if (response == "No") {} else {
+                                        $('#contenerLista').show();
+                                        $('#listaProv').show();
+                                        $('#listaProv').html(response);
+                                        $('#listaProv').append(response.htmlresponse);
+
+
+                                        $("#busqueda button[name=det]").click(function () {
+                                            $('#buscarAdmin').val($(this).text());
+                                            $('#listaProv').hide();
+                                            $('#contenerLista').hide();
+                                            $.ajax({
+                                                url: "/valorTablaAdmin",
+                                                type: "POST",
+                                                data: {
+                                                    valor: opc,
+                                                    proveedor: $('#buscarAdmin').val()
+
+                                                },
+                                                success: function (response) {
+                                                    $('#tabla-adm').html(response);
+                                                    $('#tabla-adm').append(response.htmlresponse);
+                                                },
+                                                error: function (error) { // console.log(error);
+                                                }
+                                            });
+
+                                        });
+                                    }
+                                },
+                                error: function (error) { // console.log(error);
+                                }
+                            });
+                        } else {
+                            $('#listaproveedor').hide();
+                            $('#contenerLista').hide();
+                        }
+
+
+                    }
+                    $("#buscarAdmin").on('keyup', buscar);
+                } else if (opc == "Proveedores") {
+                    $('#filtros').removeClass('col-12').addClass('col-8')
+                    $("#buscador").show();
+                    $('#contenerLista').hide();
+                    var buscar = function () {
+                        var proveedor = $('#buscarAdmin').val();
+
+                        if (proveedor != "") {
+                            $.ajax({
+                                url: "/buscarProveedor",
+                                type: "POST",
+                                data: {
+                                    proveedor: proveedor
+
+                                },
+                                success: function (response) {
+                                    if (response == "No") {} else {
+                                        $('#contenerLista').show();
+                                        $('#listaProv').show();
+                                        $('#listaProv').html(response);
+                                        $('#listaProv').append(response.htmlresponse);
+
+
+                                        $("#busqueda button[name=det]").click(function () {
+                                            $('#buscarAdmin').val($(this).text());
+                                            contenerLista
+                                            $('#listaProv').hide();
+                                            $('#contenerLista').hide();
+                                            $.ajax({
+                                                url: "/valorTablaAdmin",
+                                                type: "POST",
+                                                data: {
+                                                    valor: opc,
+                                                    proveedor: $('#buscarAdmin').val()
+
+                                                },
+                                                success: function (response) {
+                                                    $('#tabla-adm').html(response);
+                                                    $('#tabla-adm').append(response.htmlresponse);
+                                                },
+                                                error: function (error) { // console.log(error);
+                                                }
+                                            });
+
+                                        });
+                                    }
+                                },
+                                error: function (error) { // console.log(error);
+                                }
+                            });
+                        } else {
+                            $('#listaproveedor').hide();
+                            $('#contenerLista').hide();
+                        }
+
+
+                    }
+                    $("#buscarAdmin").on('keyup', buscar);
+                } else {
+                    $('#filtros').removeClass('col-12').addClass('col-12')
+                    $("#buscador").hide();
+                    $.ajax({
+                        url: "/valorTablaAdmin",
+                        type: "POST",
+                        data: {
+                            valor: opc
+
+                        },
+                        success: function (response) {
+                            $('#tabla-adm').html(response);
+                            $('#tabla-adm').append(response.htmlresponse);
+                        },
+                        error: function (error) { // console.log(error);
+                        }
+                    });
+                }
+
 
             });
         </script>

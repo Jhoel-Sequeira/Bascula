@@ -1,0 +1,63 @@
+
+<table class="table rounded" id="tabla-prov">
+    <thead>
+        <tr>
+            <th colspan="6" class="" style="text-align: center; font-size: 35px;">
+                Tabla {{opc}}</th>
+        </tr>
+        <tr>
+            <th style="width: 450px">Proveedor</th>
+            <th>Fecha</th>
+            <th>Po</th>
+            <th>NoBoleta</th>
+            <th>Punto de Compra</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {%for i in verificaciones%}
+        <tr>
+            <td>{{i[6]}}</td>
+            <td align="center" style="padding-right: 100px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
+            <td align="center" style="padding-right: 100px">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
+            <td align="center" style="padding-right: 100px">{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
+            <td align="center" style="padding-right: 100px">{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
+            <td align="center" style="padding-right: 100px">{%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>
+
+            <td>
+                <button type="button" class="btn btn-primary" value="{{i[0]}}" id="detallever" name="detallever">
+                    <i class="fa-sharp fa-solid fa-eye"></i>
+                </button>
+            </td>
+        </tr>
+        {%endfor%}
+
+    </tbody>
+</table>
+<input id="launch2" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacion">
+
+<div id="modal-act2">
+
+</div>
+<script>
+
+    $("#tabla-prov button[name=detallever]").click(function () {
+        id = $(this).val();
+        $.ajax({
+            url: "/detalleVerificacionAdmin",
+            type: "POST",
+            data: {
+                id: id
+            },
+            success: function (response) {
+                $('#modal-act2').html(response);
+                $('#modal-act2').append(response.htmlresponse);
+                $('#launch2').click();
+            },
+            error: function (error) {
+                //console.log(error);
+            },
+        });
+    });
+</script>

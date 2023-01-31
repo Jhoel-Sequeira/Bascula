@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="../static/css/sidebar.css">
   <link rel="stylesheet" href="../static/css/animaciones.css">
+  <link rel="stylesheet" href="../static/css/oddo-icon.css">
 
   <!-- =======JQUERY CDN ====== -->
 
@@ -56,15 +57,6 @@
         </ul>
       </li>
       </li>
-      <li>
-        <a href="#">
-          <i class='bx bx-pie-chart-alt-2'></i>
-          <span class="link_name">Verificacion</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Verificacion</a></li>
-        </ul>
-      </li>
       {% if session.user %} {% if session.userrole == 1%}
       <li>
         <a href="/administracion">
@@ -76,12 +68,12 @@
         </ul>
       </li>
       <li>
-        <a href="#">
+        <a href="/ajustes">
           <i class='bx bx-cog'></i>
           <span class="link_name">Configuracion</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Configuracion</a></li>
+          <li><a class="link_name" href="/ajustes">Configuracion</a></li>
         </ul>
       </li>
       {% endif %}{% endif %}
