@@ -44,10 +44,10 @@
                     {%for i in pesos%}
                     <tr>
                         <td>{{i[2]}}</td>
-                        <td>{{i[3]}} Lb</td>
-                        <td>{{i[4]}} Lb</td>
-                        <td>{{i[5]}} Lb</td>
-                        <td>{{i[6]}} Lb</td>
+                        <td style="padding-left: 10px;">{{i[3]}} Lb</td>
+                        <td style="padding-left: 10px;">{{i[4]}} Lb</td>
+                        <td style="padding-left: 10px;">{{i[5]}} Lb</td>
+                        <td style="padding-left: 10px;">{{i[6]}} Lb</td>
                     </tr>
                     {%endfor%}
                    
@@ -81,14 +81,14 @@
             <div class="col col-lg" >
                 <table class=" table-borderless" style="border-spacing: 3px; font-size: 12px;">
                     <thead>
-                        <th>MT</th>
+                        <th>Materia</th>
                         <th style="padding-left: 10px;">P.Bruto</th>
                         <th style="padding-left: 10px;">P.Tara</th>
                         <th style="padding-left: 10px;">P.Neto</th>
                         {%for mate in mat%}
                         <tr>
                         <th>{{mate[0]}}</th>
-                        <td style="padding-left: 50px;" align="center">{{mate[1]}} Lb</td>
+                        <td align="center">{{mate[1]}} Lb</td>
                         <td align="center">{{mate[2]}} Lb</td>
                         <td align="center">{{mate[3]}} Lb</td>
                         </tr>
