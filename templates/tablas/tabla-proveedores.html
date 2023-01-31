@@ -39,9 +39,10 @@
 
     </tbody>
 </table>
-<input id="launch2" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacion">
+<input id="launch2" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacionmodal">
+<!-- MANDA A LLAMAR verificacion modal -->
 
-<div id="modal-act2">
+<div id="modal-act3">
 
 </div>
 <script>
@@ -55,8 +56,8 @@
                 id: id
             },
             success: function (response) {
-                $('#modal-act2').html(response);
-                $('#modal-act2').append(response.htmlresponse);
+                $('#modal-act3').html(response);
+                $('#modal-act3').append(response.htmlresponse);
                 $('#launch2').click();
             },
             error: function (error) {

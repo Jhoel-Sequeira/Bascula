@@ -82,7 +82,7 @@ def login():
                     cur = mysql.connection.cursor()
                     cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
                     digitador = cur.fetchall()
-                    return render_template('home.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
+                    return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
            
     return render_template('index.html') 
             
@@ -125,6 +125,22 @@ def buscarProveedor():
    else:
         return "No"
 
+@app.route('/buscarProveedorAdmin', methods =["POST","GET"])
+def buscarProveedorAdmin():
+   if request.method == "POST":
+        proveedor = request.form['proveedor']
+        print(proveedor)
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT p.Id_Proveedor,p.NombreProveedor,e.NombreEstado FROM tb_proveedor as p inner join tb_estado as e ON p.IdEstado = e.Id_Estado where p.NombreProveedor like %s",[proveedor+'%'])
+        proveedores = cur.fetchall()
+        if proveedores :
+
+            return render_template('tablas/tabla-proveedornuevo.html',prov = proveedores)
+        else:
+            return "no"
+   else:
+        return "No"
+
 @app.route('/buscarUsuario', methods =["POST","GET"])
 def buscarUsuario():
    if request.method == "POST":
@@ -134,6 +150,7 @@ def buscarUsuario():
         proveedores = cur.fetchall()
         print(proveedores)
         return render_template('otros/proveedor-busqueda.html',proveedores = proveedores)
+
 #LISTA DE PROVEEDORES TABLA
 @app.route('/listaProveedores', methods =["POST","GET"])
 def listaProveedores():
@@ -514,6 +531,7 @@ def traerProveedores():
 
         print(proveedores)
         return render_template('tablas/tabla-proveedornuevo.html',prov = proveedores)
+
 
 
     return render_template('administracion.html')

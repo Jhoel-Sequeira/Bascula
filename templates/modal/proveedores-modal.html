@@ -30,9 +30,7 @@
                     <!-- INICIO DE LA FUNCIONALIDAD DE LOS BOTONES CON JQUERY  DE LA PRIMERA PANTALLA-->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="finalizar" disabled="disabled" onclick="finalizar()">
-                        Guardar
-                    </button>
+                    
                 </div>
             </div>
         </div>
@@ -40,6 +38,9 @@
 </div>
 <script>
     $(document).ready(function () {
+        vacioProv();
+    });
+    function vacioProv(){
         $.ajax({
             url: "/traerProveedores",
             type: "POST",
@@ -53,44 +54,43 @@
             error: function (error) { // console.log(error);
             }
         });
-    });
+    }
 
     // Funcion para poner lista de resultados
-    var buscarProveedores = function () {
-        var material = $('#buscarmat').val();
+    var buscarProveedorControl = function () {
+        var material = $('#buscarprov').val();
         if (material != "") {
             $.ajax({
-                url: "/buscarMaterial",
+                url: "/buscarProveedorAdmin",
                 type: "POST",
                 data: {
-                    material: material
+                    proveedor: material
 
                 },
                 success: function (response) {
-                    if (response == "No") {} else {
-
-                        $('#listamat').html(response);
-                        $('#listamat').append(response.htmlresponse);
-                        $('#totalmat').show();
-                        $('#listamat').show();
-
-                        $("#busqueda button[name=det]").click(function () {
-                            $('#buscarmat').val($(this).text());
-                            $('#listamat').hide();
-                            $('#totalmat').hide();
-
-                        });
+                    if (response == "no"){
+                        if (material != ""){
+                            $("#agregar").removeAttr('disabled')
+                        }else{
+                            $("#agregar").attr('disabled', 'true');
+                        }
+                        
+                    }else{
+                        $('#tabla-prov').html(response);
+                        $('#tabla-prov').append(response.htmlresponse);
                     }
+                        
+                        
+                        
                 },
                 error: function (error) { // console.log(error);
                 }
             });
         } else {
-            $('#listamat').hide();
-            $('#totalmat').hide();
-
+            vacioProv();
+            $("#agregar").attr('disabled', 'true');
         }
 
     }
-    $("#buscarmat").on('keyup', buscarMaterial);
+    $("#buscarprov").on('keyup', buscarProveedorControl);
 </script>
