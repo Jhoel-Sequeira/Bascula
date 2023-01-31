@@ -239,6 +239,9 @@
   font-weight: 600;
 }
 @media (max-width: 900px) {
+  .modal-backdrop{
+    display: none;
+  }
   .sidebar.close .nav-links li .sub-menu{
     display: none;
   }

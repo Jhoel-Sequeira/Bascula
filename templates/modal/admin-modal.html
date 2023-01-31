@@ -4,7 +4,7 @@
         <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
             <div class="modal-content" style="background-color: #E4E9F7;">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Información</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Información modal de historial</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="cargarLista()"></button>
                 </div>
                 <div class="modal-body">
@@ -16,7 +16,7 @@
                                     <div class="col-6">
                                         <div class="form-outline">
                                             <label class="form-label" for="proveedor">Proveedor</label>
-                                            <input type="text" id="proveedor" name="proveedor" placeholder="PO" required="required" class="form-control" disabled value="{{ verifi[6] }}"/>
+                                            <input type="text" id="proveedor" name="proveedor" placeholder="PO" required="required" class="form-control" disabled="disabled" value="{{ verifi[6] }}"/>
                                         </div>
 
                                     </div>
@@ -26,10 +26,10 @@
                                             <label class="form-label" for="form3Example3">Punto de Compra</label>
                                             {% if (verifi[4]) and (verifi[4] != 'Sin Punto') %}
 
-                                                <input type="text" id="puntoCompra" name="puntoCompra" placeholder="Punto de Compra" required="required" class="form-control" disabled value="{{ verifi[4] }}"/>
+                                                <input type="text" id="puntoCompra" name="puntoCompra" placeholder="Punto de Compra" required="required" class="form-control" disabled="disabled" value="{{ verifi[4] }}"/>
                                             {% else %}
                                                 <select class="form-select" id="puntoCompra" aria-label="Default select example">
-                                                    <option selected="selected" hidden>Seleccionar Punto</option>
+                                                    <option selected="selected" hidden="hidden">Seleccionar Punto</option>
                                                     {% for punto in Punto %}
                                                         {% if punto[1] != 'Sin Punto' %}
                                                             <option value="{{ punto[0] }}">{{ punto[1] }}</option>
@@ -51,10 +51,10 @@
                                         <div class="form-outline">
                                             <label class="form-label" for="form3Example3">Nombre Verificador</label>
                                             {% if verifi[7] %}
-                                                <input type="text" id="verificador" name="verificador" placeholder="Punto de Compra" required="required" class="form-control" disabled value="{{ verifi[7] }}"/>
+                                                <input type="text" id="verificador" name="verificador" placeholder="Punto de Compra" required="required" class="form-control" disabled="disabled" value="{{ verifi[7] }}"/>
                                             {% else %}
                                                 <select class="form-select" id="verificador" aria-label="Default select example">
-                                                    <option selected="selected" disabled hidden>Seleccionar Verificador</option>
+                                                    <option selected="selected" disabled="disabled" hidden="hidden">Seleccionar Verificador</option>
                                                     {% for i in Verificador %}
                                                         <option value="{{ i[0] }}">{{ i[1] }}</option>
                                                     {% endfor %}
@@ -62,18 +62,18 @@
                                             {% endif %}
 
                                             <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                        style="display: none;">Las
-                                                                                                                                                                                                                                                                                                                                                                                                        constraseñas no coinciden</label> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    style="display: none;">Las
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    constraseñas no coinciden</label> -->
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="form-outline">
                                             <label class="form-label" for="form3Example3">Nombre Digitador</label>
                                             {% if verifi[8] %}
-                                                <input type="text" id="digitador" name="digitador" placeholder="Punto de Compra" required="required" class="form-control" disabled value="{{ verifi[8] }}"/>
+                                                <input type="text" id="digitador" name="digitador" placeholder="Punto de Compra" required="required" class="form-control" disabled="disabled" value="{{ verifi[8] }}"/>
                                             {% else %}
                                                 <select class="form-select" id="digitador" aria-label="Default select example">
-                                                    <option selected="selected" hidden>Seleccionar Digitador</option>
+                                                    <option selected="selected" hidden="hidden">Seleccionar Digitador</option>
                                                     {% for i in Digitador %}
                                                         <option value="{{ i[0] }}">{{ i[1] }}</option>
                                                     {% endfor %}
@@ -81,8 +81,8 @@
                                             {% endif %}
 
                                             <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                        style="display: none;">Las
-                                                                                                                                                                                                                                                                                                                                                                                                        constraseñas no coinciden</label> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    style="display: none;">Las
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    constraseñas no coinciden</label> -->
                                         </div>
                                     </div>
                                 </div>
@@ -92,7 +92,7 @@
                                             <div class="form-outline">
                                                 <label class="form-label" for="form3Example1">PO</label>
                                                 {% if verifi[2] %}
-                                                    <input type="text" id="po" name="nombre" disabled placeholder="PO" required="required" class="form-control" value="{{ verifi[2] }}"/>
+                                                    <input type="text" id="po" name="nombre" disabled="disabled" placeholder="PO" required="required" class="form-control" value="{{ verifi[2] }}"/>
                                                 {% else %}
                                                     <input type="text" id="po" name="nombre" placeholder="PO" required="required" class="form-control"/>
                                                 {% endif %}
@@ -103,17 +103,17 @@
                                             <div class="form-outline">
                                                 <label class="form-label" for="form3Example1">Fecha</label>
                                                 <input
-                                                type="text" id="fecha" disabled name="nombre" placeholder="nombres" required="required" class="form-control" value="{{ verifi[1] }}"/>
+                                                type="text" id="fecha" disabled="disabled" name="nombre" placeholder="nombres" required="required" class="form-control" value="{{ verifi[1] }}"/>
                                             <!-- <label id="mensaje_error_input" class="control-label col-md-12 text-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                            style="display: block;">Las
-                                                                                                                                                                                                                                                                                                                                                                                                            constraseñas no coinciden</label> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        style="display: block;">Las
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        constraseñas no coinciden</label> -->
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="form-outline">
                                                 <label class="form-label" for="form3Example2">No Boleta</label>
                                                 {% if verifi[3] %}
-                                                    <input type="text" id="nboleta" name="nboleta" disabled placeholder="PO" required="required" class="form-control" value="{{ verifi[3] }}"/>
+                                                    <input type="text" id="nboleta" name="nboleta" disabled="disabled" placeholder="PO" required="required" class="form-control" value="{{ verifi[3] }}"/>
                                                 {% else %}
                                                     <input type="text" id="nboleta" name="nboleta" required="required" placeholder="No Boleta" class="form-control"/>
                                                 {% endif %}
@@ -123,30 +123,30 @@
                                             <div class="form-outline">
                                                 <label class="form-label" for="form3Example2">Bahia</label>
                                                 {% if verifi[9] %}
-                                                    <input type="text" id="bahia" name="bahia" disabled placeholder="PO" required="required" class="form-control" value="{{ verifi[9] }}"/>
+                                                    <input type="text" id="bahia" name="bahia" disabled="disabled" placeholder="PO" required="required" class="form-control" value="{{ verifi[9] }}"/>
                                                 {% else %}
                                                     <select class="form-select" id="bahia" aria-label="Default select example">
-                                                        <option selected="selected" hidden>Seleccionar Bahia</option>
+                                                        <option selected="selected" hidden="hidden">Seleccionar Bahia</option>
                                                         <option value="1">1</option>
                                                         <option value="2">2</option>
                                                         <option value="3">3</option>
                                                         <option value="1">4</option>
                                                         <option value="2">5</option>
                                                         <!-- <option value="3">6</option>
-                                                                                                                                                                                                                                                                <option value="1">7</option>
-                                                                                                                                                                                                                                                                <option value="2">8</option>
-                                                                                                                                                                                                                                                                <option value="3">9</option>
-                                                                                                                                                                                                                                                                <option value="1">10</option>
-                                                                                                                                                                                                                                                                <option value="2">11</option>
-                                                                                                                                                                                                                                                                <option value="3">12</option>
-                                                                                                                                                                                                                                                                <option value="1">13</option>
-                                                                                                                                                                                                                                                                <option value="2">14</option>
-                                                                                                                                                                                                                                                                <option value="3">15</option>
-                                                                                                                                                                                                                                                                <option value="1">16</option>
-                                                                                                                                                                                                                                                                <option value="2">17</option>
-                                                                                                                                                                                                                                                                <option value="3">18</option>
-                                                                                                                                                                                                                                                                <option value="2">19</option>
-                                                                                                                                                                                                                                                                <option value="3">20</option> -->
+                                                                                                                                                                                                                                                                                                                        <option value="1">7</option>
+                                                                                                                                                                                                                                                                                                                        <option value="2">8</option>
+                                                                                                                                                                                                                                                                                                                        <option value="3">9</option>
+                                                                                                                                                                                                                                                                                                                        <option value="1">10</option>
+                                                                                                                                                                                                                                                                                                                        <option value="2">11</option>
+                                                                                                                                                                                                                                                                                                                        <option value="3">12</option>
+                                                                                                                                                                                                                                                                                                                        <option value="1">13</option>
+                                                                                                                                                                                                                                                                                                                        <option value="2">14</option>
+                                                                                                                                                                                                                                                                                                                        <option value="3">15</option>
+                                                                                                                                                                                                                                                                                                                        <option value="1">16</option>
+                                                                                                                                                                                                                                                                                                                        <option value="2">17</option>
+                                                                                                                                                                                                                                                                                                                        <option value="3">18</option>
+                                                                                                                                                                                                                                                                                                                        <option value="2">19</option>
+                                                                                                                                                                                                                                                                                                                        <option value="3">20</option> -->
                                                     </select>
                                                 {% endif %}
 
@@ -156,12 +156,12 @@
 
                                 </div>
                             </div>
-                            <div class="row mt-2" >
+                            <div class="row mt-2">
                                 <div class="col-3">
 
 
                                     <div class="col mt-4 pt-2">
-                                        
+
                                         <button type="button" class="btn btn-link border-light" onclick="mostrarDetalle()">
                                             <i class="fa-sharp fa-solid fa-circle-info"></i>
                                         </button>
@@ -175,6 +175,7 @@
 
                             <!-- INICIO DE LA FUNCIONALIDAD DE LOS BOTONES CON JQUERY  DE LA PRIMERA PANTALLA-->
                             <script>
+                                
                                 flagbloquear = 0;
                                 inicio = 1
 
@@ -306,7 +307,7 @@
                                         $("#tara").removeAttr("disabled");
                                         $("#agregar").removeAttr("disabled");
                                         $("#finalizar").removeAttr("disabled");
-                                        
+
                                     } else if (!($("#proveedor option:selected").val() != "Seleccionar Proveedor" && $("#puntoCompra option:selected").val() != "Seleccionar Punto" && $("#verificador option:selected").val() != "Seleccionar Verificador" && $("#digitador option:selected").val() != "Seleccionar Digitador" && $("#po").val() != "" && $("#fecha").val() != "" && $("#nboleta").val() != "" && $("#bahia option:selected").val() != "Seleccionar Bahia" && flagbloquear != 0)) {
                                         Swal.fire({icon: 'error', title: 'Datos faltantes', confirmButtonText: 'Ok', text: 'Debe Añadir los datos faltantes'}).then((result) => { /* Read more about isConfirmed, isDenied below */
                                             if (result.isConfirmed) {}
@@ -319,6 +320,7 @@
                                      else 
                                         $("#detalles").hide();
                                     
+
 
                                 }
                                 function cargarPesos() {
@@ -412,8 +414,8 @@
                             </script>
                         </div>
                         <!-- <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" id="finalizar" disabled onclick="finalizar()">Imprimir</button>
-                        </div> -->
+                                                    <button type="button" class="btn btn-primary" id="finalizar" disabled onclick="finalizar()">Imprimir</button>
+                                                </div> -->
                     </div>
                 </div>
             </div>
@@ -428,11 +430,11 @@
 
                         },
                         success: function (response) {
-                            if(response == 'vacio'){
+                            if (response == 'vacio') {
                                 Swal.fire({icon: 'warning', title: 'Datos faltantes', confirmButtonText: 'Ok', text: 'Esta verificacion no posee pesajes'}).then((result) => { /* Read more about isConfirmed, isDenied below */
-                                            if (result.isConfirmed) {}
-                                        })
-                            }else{
+                                    if (result.isConfirmed) {}
+                                })
+                            } else {
                                 $('#factura').html(response);
                                 $('#factura').append(response.htmlresponse);
                                 // Escuchamos el click del botón
@@ -460,7 +462,7 @@
                                     window.location = '/home'
                                 }, 1000)
                             }
-                            
+
 
                         },
                         error: function (error) { // console.log(error);

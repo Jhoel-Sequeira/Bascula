@@ -36,7 +36,7 @@
 
                         </tbody>
                     </table>
-                    <input id="launch3" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacion1">
+                    <input id="launch3" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacion">
 
                         <div id="modal-act2"></div>
                         <script>
@@ -52,7 +52,9 @@
                                     success: function (response) {
                                         $('#modal-act2').html(response);
                                         $('#modal-act2').append(response.htmlresponse);
+                                        $('.modal-backdrop').remove();
                                         $('#launch3').click();
+
                                     },
                                     error: function (error) { // console.log(error);
                                     }

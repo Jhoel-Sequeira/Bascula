@@ -434,7 +434,13 @@ def finalizarVerificacion():
             cur = mysql.connection.cursor()
             cur.execute('Update tb_verificacion set IdEstado = 4 Where Id_Verificacion = %s',[id])
             mysql.connection.commit()
-            return render_template('otros/factura.html',usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
+            #total de materiales
+            cur = mysql.connection.cursor()
+            cur.execute('SELECT m.NombreMaterial,sum(ver.PesoBruto) as bruto,sum(ver.PesoTara) as tara,SUM(ver.PesoNeto) as neto FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
+            mat = cur.fetchall()
+            mysql.connection.commit()
+            print(mat)
+            return render_template('otros/factura.html',mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
         else:
             return "vacio"
         

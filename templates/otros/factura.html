@@ -21,9 +21,10 @@
                 <a style="margin-left: 3px; font-size: 10px;">Fecha de verificacion: {{fechaEmision[0]}}</a></p>
             </div>
         </div>
+        <br>
         <div class="row justify-content-md-center" >
             <div class="col col-lg" >
-              <p style="font-size: 12px;">Proveedor:<strong style="margin-left: 30px;">{{ ver[6] }}</strong><br>
+              <p style="font-size: 12px;">No Verificacion: {{id[0]}}<br> Proveedor:<strong style="margin-left: 30px;">{{ ver[6] }}</strong><br>
                 Digitador:<strong style="margin-left: 30px;">{{ver[7]}}</strong><br>
               Verificador: <strong style="margin-left: 30px;">{{ver[8]}}</strong><br>
               PO:<strong style="margin-left: 70px;">{{ver[2]}}</strong></p>
@@ -34,25 +35,25 @@
               <table class=" table-borderless" style="border-spacing: 3px;">
                 <thead style="font-size: 11px;">
                     <th>Material</th>
-                    <th>Peso Bruto</th>
-                    <th>Peso Tara</th>
-                    <th>Destare</th>
-                    <th>Peso Neto</th>
+                    <th style="padding-left: 10px;">P.Bruto</th>
+                    <th style="padding-left: 10px;">P.Tara</th>
+                    <th style="padding-left: 10px;">Destare</th>
+                    <th style="padding-left: 10px;">P.Neto</th>
                 </thead>
                 <tbody style="font-size: 10px; padding: none;">
                     {%for i in pesos%}
                     <tr>
                         <td>{{i[2]}}</td>
-                        <td>{{i[3]}}<br>Lb</td>
-                        <td>{{i[4]}}<br>Lb</td>
-                        <td>{{i[5]}}<br>Lb</td>
-                        <td>{{i[6]}}<br>Lb</td>
+                        <td>{{i[3]}} Lb</td>
+                        <td>{{i[4]}} Lb</td>
+                        <td>{{i[5]}} Lb</td>
+                        <td>{{i[6]}} Lb</td>
                     </tr>
                     {%endfor%}
                    
                 </tbody>
                 
-                <thead style="font-size: 12px;">
+                <thead style="font-size: 10px;">
                     <tr>
                         <td colspan="1" align="center" style="margin-right: 100px">
                             <strong>Total</strong>
@@ -74,6 +75,28 @@
                 
                 
               </table>
+            </div>
+        </div>
+        <div class="row justify-content-md-center mt-2" >
+            <div class="col col-lg" >
+                <table class=" table-borderless" style="border-spacing: 3px; font-size: 12px;">
+                    <thead>
+                        <th>MT</th>
+                        <th style="padding-left: 10px;">P.Bruto</th>
+                        <th style="padding-left: 10px;">P.Tara</th>
+                        <th style="padding-left: 10px;">P.Neto</th>
+                        {%for mate in mat%}
+                        <tr>
+                        <th>{{mate[0]}}</th>
+                        <td style="padding-left: 50px;" align="center">{{mate[1]}} Lb</td>
+                        <td align="center">{{mate[2]}} Lb</td>
+                        <td align="center">{{mate[3]}} Lb</td>
+                        </tr>
+                        {%endfor%}
+                    
+                    
+                    </thead>
+                </table>
             </div>
         </div>
         <div class="row justify-content-md-center mt-2" >
