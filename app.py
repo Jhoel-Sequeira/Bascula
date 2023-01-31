@@ -485,6 +485,36 @@ def ajustes():
    
     return render_template('ajustes.html')
 
+# APARTADO DE VER PROVEEDORES
+@app.route('/verProveedores', methods =["POST","GET"])
+def verProveedores():
+    if request.method == "POST":
+
+        #SELECCIONAR EL ID DEL PROVEEDOR
+        cur = mysql.connection.cursor()
+        cur.execute("select * from tb_proveedor Where IdEstado = 3")
+        proveedores = cur.fetchall()
+
+        return render_template('modal/proveedores-modal.html')
+#TRAER TODOS LOS PROVEEDORES
+@app.route('/traerProveedores', methods =["POST","GET"])
+def traerProveedores():
+    if request.method == "POST":
+        proveedor = request.form['proveedor']
+        if proveedor == "":
+            #SELECCIONAR EL ID DEL PROVEEDOR
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT p.Id_Proveedor,p.NombreProveedor,e.NombreEstado FROM tb_proveedor as p inner join tb_estado as e ON p.IdEstado = e.Id_Estado")
+            proveedores = cur.fetchall()
+        else:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT p.Id_Proveedor,p.NombreProveedor,e.NombreEstado FROM tb_proveedor as p inner join tb_estado as e ON p.IdEstado = e.Id_Estado where p.NombreProveedor like %s",[proveedor+'%'])
+            proveedores = cur.fetchall()
+
+
+        print(proveedores)
+        return render_template('tablas/tabla-proveedornuevo.html',prov = proveedores)
+
 
     return render_template('administracion.html')
  

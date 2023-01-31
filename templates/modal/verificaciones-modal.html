@@ -409,6 +409,7 @@
 
                                 }
                                 $("#buscarmat").on('keyup', buscarMaterial);
+                                
                                 function añadir() {
                                     if ($("#buscarmat").val() == "" || $("#bruto").val() == "" || $("#tara").val() == "" || $("#destare").val() == "") {
                                         Swal.fire({icon: 'error', title: 'Datos faltantes', confirmButtonText: 'Ok', text: 'Debe Añadir los datos faltantes'}).then((result) => { /* Read more about isConfirmed, isDenied below */

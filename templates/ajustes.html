@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}
-    Ajustes
+Ajustes
 {% endblock %}
 {%block header%}
 
@@ -8,56 +8,76 @@
 
 {% block
 encabezado %}
-    <div class="row">
-        <div class="col">
-            <h1>Ajustes</h1>
-        </div>
+<div class="row">
+    <div class="col">
+        <h1>Ajustes</h1>
     </div>
+</div>
 {% endblock %}
 {% block content %}
-    <div class="container ">
-        <div class="centrar">
-            <div class="row">
-                <div
-                    class="col-lg-3 col-6" style="padding: 10px;">
-                    <!-- small box -->
-                    <div class="card cartas bg-info" style="padding: 5px;">
-                        <div class="inner">
-                            <h3>
-                                <sup style="font-size: 20px"></sup>
-                            </h3>
-                            <br>
-                                <br></div>
-                                <div class="icon">
-                                    <i class="fa-solid fa-truck"></i>
-                                </div>
-                                <a href="/ajuste" class="card-footer">
-                                    Ver mas
-                                    <i class="fas fa-arrow-circle-right"></i>
-                                </a>
-                            </div>
-                        </div>
+<div class="container ">
+    <div class="centrar">
+        <div class="row mt-5">
+            <div class="col-lg-3 col-6" style="padding: 10px;">
+                <!-- small box -->
+                <div class="card cartas bg-info" style="padding: 5px;">
+                    <div class="inner">
+                        <h3>
+                            <sup style="font-size: 20px"></sup>
+                        </h3>
                         <br>
-                            <div
-                                class="col-lg-3 col-6" style="padding: 10px;">
-                                <!-- small box -->
-                                <div class="card cartas bg-info" style="padding: 5px;">
-                                    <div class="inner">
-                                        <h3>
-                                            <sup style="font-size: 20px"></sup>
-                                        </h3>
-                                        <br>
-                                            <br></div>
-                                            <div class="icon mr-1">
-                                                <i class="fa-solid fa-users"></i>
-                                            </div>
-                                            <a href="/ajuste" class="card-footer">
-                                                Ver mas
-                                                <i class="fas fa-arrow-circle-right"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <br>
-                                </div>
-                                </div>
-                            {% endblock %}
+                        <br>
+                    </div>
+                    <div class="icon">
+                        <i class="fa-solid fa-truck"></i>
+                    </div>
+                    <a style="cursor: pointer;" onclick="verProveedores()" class="card-footer">
+                        Proveedores
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+            <br>
+            <div class="col-lg-3 col-6" style="padding: 10px;">
+                <!-- small box -->
+                <div class="card cartas bg-info" style="padding: 5px;">
+                    <div class="inner">
+                        <h3>
+                            <sup style="font-size: 20px"></sup>
+                        </h3>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="icon mr-1">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <a href="/ajuste" class="card-footer">
+                        Usuarios
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+<input id="launchProv" type="hidden" data-bs-toggle="modal" data-bs-target="#provEedor">
+
+<div id="modalito"></div>
+<script>
+    function verProveedores() {
+        $.ajax({
+            url: "/verProveedores",
+            type: "POST",
+            data: {},
+            success: function (response) {
+                $('#modalito').html(response);
+                $('#modalito').append(response.htmlresponse);
+                $('#launchProv').click();
+            },
+            error: function (error) { // console.log(error);
+            }
+        });
+    }
+</script>
+{% endblock %}
