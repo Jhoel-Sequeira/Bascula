@@ -499,25 +499,14 @@
             $('#mensaje_error_peso_bruto').hide();
         }
     })
-    $('#tara').on('keyup', function () {
+    function validartara(){
         var bruto1 = parseInt($('#bruto').val());
         var tara1 = parseInt($('#tara').val());
         var destare1 = parseInt($('#destare').val());
-        alert(bruto1)
+        
         alert(tara1)
-        if(tara1 <= 0){
-            $('#mensaje_error_peso_tara').html('El peso no puede ser 0 o inferior.')
-        
-        }else if(tara1 >= bruto1){
-            $('#mensaje_error_peso_tara').html('El peso no puede ser igual o mayor al peso bruto ni destare.')
-        
-        }else if((bruto1-tara1) < destare1){
-            $('#mensaje_error_peso_tara').html('El destare no puede ser mayor a la resta de la tara y el peso bruto.')
-        
-        }else{
-            $('#mensaje_error_peso_tara').hide();
-        }
-    })
+    }
+    $('#tara').on('keyup', validartara);
     $('#destare').on('keyup', function () {
         var bruto2 = parseInt($('#bruto').val());
         var tara2 = parseInt($('#tara').val());
