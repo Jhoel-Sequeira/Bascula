@@ -67,7 +67,7 @@
 
 
                                     </div>
-                                    <label id="mensaje_error" class="control-label col-md-12 text-danger" style="display: none;">Alguno de los campos esta vacio</label>
+                                    <label id="mensaje_error" class="control-label col-md-12 text-danger" style="display: none;">Datos erróneos</label>
 
                                     <!-- Submit button -->
                                     <button type="submit" class="btn btn-primary btn-block mb-4" onclick="iniciarSesion()" style="background-color: #437413; border-color: #437413;">Iniciar sesion</button>
@@ -92,27 +92,15 @@
         });
         function iniciarSesion(){
             $.ajax({
-            url: "/buscarMaterial",
+            url: "/login",
             type: "POST",
             data: {
-                material: material
+                loginUser: $("#loginUser"),
+                loginPassword: $("#loginPassword")
 
             },
             success: function (response) {
-                if (response == "No") {} else {
-
-                    $('#listamat').html(response);
-                    $('#listamat').append(response.htmlresponse);
-                    $('#totalmat').show();
-                    $('#listamat').show();
-
-                    $("#busqueda button[name=det]").click(function () {
-                        $('#buscarmat').val($(this).text());
-                        $('#listamat').hide();
-                        $('#totalmat').hide();
-
-                    });
-                }
+               
             },
             error: function (error) { // console.log(error);
             }
@@ -124,7 +112,13 @@
 {%if errorlogin == 1%}
 <script>
     $("#mensaje_error").show();
+    $("#mensaje_error").fadeOut(2000);
 </script>
 
 {%elif errorlogin == 2%}
+<script>
+    $('#mensaje_error').html('Las constraseñas no coinciden')
+    $('#mensaje_error').attr('class', 'control-label col-md-12 text-danger')
+    $("#mensaje_error").show();
+</script>
     {%endif%}

@@ -53,38 +53,47 @@ def login():
             cur = mysql.connection.cursor()
             cur.execute("select * from tb_credenciales Where Usuarios = %s",[usuario])
             results = cur.fetchone()
-            if len(results) == 0 or not check_password_hash(results[2], Contraseña):
-                return render_template('index.html', errorlogin=2)
-            else:
-                   
-                    # Recordar el usuario y rol que se logeo
-                    session["userId"] = results[0]
-                    session["user"] = results[1]
-                    session["userrole"] = results[3]
-                    #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
-                    #CONSULTA PARA LOS PROVEEDORES
-                    cur = mysql.connection.cursor()
-                    cur.execute("select * from tb_proveedor Where IdEstado = 1")
-                    Proveedores = cur.fetchall()
-                    #CONSULTA PARA LOS PUNTOS DE COMPRA
-                    cur = mysql.connection.cursor()
-                    cur.execute("select * from tb_puntocompra Where IdEstado = 1")
-                    punto = cur.fetchall()
-                    #CONSULTA PARA LOS MATERIALES
-                    cur = mysql.connection.cursor()
-                    cur.execute("select * from tb_material Where Id_Estado = 1")
-                    material = cur.fetchall()
-                    #CONSULTA PARA LOS VERIFICADORES
-                    cur = mysql.connection.cursor()
-                    cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
-                    verificador = cur.fetchall()
-                    #CONSULTA PARA LOS DIGITADOR
-                    cur = mysql.connection.cursor()
-                    cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
-                    digitador = cur.fetchall()
-                    return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
+            print(results)
+            if results:
+                #si trae algo
+                # Recordar el usuario y rol que se logeo
+                session["userId"] = results[0]
+                session["user"] = results[1]
+                session["userrole"] = results[3]
+                #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
+                #CONSULTA PARA LOS PROVEEDORES
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_proveedor Where IdEstado = 1")
+                Proveedores = cur.fetchall()
+                #CONSULTA PARA LOS PUNTOS DE COMPRA
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_puntocompra Where IdEstado = 1")
+                punto = cur.fetchall()
+                #CONSULTA PARA LOS MATERIALES
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_material Where Id_Estado = 1")
+                material = cur.fetchall()
+                #CONSULTA PARA LOS VERIFICADORES
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+                verificador = cur.fetchall()
+                #CONSULTA PARA LOS DIGITADOR
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+                digitador = cur.fetchall()
+                
+                #CHEQUEAMOS LAS CONTRASEÑAS PARA VER SI SON IGUALES
+                if not check_password_hash(results[2], Contraseña):
+                    #contraseñas incorrectas
+                    print("contras")
+                    return render_template('login.html', errorlogin=2)
+                return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
            
-    return render_template('index.html') 
+            else:
+                #VIENE VACIO
+                return render_template('login.html', errorlogin=1) 
+                    
+        return render_template('index.html') 
             
         
 @app.route('/home')
