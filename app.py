@@ -1,7 +1,7 @@
 
 
 from datetime import datetime,date, timedelta
-from flask import Flask,render_template, request, session, url_for
+from flask import Flask, redirect,render_template, request, session, url_for
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -600,7 +600,7 @@ def insertarProveedor():
 @app.route('/deslog')
 def deslog():
     session.clear()
-    return render_template('login.html')
+    return redirect(url_for('Index'))
  
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
