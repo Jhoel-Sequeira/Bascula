@@ -1,0 +1,141 @@
+<table class="table rounded" id="tabla-usuario1">
+    <thead>
+        <tr>
+            <th colspan="6" class="" style="text-align: center; font-size: 35px;">
+                Usuarios
+            </th>
+        </tr>
+        <tr>
+            <th style="width: 450px">Id Usuario</th>
+            <th>Nombre</th>
+            <th>Usuario</th>
+
+            <th>Rol</th>
+            <th>Estado</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {%for i in prov%}
+            <tr>
+                <td>
+                    {%if i[0] == None%}--{%else%}{{i[0]}}{%endif%}</td>
+                </td>
+                <td align="center" style="padding-right: 100px">
+                    {%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
+                </td>
+                <td align="center" style="padding-right: 100px">
+                    {%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
+                </td>
+                <td align="center" style="padding-right: 100px">
+                    {%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
+                </td>
+                <td align="center" style="padding-right: 100px">
+                    {%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
+
+                    {%if i[4] == 'Inactivo'%}
+                        <td>
+                            <button type="button" class="btn btn-success" value="{{i[0]}}" id="habilitarUsuario" name="habilitarUsuario">
+                                <i class="fas fa-power-off"></i>
+                            </button>
+                        </td>
+                        {%else%}
+                        <td>
+                            <button type="button" class="btn btn-danger" value="{{i[0]}}" id="inhabilitarusuario" name="inhabilitarusuario">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                        {%endif%}
+                        <td>
+                            <button type="button" class="btn btn-primary" value="{{i[0]}}" id="editarUsuario" name="editarUsuario">
+                                <i class="fas fa-user-edit"></i>
+                            </button>
+                        </td>
+
+                    </tr>
+                    {%endfor%}</td>
+            </tr>
+        </tbody>
+    </tbody>
+</table>
+<input id="launch3" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacion">
+
+<div id="modal-act2"></div>
+<!-- CREAMOS EL DIV DONDE VA A IR EL MODAL DE DETALLES DE USUARIOS Y EL INPUT TAMBIEN -->
+<input id="launchdetallemodal" type="hidden" data-bs-toggle="modal" data-bs-target="#usuarioDetalles">
+
+<div id="modal-detalleusu"></div>
+<script>
+
+    $("#tabla-usuario1 button[name=editarUsuario]").click(function () {
+        id = $(this).val();
+        $.ajax({
+            url: "/detalleUsuarios",
+            type: "POST",
+            data: {
+                id: id,
+                flagUsuario: "editar",
+                nombre: $('#buscarUsu').val()
+            },
+            success: function (response) {
+                $('#modal-detalleusu').html(response);
+                $('#modal-detalleusu').append(response.htmlresponse);
+                $('#launchdetallemodal').click();
+
+            },
+            error: function (error) { // console.log(error);
+            }
+        });
+
+    });
+    $("#tabla-usuario1 button[name=inhabilitarusuario]").click(function () {
+        id = $(this).val();
+        Swal.fire({
+            title: "¿Desea inhabilitar?",
+            text: "El usuario se inhabilitará",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: "Sí, aceptar",
+            cancelButtonText: "Cancelar"
+        }).then(resultado => {
+            if (resultado.value) {
+                $.ajax({
+                    url: "/eliminarUsuario",
+                    type: "POST",
+                    data: {
+                        id: id
+                    },
+                    success: function (response) {
+                        if (response == "done") {
+                            vacioUsuario();
+
+                        }
+                    },
+                    error: function (error) { // console.log(error);
+                    }
+                });
+            } else { // Dijeron que no
+                console.log("*NO se elimina la venta*");
+            }
+        });
+    });
+    $("#tabla-usuario1 button[name=habilitarUsuario]").click(function () {
+        id = $(this).val();
+        $.ajax({
+            url: "/habilitarUsuario",
+            type: "POST",
+            data: {
+                id: id
+            },
+            success: function (response) {
+                if (response == "done") {
+                    vacioUsuario();
+
+                }
+            },
+            error: function (error) { // console.log(error);
+            }
+        });
+    });
+</script>

@@ -54,7 +54,7 @@ def login():
             cur.execute("select * from tb_credenciales Where Usuarios = %s",[usuario])
             results = cur.fetchone()
             if len(results) == 0 or not check_password_hash(results[2], Contraseña):
-                return render_template('index.html', errorlogin=1)
+                return render_template('index.html', errorlogin=2)
             else:
                    
                     # Recordar el usuario y rol que se logeo
@@ -171,6 +171,20 @@ def eliminarProveedor():
    else:
         return "No"
 
+#ACTUALIZAMOS EL PROVEEDOR
+@app.route('/eliminarUsuario', methods =["POST","GET"])
+def eliminarUsuario():
+   if request.method == "POST":
+        id = request.form['id']
+        cur = mysql.connection.cursor()
+        cur.execute("Update tb_usuarios set IdEstado = 2 Where Id_Usuario = %s",[id])
+        
+        mysql.connection.commit()
+        
+        return "done"
+   else:
+        return "No"
+
 #HABILITAMOS EL PROVEEDOR QUE SE ENCUENTRA INACTIVO
 @app.route('/habilitarProveedor', methods =["POST","GET"])
 def habilitarProveedor():
@@ -178,6 +192,20 @@ def habilitarProveedor():
         id = request.form['id']
         cur = mysql.connection.cursor()
         cur.execute("Update tb_proveedor set IdEstado = 1 Where Id_Proveedor = %s",[id])
+        
+        mysql.connection.commit()
+        
+        return "done"
+   else:
+        return "No"
+
+#HABILITAMOS EL USUARIO QUE SE ENCUENTRA INACTIVO
+@app.route('/habilitarUsuario', methods =["POST","GET"])
+def habilitarUsuario():
+   if request.method == "POST":
+        id = request.form['id']
+        cur = mysql.connection.cursor()
+        cur.execute("Update tb_USuarios set IdEstado = 1 Where Id_Usuario = %s",[id])
         
         mysql.connection.commit()
         
@@ -194,6 +222,33 @@ def buscarUsuario():
         proveedores = cur.fetchall()
         print(proveedores)
         return render_template('otros/proveedor-busqueda.html',proveedores = proveedores)
+    
+@app.route('/buscarUsuarioNuevo', methods =["POST","GET"])
+def buscarUsuarioNuevo():
+   if request.method == "POST":
+        usuario = request.form['usuario']
+        cur = mysql.connection.cursor()
+        cur.execute("select * from tb_usuarios Where IdEstado = 1 AND NombreUsuario like %s",[usuario+'%'])
+        usuario = cur.fetchall()
+        if usuario:
+            return "existe"
+        else:
+            return "no existe"
+        return render_template('otros/proveedor-busqueda.html',proveedores = proveedores)
+
+#DETALLES DE USUARIO Y ESTE MODAL ES PARA AÑADIR USUARIOS NUEVOS DEPENDIENDO DE LA FLAG
+@app.route('/detalleUsuarios', methods =["POST","GET"])
+def detalleUsuarios():
+   if request.method == "POST":
+        
+        flagUSuario = request.form['flagUsuario']
+        nombre = request.form['nombre']
+        if flagUSuario == "editar":
+            id = request.form['id']
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol inner join tb_estado as e on u.IdEstado = e.Id_Estado where Id_Usuario = %s",[id])
+            usuario = cur.fetchall()
+            return render_template('modal/usuarionuevo-modal.html',flagUSuario = flagUSuario, info = usuario)
 
 #LISTA DE PROVEEDORES TABLA
 @app.route('/listaProveedores', methods =["POST","GET"])
@@ -563,6 +618,19 @@ def verProveedores():
         proveedores = cur.fetchall()
 
         return render_template('modal/proveedores-modal.html')
+# APARTADO DE VER USUARIOS
+@app.route('/verUsuarios', methods =["POST","GET"])
+def verUsuarios():
+    if request.method == "POST":
+
+        #SELECCIONAR EL ID DEL PROVEEDOR
+        cur = mysql.connection.cursor()
+        cur.execute("select * from tb_usuarios Where IdEstado = 3")
+        proveedores = cur.fetchall()
+
+        return render_template('modal/usuarios-modal.html')
+
+
 #TRAER TODOS LOS PROVEEDORES
 @app.route('/traerProveedores', methods =["POST","GET"])
 def traerProveedores():
@@ -581,6 +649,25 @@ def traerProveedores():
 
         print(proveedores)
         return render_template('tablas/tabla-proveedornuevo.html',prov = proveedores)
+
+#TRAER TODOS LOS PROVEEDORES
+@app.route('/traerUsuarios', methods =["POST","GET"])
+def traerUsuarios():
+    if request.method == "POST":
+        usuario = request.form['usuario']
+        if usuario == "":
+            #SELECCIONAR EL ID DEL PROVEEDOR
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol inner join tb_estado as e on u.IdEstado = e.Id_Estado")
+            proveedores = cur.fetchall()
+        else:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol inner join tb_estado as e on u.IdEstado = e.Id_Estado where u.NombreUSuario like %s",[usuario+'%'])
+            proveedores = cur.fetchall()
+
+
+        print(proveedores)
+        return render_template('tablas/tabla-usuario.html',prov = proveedores)
 
 #INSERTAMOS LOS PESOS DEL MATERIALE SELECCIONADO
 @app.route('/insertarProveedor', methods =["POST","GET"])

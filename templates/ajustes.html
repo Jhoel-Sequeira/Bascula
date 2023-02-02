@@ -3,7 +3,7 @@
 Home
 {% endblock %}
 {%block header%}
-
+<script src="../static/js/validacion-usuario.js"></script>
 {%endblock%}
 
 {% block
@@ -18,6 +18,7 @@ encabezado %}
 <div class="container ">
     <div class="centrar">
         <div class="row mt-5">
+            {% if session.user %} {% if session.userrole == 1%}
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
                 <div class="card cartas" style="padding: 5px; background-color: #4b3621">
@@ -51,7 +52,7 @@ encabezado %}
                     <div class="icon mr-1">
                         <i class="fa-solid fa-users"></i>
                     </div>
-                    <a href="#" class="card-footer">
+                    <a style="cursor: pointer;" onclick="verUsuarios()" class="card-footer">
                         Usuarios
                         <i class="fas fa-arrow-circle-right"></i>
                     </a>
@@ -78,6 +79,7 @@ encabezado %}
                 </div>
             </div>
             <br>
+            {% endif %}{% endif %}
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
                 <div class="card cartas" style="padding: 5px; background-color: #547735">
@@ -104,6 +106,10 @@ encabezado %}
 <input id="launchProv" type="hidden" data-bs-toggle="modal" data-bs-target="#provEedor">
 
 <div id="modalito"></div>
+<!-- EN ESTA PARTE VA LO QUE ES EL MODAL DE LOS USUARIOS Y EL BOTON PARA LANZAR EL MODAL -->
+<input id="launchUsuarios" type="hidden" data-bs-toggle="modal" data-bs-target="#usUario">
+
+<div id="modalUsuario"></div>
 <script>
     function verProveedores() {
         $.ajax({
@@ -114,6 +120,21 @@ encabezado %}
                 $('#modalito').html(response);
                 $('#modalito').append(response.htmlresponse);
                 $('#launchProv').click();
+            },
+            error: function (error) { // console.log(error);
+            }
+        });
+    }
+    //FUNCION PARA MANDAR A TRAER LOS USUARIOS 
+    function verUsuarios() {
+        $.ajax({
+            url: "/verUsuarios",
+            type: "POST",
+            data: {},
+            success: function (response) {
+                $('#modalUsuario').html(response);
+                $('#modalUsuario').append(response.htmlresponse);
+                $('#launchUsuarios').click();
             },
             error: function (error) { // console.log(error);
             }

@@ -1,31 +1,33 @@
-.fondo{
-    background-image: url('../img/FondoLogin.jpg');
-    backdrop-filter: blur(10px);
+.fondo {
+  background: rgb(67,116,19);
+  background: linear-gradient(180deg, rgba(67,116,19,1) 0%, rgba(100,130,30,1) 33%, rgba(151,152,48,1) 64%, rgba(220,181,72,1) 100%);
+  backdrop-filter: blur(10px);
+  
 }
 .input-wrapper {
-    position: relative;
-  }
-  
+  position: relative;
+}
+
 .input {
-    box-sizing: border-box;
-    color: #191919;
-    padding: 15px 15px 15px 35px;
-  }
+  box-sizing: border-box;
+  color: #191919;
+  padding: 15px 15px 15px 35px;
+}
 .input.password {
-    padding: 15px 35px 15px 15px;
-  }
-  
-  .input-icon {
-    color: #191919;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  .input-icon.password {
-    left: unset;
-    right: 12px;
-  }
+  padding: 15px 35px 15px 15px;
+}
+
+.input-icon {
+  color: #191919;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.input-icon.password {
+  left: unset;
+  right: 12px;
+}
