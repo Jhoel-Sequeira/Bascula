@@ -1,65 +1,145 @@
-<head>
-    <!-- ======= BOOTSTRAP ========= -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"></head>
-    <table class="table rounded" id="tabla-prov">
-        <thead>
-            <tr>
-                <th colspan="6" class="" style="text-align: center; font-size: 35px;">
-                    Proveedores
-                </th>
-            </tr>
-            <tr>
-                <th style="width: 450px">No Proveedor</th>
-                <th>Proveedor</th>
-                <th>Estado</th>
+<table class="table rounded" id="tabla-prov1">
+    <thead>
+        <tr>
+            <th colspan="6" class="" style="text-align: center; font-size: 35px;">
+                Proveedores
+            </th>
+        </tr>
+        <tr>
+            <th style="width: 450px">No Proveedor</th>
+            <th>Proveedor</th>
+            <th>Estado</th>
 
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {%for i in prov%}
-                <tr>
-                    <td>
-                        {%if i[0] == None%}--{%else%}{{i[0]}}{%endif%}</td>
-                        <td align="center" style="padding-right: 100px">
-                            {%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
-                            <td align="center" style="padding-right: 100px">
-                                {%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {%for i in prov%}
+        <tr>
+            <td>
+                {%if i[0] == None%}--{%else%}{{i[0]}}{%endif%}</td>
+            <td align="center" style="padding-right: 100px">
+                {%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
+            <td align="center" style="padding-right: 100px">
+                {%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
 
-                                <td>
-                                    <button type="button" class="btn btn-primary" value="{{i[0]}}" id="detallever" name="detallever">
-                                        <i class="fa-sharp fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            {%endfor%}
+            {%if i[2] == 'Inactivo'%}
+            <td>
+                <button type="button" class="btn btn-success" value="{{i[0]}}" id="habilitarProveedor"
+                    name="habilitarProveedor">
+                    <i class="fas fa-power-off"></i>
+                </button>
+            </td>
+            {%else%}
+            <td>
+                <button type="button" class="btn btn-danger" value="{{i[0]}}" id="inhabilitarproveedor"
+                    name="inhabilitarproveedor">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+            {%endif%}
+            <td>
+                <button type="button" class="btn btn-primary" value="{{i[0]}}" id="editarproveedor"
+                    name="editarproveedor">
+                    <i class="fas fa-user-edit"></i>
+                </button>
+            </td>
 
-                        </tbody>
-                    </table>
-                    <input id="launch3" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacion">
+        </tr>
+        {%endfor%}
 
-                        <div id="modal-act2"></div>
-                        <script>
+    </tbody>
+</table>
+<input id="launch3" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacion">
 
-                            $("#tabla-prov button[name=detallever]").click(function () {
-                                id = $(this).val();
-                                $.ajax({
-                                    url: "/detalleVerificacion",
-                                    type: "POST",
-                                    data: {
-                                        id: id
-                                    },
-                                    success: function (response) {
-                                        $('#modal-act2').html(response);
-                                        $('#modal-act2').append(response.htmlresponse);
-                                        $('.modal-backdrop').remove();
-                                        $('#launch3').click();
+<div id="modal-act2"></div>
+<script>
 
-                                    },
-                                    error: function (error) { // console.log(error);
-                                    }
-                                });
-                            });
+    $("#tabla-prov1 button[name=editarproveedor]").click(function () {
+        id = $(this).val();
+        Swal
+            .fire({
+                title: "Ingrese el Nuevo nombre",
+                input: "text",
+                showCancelButton: true,
+                confirmButtonText: "Guardar",
+                cancelButtonText: "Cancelar",
+            })
+            .then(resultado => {
+                if (resultado.value) {
+                    let nombre = resultado.value;
+                    $.ajax({
+                        url: "/actProveedor",
+                        type: "POST",
+                        data: {
+                            id: id,
+                            nombre: nombre
+                        },
+                        success: function (response) {
+                            vacioProv();
 
-                            
-                        </script>
+                        },
+                        error: function (error) { // console.log(error);
+                        }
+                    });
+                }
+            });
+
+
+    });
+    $("#tabla-prov1 button[name=inhabilitarproveedor]").click(function () {
+        id = $(this).val();
+        Swal
+            .fire({
+                title: "¿Desea inhabilitar?",
+                text: "El proveedor se inhabilitará",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: "Sí, aceptar",
+                cancelButtonText: "Cancelar",
+            })
+            .then(resultado => {
+                if (resultado.value) {
+                    $.ajax({
+                        url: "/eliminarProveedor",
+                        type: "POST",
+                        data: {
+                            id: id
+                        },
+                        success: function (response) {
+                            if (response == "done") {
+                                vacioProv();
+
+                            }
+                        },
+                        error: function (error) { // console.log(error);
+                        }
+                    });
+                } else {
+                    // Dijeron que no
+                    console.log("*NO se elimina la venta*");
+                }
+            });
+    });
+    $("#tabla-prov1 button[name=habilitarProveedor]").click(function () {
+        id = $(this).val();
+        $.ajax({
+            url: "/habilitarProveedor",
+            type: "POST",
+            data: {
+                id: id
+            },
+            success: function (response) {
+                if (response == "done") {
+                    vacioProv();
+
+                }
+            },
+            error: function (error) { // console.log(error);
+            }
+        });
+    });
+
+
+</script>

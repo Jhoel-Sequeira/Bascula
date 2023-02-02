@@ -1,56 +1,67 @@
-.centrar{
-    padding-left: 30% ; background-color: transparent; height: calc(100vh - 80px);
+.centrar {
+  padding-left: 30%;
+  background-color: transparent;
+  height: calc(100vh - 80px);
 }
+
 .card .icon {
-    color: rgba(0, 0, 0, 0.15);
-    z-index: 0;
+  color: rgba(0, 0, 0, 0.15);
+  z-index: 0;
+}
+
+.icon>i.fa-solid {
+  font-size: 90px;
+  color: rgb(190, 190, 190);
+  top: 20px;
+}
+
+.card>.inner {
+  padding: 30px;
+}
+
+.card .icon>i {
+  position: absolute;
+  right: 35px;
+  top: 15px;
+  transition: -webkit-transform 0.3s linear;
+  transition: transform 0.3s linear;
+  transition: transform 0.3s linear, -webkit-transform 0.3s linear;
+}
+
+.card:hover .icon>i,
+.card:hover .icon>i.fas {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.card>.card-footer {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  display: block;
+
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  z-index: 10;
+}
+
+.card.bg-info {
+  background-color: #17a2b8 !important;
+}
+
+@media (max-width: 900px) {
+  .centrar {
+    justify-items: start;
+    background-color: transparent;
+    padding: 0;
   }
-  .icon > i.fa-solid {
-    font-size: 90px;
-    top: 20px;
-  }
-  .card > .inner {
-    padding: 30px;
-  }
-  .card .icon > i {
+
+  .card .icon>i {
     position: absolute;
-    right: 35px;
+    right: 35%;
     top: 15px;
     transition: -webkit-transform 0.3s linear;
     transition: transform 0.3s linear;
     transition: transform 0.3s linear, -webkit-transform 0.3s linear;
   }
-  .card:hover .icon > i,
-  .card:hover .icon > i.fas {
-    -webkit-transform: scale(1.1);
-    transform: scale(1.1);
-  }
-  .card > .card-footer {
-    background-color: rgba(0, 0, 0, 0.1);
-    color: rgba(255, 255, 255, 0.8);
-    display: block;
-  
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-    z-index: 10;
-  }
-  .card.bg-info {
-    background-color: #17a2b8 !important;
-  }
-  
-@media (max-width: 900px) {
-    .centrar{
-        justify-items: start;
-        background-color: transparent;
-        padding: 0;
-    }
-    .card .icon > i {
-        position: absolute;
-        right: 35%;
-        top: 15px;
-        transition: -webkit-transform 0.3s linear;
-        transition: transform 0.3s linear;
-        transition: transform 0.3s linear, -webkit-transform 0.3s linear;
-      }
-  }
+}

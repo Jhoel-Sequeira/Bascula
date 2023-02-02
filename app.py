@@ -141,6 +141,50 @@ def buscarProveedorAdmin():
    else:
         return "No"
 
+#ACTUALIZAMOS EL PROVEEDOR
+@app.route('/actProveedor', methods =["POST","GET"])
+def actProveedor():
+   if request.method == "POST":
+        nombre = request.form['nombre']
+        id = request.form['id']
+        print(id)
+        cur = mysql.connection.cursor()
+        cur.execute("Update tb_proveedor set NombreProveedor = %s Where Id_Proveedor = %s",(nombre,id))
+        proveedores = cur.fetchall()
+        mysql.connection.commit()
+        
+        return "done"
+   else:
+        return "No"
+
+#ACTUALIZAMOS EL PROVEEDOR
+@app.route('/eliminarProveedor', methods =["POST","GET"])
+def eliminarProveedor():
+   if request.method == "POST":
+        id = request.form['id']
+        cur = mysql.connection.cursor()
+        cur.execute("Update tb_proveedor set IdEstado = 2 Where Id_Proveedor = %s",[id])
+        
+        mysql.connection.commit()
+        
+        return "done"
+   else:
+        return "No"
+
+#HABILITAMOS EL PROVEEDOR QUE SE ENCUENTRA INACTIVO
+@app.route('/habilitarProveedor', methods =["POST","GET"])
+def habilitarProveedor():
+   if request.method == "POST":
+        id = request.form['id']
+        cur = mysql.connection.cursor()
+        cur.execute("Update tb_proveedor set IdEstado = 1 Where Id_Proveedor = %s",[id])
+        
+        mysql.connection.commit()
+        
+        return "done"
+   else:
+        return "No"
+
 @app.route('/buscarUsuario', methods =["POST","GET"])
 def buscarUsuario():
    if request.method == "POST":
@@ -538,6 +582,18 @@ def traerProveedores():
         print(proveedores)
         return render_template('tablas/tabla-proveedornuevo.html',prov = proveedores)
 
+#INSERTAMOS LOS PESOS DEL MATERIALE SELECCIONADO
+@app.route('/insertarProveedor', methods =["POST","GET"])
+def insertarProveedor():
+    if request.method == "POST":
+        proveedor = request.form['proveedor']
+        #INSERTAMOS EL NUEVO PROVEEDOR EN LA BASE
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO tb_proveedor (NombreProveedor,IdEstado) VALUES (%s,1)",[proveedor])
+        mysql.connection.commit()
+        return "done"
+    else:
+        return "No"
 
 
     return render_template('administracion.html')
