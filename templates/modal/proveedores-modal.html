@@ -1,11 +1,9 @@
-<div class="modal fade" id="provEedor" data-bs-focus="false" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="provEedor" data-bs-focus="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
         <div class="modal-content" style="background-color: #e4e9f7">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Información Proveedores</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                    onclick="cargarLista()"></button>
+                <h5 class="modal-title" id="exampleModalLabel">Contacto poveedores</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="cargarLista()"></button>
             </div>
             <div class="modal-body">
                 <div class="tab-pane fade show active mt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -14,14 +12,12 @@
                             <div class="col-10">
                                 <div class="form-outline">
                                     <label class="form-label" for="form3Example3">Proveedor</label>
-                                    <input type="search" class="form-control" id="buscarprov"
-                                        placeholder="Buscar proveedor..." aria-label="Buscar" />
+                                    <input type="search" class="form-control" style="text-transform:uppercase;" id="buscarprov" placeholder="Buscar cedula proveedor..." aria-label="Buscar"/>
                                 </div>
                             </div>
 
                             <div class="col mt-4 pt-2">
-                                <button type="button" disabled="disabled" id="agregar" class="btn btn-success ml-5"
-                                    id="boton-enviar" onclick="añadirProveedor()">
+                                <button type="button" disabled="disabled" id="agregar" class="btn btn-success ml-5" id="boton-enviar" onclick="añadirProveedor()">
                                     <i class="fas fa-calendar-check" style="margin-right: 5px"></i>Añadir
                                 </button>
                             </div>
@@ -40,6 +36,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function () {
         vacioProv();
@@ -59,39 +56,38 @@
             }
         });
     }
-    function añadirProveedor() {
-        Swal
-            .fire({
-                title: $('#buscarprov').val(),
-                text: "¿Desea agregar?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: "Sí, agregar",
-                cancelButtonText: "Cancelar",
-            })
-            .then(resultado => {
-                if (resultado.value) {
-                    $.ajax({
-                        url: "/insertarProveedor",
-                        type: "POST",
-                        data: {
-                            proveedor: $('#buscarprov').val()
-                        },
-                        success: function (response) {
-                            if (response == "done") {
-                                $('#buscarprov').val("");
-                                vacioProv();
+    function añadirProveedor() { // modificar y hacer un modal para que registre un nuevo proveedor
+        
+        // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        Swal.fire({
+            title: $('#buscarprov').val(),
+            text: "¿Desea agregar?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: "Sí, agregar",
+            cancelButtonText: "Cancelar"
+        }).then(resultado => {
+            if (resultado.value) {
+                $.ajax({
+                    url: "/insertarProveedor",
+                    type: "POST",
+                    data: {
+                        proveedor: $('#buscarprov').val()
+                    },
+                    success: function (response) {
+                        if (response == "done") {
+                            $('#buscarprov').val("");
+                            vacioProv();
 
-                            }
-                        },
-                        error: function (error) { // console.log(error);
                         }
-                    });
-                } else {
-                    // Dijeron que no
-                    console.log("*NO se elimina la venta*");
-                }
-            });
+                    },
+                    error: function (error) { // console.log(error);
+                    }
+                });
+            } else { // Dijeron que no
+                console.log("*NO se elimina la venta*");
+            }
+        });
 
     }
     // Funcion para poner lista de resultados
@@ -117,7 +113,6 @@
                         $('#tabla-prov').html(response);
                         $('#tabla-prov').append(response.htmlresponse);
                     }
-
 
 
                 },

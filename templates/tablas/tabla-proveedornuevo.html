@@ -1,13 +1,12 @@
 <table class="table rounded" id="tabla-prov1">
     <thead>
         <tr>
-            <th colspan="6" class="" style="text-align: center; font-size: 35px;">
-                Proveedores
-            </th>
+            
         </tr>
         <tr>
-            <th style="width: 450px">No Proveedor</th>
-            <th>Proveedor</th>
+            <th style="width: 20px">Id</th>
+            <th>Nombre</th>
+            <th>Cédula</th>
             <th>Estado</th>
 
             <th></th>
@@ -16,90 +15,87 @@
     </thead>
     <tbody>
         {%for i in prov%}
-        <tr>
-            <td>
-                {%if i[0] == None%}--{%else%}{{i[0]}}{%endif%}</td>
-            <td align="center" style="padding-right: 100px">
-                {%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
-            <td align="center" style="padding-right: 100px">
-                {%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
+            <tr>
+                <td>
+                    {%if i[0] == None%}--{%else%}{{i[0]}}{%endif%}</td>
+                </td>
+                <td align="center" style="padding-right: 100px">
+                    {%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
+                </td>
+                <td align="center" style="padding-right: 100px">
+                    {%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
+                </td>
+                <td align="center" style="padding-right: 100px">
+                    {%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
+                    
 
-            {%if i[2] == 'Inactivo'%}
-            <td>
-                <button type="button" class="btn btn-success" value="{{i[0]}}" id="habilitarProveedor"
-                    name="habilitarProveedor">
-                    <i class="fas fa-power-off"></i>
-                </button>
-            </td>
-            {%else%}
-            <td>
-                <button type="button" class="btn btn-danger" value="{{i[0]}}" id="inhabilitarproveedor"
-                    name="inhabilitarproveedor">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-            {%endif%}
-            <td>
-                <button type="button" class="btn btn-primary" value="{{i[0]}}" id="editarproveedor"
-                    name="editarproveedor">
-                    <i class="fas fa-user-edit"></i>
-                </button>
-            </td>
+                    {%if i[2] == 'Inactivo'%}
+                        <td>
+                            <button type="button" class="btn btn-success" value="{{i[0]}}" id="habilitarProveedor" name="habilitarProveedor">
+                                <i class="fas fa-power-off"></i>
+                            </button>
+                        </td>
+                        {%else%}
+                        <td>
+                            <button type="button" class="btn btn-danger" value="{{i[0]}}" id="inhabilitarproveedor" name="inhabilitarproveedor">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                        {%endif%}
+                        <td>
+                            <button type="button" class="btn btn-primary" value="{{i[0]}}" id="editarproveedor" name="editarproveedor">
+                                <i class="fas fa-user-edit"></i>
+                            </button>
+                        </td>
 
-        </tr>
-        {%endfor%}
-
+                    </tr>
+                    {%endfor%}</td>
+            </tr>
+        </tbody>
     </tbody>
 </table>
 <input id="launch3" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacion">
 
 <div id="modal-act2"></div>
-<script>
 
-    $("#tabla-prov1 button[name=editarproveedor]").click(function () {
-        id = $(this).val();
-        Swal
-            .fire({
-                title: "Ingrese el Nuevo nombre",
-                input: "text",
-                showCancelButton: true,
-                confirmButtonText: "Guardar",
-                cancelButtonText: "Cancelar",
-            })
-            .then(resultado => {
-                if (resultado.value) {
-                    let nombre = resultado.value;
-                    $.ajax({
-                        url: "/actProveedor",
-                        type: "POST",
-                        data: {
-                            id: id,
-                            nombre: nombre
-                        },
-                        success: function (response) {
-                            vacioProv();
+<!-- MODAL PARA LA ACTUALIZACION DE PROVEEDORES  -->
+<input
+id="launchModalActProveedor" type="hidden" data-bs-toggle="modal" data-bs-target="#proveedorDetalle">
+<!-- MANDA A LLAMAR verificacion modal -->
 
-                        },
-                        error: function (error) { // console.log(error);
-                        }
-                    });
+<div id="modal-addProveedor">
+    <script>
+
+        $("#tabla-prov1 button[name=editarproveedor]").click(function () {
+            id = $(this).val();
+            $.ajax({
+                url: "/llamarProveedorEspecifico",
+                type: "POST",
+                data: {
+                    id: id
+                },
+                success: function (response) {
+                    $('#modal-addProveedor').html(response);
+                    $('#modal-addProveedor').append(response.htmlresponse);
+                    $('#launchModalActProveedor').click();
+                    
+
+                },
+                error: function (error) { // console.log(error);
                 }
             });
 
-
-    });
-    $("#tabla-prov1 button[name=inhabilitarproveedor]").click(function () {
-        id = $(this).val();
-        Swal
-            .fire({
+        });
+        $("#tabla-prov1 button[name=inhabilitarproveedor]").click(function () {
+            id = $(this).val();
+            Swal.fire({
                 title: "¿Desea inhabilitar?",
                 text: "El proveedor se inhabilitará",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: "Sí, aceptar",
-                cancelButtonText: "Cancelar",
-            })
-            .then(resultado => {
+                cancelButtonText: "Cancelar"
+            }).then(resultado => {
                 if (resultado.value) {
                     $.ajax({
                         url: "/eliminarProveedor",
@@ -116,30 +112,27 @@
                         error: function (error) { // console.log(error);
                         }
                     });
-                } else {
-                    // Dijeron que no
+                } else { // Dijeron que no
                     console.log("*NO se elimina la venta*");
                 }
             });
-    });
-    $("#tabla-prov1 button[name=habilitarProveedor]").click(function () {
-        id = $(this).val();
-        $.ajax({
-            url: "/habilitarProveedor",
-            type: "POST",
-            data: {
-                id: id
-            },
-            success: function (response) {
-                if (response == "done") {
-                    vacioProv();
-
-                }
-            },
-            error: function (error) { // console.log(error);
-            }
         });
-    });
+        $("#tabla-prov1 button[name=habilitarProveedor]").click(function () {
+            id = $(this).val();
+            $.ajax({
+                url: "/habilitarProveedor",
+                type: "POST",
+                data: {
+                    id: id
+                },
+                success: function (response) {
+                    if (response == "done") {
+                        vacioProv();
 
-
-</script>
+                    }
+                },
+                error: function (error) { // console.log(error);
+                }
+            });
+        });
+    </script>

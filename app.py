@@ -128,8 +128,9 @@ def buscarProveedor():
    if request.method == "POST":
         proveedor = request.form['proveedor']
         cur = mysql.connection.cursor()
-        cur.execute("select * from tb_proveedor Where IdEstado = 1 AND NombreProveedor like %s",[proveedor+'%'])
+        cur.execute("select * from tb_proveedor Where IdEstado = 1 and Cedula like %s",[proveedor+'%'])
         proveedores = cur.fetchall()
+        print(proveedores)
         return render_template('otros/proveedor-busqueda.html',proveedores = proveedores)
    else:
         return "No"
@@ -140,7 +141,7 @@ def buscarProveedorAdmin():
         proveedor = request.form['proveedor']
         print(proveedor)
         cur = mysql.connection.cursor()
-        cur.execute("SELECT p.Id_Proveedor,p.NombreProveedor,e.NombreEstado FROM tb_proveedor as p inner join tb_estado as e ON p.IdEstado = e.Id_Estado where p.NombreProveedor like %s",[proveedor+'%'])
+        cur.execute("SELECT p.Id_Proveedor,p.NombreProveedor,p.Cedula,e.NombreEstado FROM tb_proveedor as p inner join tb_estado as e ON p.IdEstado = e.Id_Estado where p.Cedula like %s",[proveedor+'%'])
         proveedores = cur.fetchall()
         if proveedores :
 
@@ -151,22 +152,38 @@ def buscarProveedorAdmin():
         return "No"
 
 #ACTUALIZAMOS EL PROVEEDOR
-@app.route('/actProveedor', methods =["POST","GET"])
-def actProveedor():
+@app.route('/llamarProveedorEspecifico', methods =["POST","GET"])
+def llamarProveedorEspecifico():
    if request.method == "POST":
-        nombre = request.form['nombre']
         id = request.form['id']
         print(id)
         cur = mysql.connection.cursor()
-        cur.execute("Update tb_proveedor set NombreProveedor = %s Where Id_Proveedor = %s",(nombre,id))
-        proveedores = cur.fetchall()
+        cur.execute("SELECT p.Id_Proveedor,p.NombreProveedor,p.Cedula,e.NombreEstado FROM tb_proveedor as p inner join tb_estado as e ON p.IdEstado = e.Id_Estado Where p.Id_Proveedor = %s",[id])
+        proveedor = cur.fetchall()
         mysql.connection.commit()
+        print(proveedor)
         
-        return "done"
+        return render_template('modal/proveedornuevo-modal.html',proveedor = proveedor)
    else:
         return "No"
 
 #ACTUALIZAMOS EL PROVEEDOR
+@app.route('/actProve', methods =["POST","GET"])
+def actProve():
+   if request.method == "POST":
+        id = request.form['id']
+        nombre = request.form['nombre']
+        cedula = request.form['cedula']
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE tb_proveedor set NombreProveedor = %s, Cedula = %s Where Id_Proveedor = %s",(nombre,cedula,id))
+        proveedor = cur.fetchall()
+        mysql.connection.commit()
+        
+        return "listo"
+   else:
+        return "No"
+
+#ELIMINAMOS EL PROVEEDOR
 @app.route('/eliminarProveedor', methods =["POST","GET"])
 def eliminarProveedor():
    if request.method == "POST":
@@ -648,14 +665,14 @@ def traerProveedores():
         if proveedor == "":
             #SELECCIONAR EL ID DEL PROVEEDOR
             cur = mysql.connection.cursor()
-            cur.execute("SELECT p.Id_Proveedor,p.NombreProveedor,e.NombreEstado FROM tb_proveedor as p inner join tb_estado as e ON p.IdEstado = e.Id_Estado")
+            cur.execute("SELECT p.Id_Proveedor,p.NombreProveedor,e.NombreEstado,p.Cedula FROM tb_proveedor as p inner join tb_estado as e ON p.IdEstado = e.Id_Estado")
             proveedores = cur.fetchall()
         else:
             cur = mysql.connection.cursor()
-            cur.execute("SELECT p.Id_Proveedor,p.NombreProveedor,e.NombreEstado FROM tb_proveedor as p inner join tb_estado as e ON p.IdEstado = e.Id_Estado where p.NombreProveedor like %s",[proveedor+'%'])
+            cur.execute("SELECT p.Id_Proveedor,p.NombreProveedor,e.NombreEstado,p.Cedula FROM tb_proveedor as p inner join tb_estado as e ON p.IdEstado = e.Id_Estado where p.NombreProveedor like %s",[proveedor+'%'])
             proveedores = cur.fetchall()
 
-
+        
         print(proveedores)
         return render_template('tablas/tabla-proveedornuevo.html',prov = proveedores)
 

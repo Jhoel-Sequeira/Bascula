@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
         <div class="modal-content" style="background-color: #E4E9F7;">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Información de verificaciones</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Detalle de verificacion</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                     onclick="cargarLista()"></button>
             </div>
@@ -26,7 +26,7 @@
 
                             <div class="col-5">
                                 <div class="form-outline">
-                                    <label class="form-label" for="form3Example3">Punto de Compra</label>
+                                    <label class="form-label" for="form3Example3">Punto de compra</label>
                                     {% if (verifi[4]) and (verifi[4] != 'Sin Punto') %}
 
                                     <input type="text" id="puntoCompra" name="puntoCompra" placeholder="Punto de Compra"
@@ -54,7 +54,7 @@
                         <div class="row mt-2">
                             <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="form3Example3">Nombre Verificador</label>
+                                    <label class="form-label" for="form3Example3">Verificador</label>
                                     {% if verifi[7] %}
                                     <input type="text" id="verificador" name="verificador" placeholder="Punto de Compra"
                                         required="required" class="form-control" disabled value="{{ verifi[7] }}" />
@@ -74,7 +74,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="form3Example3">Nombre Digitador</label>
+                                    <label class="form-label" for="form3Example3">Digitador</label>
                                     {% if verifi[8] %}
                                     <input type="text" id="digitador" name="digitador" placeholder="Punto de Compra"
                                         required="required" class="form-control" disabled value="{{ verifi[8] }}" />
@@ -190,22 +190,28 @@
                         <div class="col-2">
                             <div class="form-outline">
                                 <label class="form-label" for="form3Example3">Peso Bruto</label>
-                                <input type="number" id="bruto" disabled maxlength="8" name="celular"
+                                <input type="number" id="bruto" value="0" disabled maxlength="8" name="celular"
                                     required="required" class="form-control" />
+                                <label id="mensaje_error_peso_bruto" class="control-label col-md-12 text-danger" style="display: block;">La cedula ya existe</label>
+                                   
                             </div>
                         </div>
                         <div class="col-2">
                             <div class="form-outline">
                                 <label class="form-label" for="form3Example3">Peso Tara</label>
-                                <input type="number" id="tara" disabled maxlength="8" name="celular" required="required"
+                                <input type="number" id="tara" value="0" disabled maxlength="8" name="celular" required="required"
                                     class="form-control" />
+                                <label id="mensaje_error_peso_tara" class="control-label col-md-12 text-danger" style="display: block;">La cedula ya existe</label>
+                                   
                             </div>
                         </div>
                         <div class="col-2">
                             <div class="form-outline">
                                 <label class="form-label" for="form3Example3">Destare</label>
-                                <input type="number" id="destare" disabled maxlength="8" name="celular"
+                                <input type="number" id="destare" disabled maxlength="8" value="0" name="celular"
                                     required="required" class="form-control" />
+                                <label id="mensaje_error_peso" class="control-label col-md-12 text-danger" style="display: block;">La cedula ya existe</label>
+                                   
                             </div>
                         </div>
 
@@ -473,6 +479,64 @@
 </div>
 
 <script>
+    var bruto = $('#bruto').val();
+       
+    //VALIDACION TARA
+    $('#bruto').on('keyup', function () {
+        var bruto = parseInt($('#bruto').val());
+        var tara = parseInt($('#tara').val());
+        var destare = parseInt($('#destare').val());
+        if(bruto <= 0){
+            $('#mensaje_error_peso_bruto').html('El peso no puede ser 0 o inferior.')
+        
+        }else if(bruto <= tara || bruto <= destare ){
+            $('#mensaje_error_peso_bruto').html('El peso no puede ser igual o inferior al peso tara ni destare.')
+        
+        }else if((bruto-tara) < destare){
+            $('#mensaje_error_peso_bruto').html('El destare no puede ser mayor a la resta de la tara y el peso bruto.')
+        
+        }else{
+            $('#mensaje_error_peso_bruto').hide();
+        }
+    })
+    $('#tara').on('keyup', function () {
+        var bruto1 = parseInt($('#bruto').val());
+        var tara1 = parseInt($('#tara').val());
+        var destare1 = parseInt($('#destare').val());
+        alert(bruto1)
+        alert(tara1)
+        if(tara1 <= 0){
+            $('#mensaje_error_peso_tara').html('El peso no puede ser 0 o inferior.')
+        
+        }else if(tara1 >= bruto1){
+            $('#mensaje_error_peso_tara').html('El peso no puede ser igual o mayor al peso bruto ni destare.')
+        
+        }else if((bruto1-tara1) < destare1){
+            $('#mensaje_error_peso_tara').html('El destare no puede ser mayor a la resta de la tara y el peso bruto.')
+        
+        }else{
+            $('#mensaje_error_peso_tara').hide();
+        }
+    })
+    $('#destare').on('keyup', function () {
+        var bruto2 = parseInt($('#bruto').val());
+        var tara2 = parseInt($('#tara').val());
+        var destare2 = parseInt($('#destare').val());
+        alert(tara2)
+        if(destare2 < 0){
+            $('#mensaje_error_peso_destare').html('El peso no puede ser 0 o inferior.')
+        
+        }else if((destare2 >= bruto2) || (destare2 >= tara2)){
+            $('#mensaje_error_peso_destare').html('El peso no puede ser igual o mayor al peso bruto ni destare.')
+        
+        }else if((bruto2-tara2) < destare2){
+            $('#mensaje_error_peso_destare').html('El destare no puede ser mayor a la resta de la tara y el peso bruto.')
+        
+        }else{
+            $('#mensaje_error_peso_destare').hide();
+        }
+    })
+    //###########################
     function finalizar() {
         $.ajax({
             url: "/finalizarVerificacion",

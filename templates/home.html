@@ -16,7 +16,7 @@ encabezado %}
     <div class="container d-flex flex-wrap mt-2">
 
         <div class="col-10 mb-3 mb-lg-0" role="search">
-            <input type="search" class="form-control" id="buscar" placeholder="Buscar Proveedor..." aria-label="Buscar">
+            <input type="search" class="form-control" id="buscar" onkeyup="this.value=this.value.toUpperCase()" style="text-transform:uppercase;" placeholder="Buscar Proveedor..." aria-label="Buscar">
         </div>
 
         <br>
