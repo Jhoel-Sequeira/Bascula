@@ -596,7 +596,11 @@ def insertarProveedor():
         return "No"
 
 
-    return render_template('administracion.html')
+#DESLOGUEO
+@app.route('/deslog')
+def deslog():
+    session.clear()
+    return render_template('login.html')
  
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
