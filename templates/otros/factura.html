@@ -24,16 +24,19 @@
         <br>
         <div class="row justify-content-md-center" >
             <div class="col col-lg" >
-              <p style="font-size: 12px;">No Verificacion: {{id[0]}}<br> Proveedor:<strong style="margin-left: 30px;">{{ ver[6] }}</strong><br>
-                Digitador:<strong style="margin-left: 30px;">{{ver[7]}}</strong><br>
-              Verificador: <strong style="margin-left: 30px;">{{ver[8]}}</strong><br>
-              PO:<strong style="margin-left: 70px;">{{ver[2]}}</strong></p>
+              <p style="font-size: 12px;">Recepción: {{ver[4]}}<br>No. De Verificación: {{id[0]}}<br> Proveedor:<strong style="margin-left: 30px;">{{ ver[6] }}</strong><br>
+                Fecha: {{fechaEmision[0]}}<br>
+                No. boleta: {{ver[3]}} <br>
+                No. PO: {{ver[2]}} 
+              </p>
             </div>
         </div>
         <div class="row justify-content-md-center" style="margin-left: -20px;" >
             <div class="col col-lg " >
               <table class=" table-borderless" style="border-spacing: 3px;">
                 <thead style="font-size: 11px;">
+                    <tr><th colspan="5" style="text-align: center;">Detalles</th>
+                    </tr>
                     <th>Material</th>
                     <th style="padding-left: 10px;">P.Bruto</th>
                     <th style="padding-left: 10px;">P.Tara</th>
@@ -81,7 +84,11 @@
             <div class="col col-lg" >
                 <table class=" table-borderless" style="border-spacing: 3px; font-size: 12px;">
                     <thead>
-                        <th>Materia</th>
+                        <tr>
+                            <th colspan="4" style="text-align: center;">Resumen</th>
+                        
+                        </tr>
+                        <th>Material</th>
                         <th style="padding-left: 10px;">P.Bruto</th>
                         <th style="padding-left: 10px;">P.Tara</th>
                         <th style="padding-left: 10px;">P.Neto</th>
