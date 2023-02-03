@@ -14,14 +14,14 @@
                             <div class="col-10">
                                 <div class="form-outline">
                                     <label class="form-label" for="form3Example3">Usuarios</label>
-                                    <input type="search" class="form-control" id="buscarUsu"
+                                    <input type="search" class="form-control" id="buscarUsu" style="text-transform: uppercase"
                                         placeholder="Buscar usuario..." aria-label="Buscar" />
                                 </div>
                             </div>
 
                             <div class="col mt-4 pt-2">
                                 <button type="button" disabled="disabled" id="agregar" class="btn btn-success ml-5"
-                                    id="boton-enviar" onclick="añadirProveedor()">
+                                    id="boton-enviar" onclick="añadirUsuario()">
                                     <i class="fas fa-calendar-check" style="margin-right: 5px"></i>Añadir
                                 </button>
                             </div>
@@ -40,6 +40,8 @@
         </div>
     </div>
 </div>
+<input id="launchAdd" type="hidden" data-bs-toggle="modal" data-bs-target="#usuarioDetalles">
+<div id="modalnuevoUsu"></div>
 <script>
     $(document).ready(function () {
         vacioUsuario();
@@ -59,11 +61,11 @@
             }
         });
     }
-    function añadirProveedor() {
+    function añadirUsuario() {
         Swal
             .fire({
-                title: $('#buscarprov').val(),
-                text: "¿Desea agregar?",
+                title: "Cédula: " + $('#buscarUsu').val(),
+                text: "No se encontró en la base de datos, ¿Desea agregar?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: "Sí, agregar",
@@ -72,17 +74,15 @@
             .then(resultado => {
                 if (resultado.value) {
                     $.ajax({
-                        url: "/insertarProveedor",
+                        url: "/insertarUsuarioNuevo",
                         type: "POST",
                         data: {
-                            proveedor: $('#buscarprov').val()
+                            cedula: $('#buscarUsu').val()
                         },
                         success: function (response) {
-                            if (response == "done") {
-                                $('#buscarprov').val("");
-                                vacioProv();
-
-                            }
+                            $('#modalnuevoUsu').html(response);
+                            $('#modalnuevoUsu').append(response.htmlresponse);
+                            $('#launchAdd').click();
                         },
                         error: function (error) { // console.log(error);
                         }
@@ -95,27 +95,28 @@
 
     }
     // Funcion para poner lista de resultados
-    var buscarProveedorControl = function () {
-        var material = $('#buscarprov').val();
+    var buscarUsuario = function () {
+        var material = $('#buscarUsu').val();
         if (material != "") {
             $.ajax({
-                url: "/buscarProveedorAdmin",
+                url: "/traerUsuarios",
                 type: "POST",
                 data: {
-                    proveedor: material
+                    usuario: material
 
                 },
                 success: function (response) {
                     if (response == "no") {
                         if (material != "") {
-                            $("#agregar").removeAttr('disabled')
+                            $("#agregar").removeAttr('disabled');
                         } else {
-                            $("#agregar").attr('disabled', 'true');
+                            $("#agregar").removeAttr('disabled');
                         }
 
                     } else {
-                        $('#tabla-prov').html(response);
-                        $('#tabla-prov').append(response.htmlresponse);
+                        $("#agregar").removeAttr('disabled');
+                        $('#tabla-usuario').html(response);
+                        $('#tabla-usuario').append(response.htmlresponse);
                     }
 
 
@@ -125,10 +126,10 @@
                 }
             });
         } else {
-            vacioProv();
-            $("#agregar").attr('disabled', 'true');
+            vacioUsuario();
+            $("#agregar").removeAttr('disabled');
         }
 
     }
-    $("#buscarprov").on('keyup', buscarProveedorControl);
+    $("#buscarUsu").on('keyup', buscarUsuario);
 </script>

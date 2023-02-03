@@ -182,6 +182,78 @@ def actProve():
         return "listo"
    else:
         return "No"
+#ACTUALIZAR USUARIOS
+@app.route('/actUsu', methods =["POST","GET"])
+def actUsu():
+   if request.method == "POST":
+        id = request.form['id']
+        nombre = request.form['nombre']
+        loginUser = request.form['loginUser']
+        cedula = request.form['cedula']
+        rol = request.form['rol']
+        cargo = request.form['cargo']
+        contra = request.form['contra']
+        flag = request.form['flag']
+        if flag == "nocontra":
+            cur = mysql.connection.cursor()
+            cur.execute("UPDATE tb_usuarios set NombreUsuario = %s, Cedula = %s, IdCargo = %s Where Id_Usuario = %s",(nombre,cedula,cargo,id))
+            proveedor = cur.fetchall()
+            mysql.connection.commit()
+            #MODIFICAMOS EL ROL
+            cur = mysql.connection.cursor()
+            cur.execute("UPDATE tb_credenciales set Usuarios = %s, IdRol = %s Where Id_Credenciales = %s",(loginUser,rol,id))
+            proveedor = cur.fetchall()
+            mysql.connection.commit()
+        elif flag == "contra":
+            contra = request.form['contra']
+            cur = mysql.connection.cursor()
+            cur.execute("UPDATE tb_usuarios set NombreUsuario = %s, Cedula = %s, IdCargo = %s Where Id_Usuario = %s",(nombre,cedula,cargo,id))
+            proveedor = cur.fetchall()
+            mysql.connection.commit()
+            #MODIFICAMOS EL ROL
+            haseho = generate_password_hash(contra)
+            cur = mysql.connection.cursor()
+            cur.execute("UPDATE tb_credenciales set Usuarios = %s,Contraseñas = %s, IdRol = %s Where Id_Credenciales = %s",(loginUser,haseho,rol,id))
+            proveedor = cur.fetchall()
+            mysql.connection.commit()
+
+        return "listo"
+   else:
+        return "No"
+
+#ADD USUARIOS
+@app.route('/addUsu', methods =["POST","GET"])
+def addUsu():
+   if request.method == "POST":
+        nombre = request.form['nombre']
+        loginUser = request.form['loginUser']
+        cedula = request.form['cedula']
+        rol = request.form['rol']
+        cargo = request.form['cargo']
+        contra = request.form['contra']
+        
+        contra = request.form['contra']
+        #CREAMOS PRIMERO LAS CREDENCIALES
+        haseho = generate_password_hash(contra)
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO tb_credenciales (Usuarios,Contraseñas,IdRol) VALUES (%s,%s,%s)",(loginUser,haseho,rol))
+        cred = cur.fetchall()
+        mysql.connection.commit()
+
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM tb_credenciales ORDER by Id_Credenciales DESC LIMIT 1")
+        cred = cur.fetchone()
+        mysql.connection.commit()
+        print(cred)
+        #AHORA CREAMOS EL USUARIO COMO TAL
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO tb_usuarios (NombreUsuario,Cedula,IdCargo,IdCredenciales,IdEstado) VALUES (%s,%s,%s,%s,1)",(nombre,cedula,cargo,cred[0]))
+        proveedor = cur.fetchall()
+        mysql.connection.commit()
+        print("listo")
+        return "listo"
+   else:
+        return "No"
 
 #ELIMINAMOS EL PROVEEDOR
 @app.route('/eliminarProveedor', methods =["POST","GET"])
@@ -268,13 +340,22 @@ def detalleUsuarios():
    if request.method == "POST":
         
         flagUSuario = request.form['flagUsuario']
-        nombre = request.form['nombre']
+        cedula = request.form['nombre']
         if flagUSuario == "editar":
             id = request.form['id']
             cur = mysql.connection.cursor()
-            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol inner join tb_estado as e on u.IdEstado = e.Id_Estado where Id_Usuario = %s",[id])
+            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado,u.Cedula,car.NombreCargo FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on u.Id_Usuario = r.Id_Rol inner join tb_estado as e on u.IdEstado = e.Id_Estado inner join tb_cargo as car on u.IdCargo = car.Id_Cargo where Id_Usuario = %s",[id])
             usuario = cur.fetchall()
-            return render_template('modal/usuarionuevo-modal.html',flagUSuario = flagUSuario, info = usuario)
+            
+        #TRAEMOS LOS CARGOS
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_cargo")
+        cargos = cur.fetchall()
+        #TRAEMOS LOS ROLES
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_roles")
+        roles = cur.fetchall()
+        return render_template('modal/usuarionuevo-modal.html',flagUSuario = flagUSuario, info = usuario,cargos = cargos, roles = roles)
 
 #LISTA DE PROVEEDORES TABLA
 @app.route('/listaProveedores', methods =["POST","GET"])
@@ -680,19 +761,18 @@ def traerProveedores():
 @app.route('/traerUsuarios', methods =["POST","GET"])
 def traerUsuarios():
     if request.method == "POST":
-        usuario = request.form['usuario']
-        if usuario == "":
+        cedula = request.form['usuario']
+        if cedula == "":
             #SELECCIONAR EL ID DEL PROVEEDOR
             cur = mysql.connection.cursor()
-            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol inner join tb_estado as e on u.IdEstado = e.Id_Estado")
+            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado,u.Cedula,car.NombreCargo FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol  inner join tb_estado as e on u.IdEstado = e.Id_Estado inner join tb_cargo as car on u.IdCargo = car.Id_Cargo")
             proveedores = cur.fetchall()
         else:
             cur = mysql.connection.cursor()
-            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol inner join tb_estado as e on u.IdEstado = e.Id_Estado where u.NombreUSuario like %s",[usuario+'%'])
+            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado,u.Cedula,car.NombreCargo FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol  inner join tb_estado as e on u.IdEstado = e.Id_Estado inner join tb_cargo as car on u.IdCargo = car.Id_Cargo where u.Cedula like %s",[cedula+'%'])
             proveedores = cur.fetchall()
 
-
-        print(proveedores)
+            print(proveedores)
         return render_template('tablas/tabla-usuario.html',prov = proveedores)
 
 #INSERTAMOS LOS PESOS DEL MATERIALE SELECCIONADO
@@ -708,6 +788,46 @@ def insertarProveedor():
         return "done"
     else:
         return "No"
+
+#INSERTAMOS EL USUARIO
+@app.route('/insertarUsuario', methods =["POST","GET"])
+def insertarUsuario():
+    if request.method == "POST":
+        flagUSuario = "nuevo"
+        cedula = request.form['cedula']
+        if flagUSuario == "editar":
+            id = request.form['id']
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado,u.Cedula,car.NombreCargo FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on u.Id_Usuario = r.Id_Rol inner join tb_estado as e on u.IdEstado = e.Id_Estado inner join tb_cargo as car on u.IdCargo = car.Id_Cargo where Id_Usuario = %s",[id])
+            usuario = cur.fetchall()
+            
+        #TRAEMOS LOS CARGOS
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_cargo")
+        cargos = cur.fetchall()
+        #TRAEMOS LOS ROLES
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_roles")
+        roles = cur.fetchall()
+        return render_template('modal/usuarionuevo-modal.html',flagUSuario = flagUSuario, info = cedula,cargos = cargos, roles = roles)
+
+#INSERTAMOS EL USUARIO NUEVO
+@app.route('/insertarUsuarioNuevo', methods =["POST","GET"])
+def insertarUsuarioNuevo():
+    if request.method == "POST":
+        flagUSuario = "nuevo"
+        cedula = request.form['cedula']
+         
+        #TRAEMOS LOS CARGOS
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_cargo")
+        cargos = cur.fetchall()
+        #TRAEMOS LOS ROLES
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_roles")
+        roles = cur.fetchall()
+        print(cedula)
+        return render_template('modal/usuarionuevo-modal.html',flagUSuario = flagUSuario, info = cedula,cargos = cargos, roles = roles)
 
 
 #DESLOGUEO

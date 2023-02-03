@@ -9,7 +9,8 @@
             <th style="width: 450px">Id Usuario</th>
             <th>Nombre</th>
             <th>Usuario</th>
-
+            <th>Cedula</th>
+            <th>Cargo</th>
             <th>Rol</th>
             <th>Estado</th>
             <th></th>
@@ -28,6 +29,14 @@
                 <td align="center" style="padding-right: 100px">
                     {%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
                 </td>
+                <!-- viene el rol -->
+                <td align="center" style="padding-right: 100px">
+                    {%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>
+                </td>
+                
+                <td align="center" style="padding-right: 100px">
+                    {%if i[6] == None%}--{%else%}{{i[6]}}{%endif%}</td>
+                    <!--  cargo -->
                 <td align="center" style="padding-right: 100px">
                     {%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
                 </td>

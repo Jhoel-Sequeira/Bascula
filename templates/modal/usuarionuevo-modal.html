@@ -1,5 +1,7 @@
+{%if flagUSuario == 'editar'%}
 <div class="modal fade" id="usuarioDetalles" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
+        {%for i in info%}
         <div class="modal-content" style="background-color: #E4E9F7;">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Información del Usuario</h5>
@@ -7,6 +9,7 @@
             </div>
             <div
                 class="modal-body" style="height: clac(100vh -300px);">
+                <input type="hidden" name="id" id="id" value="{{i[0]}}">
                 <!--  -->
                 <div class="tab-pane fade show active mt-3 p-3 bg-light" style="height: 900px;" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <div class="form-group" id="detalles">
@@ -15,7 +18,128 @@
                             <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label" for="proveedor">Nombre del Empleado</label>
-                                    <input type="text" id="nombres" name="nombres" placeholder="Ingrese el nombre..." required="required" class="form-control"  value=""/>
+                                    <input type="text" id="nombres" name="nombres" style="text-transform:uppercase;" onkeyup="this.value=this.value.toUpperCase()" style="text-transform:uppercase;" value="{{i[1]}}" placeholder="Ingrese el nombre..." required="required" class="form-control"  value=""/>
+                                    <label id="mensaje_error_input" class="control-label col-md-12 text-danger"
+                                style="display: block;">Las
+                                constraseñas no coinciden</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-5">
+                                <div class="form-outline">
+                                    <label class="form-label" for="proveedor">Usuario</label>
+                                    <input type="text" id="loginUser" name="loginUser" value="{{i[2]}}" placeholder="Ingrese el usuario..." required="required" class="form-control"  value=""/>
+                                    <label id="mensaje_error_usu" class="control-label col-md-12 text-danger" style="display: block;">El
+                                                                    usuario ya existe</label>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="form-outline">
+                                    <label class="form-label" for="proveedor">Cédula</label>
+                                    <input type="text" id="cedula" name="cedula" value="{{i[5]}}" placeholder="Ingrese la cédula..." required="required" class="form-control"  value=""/>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <div class="form-outline">
+                                    <label class="form-label" for="proveedor">Rol</label>
+                                    <select class="form-select" id="rol" aria-label="Default select example">
+                                        
+                                        {% for rol in roles %}
+                                        {%if rol[1] == i[3] %}
+                                        <option selected="selected" value="{{ rol[0] }}">{{ i[3] }}</option>
+                                        {%else%}
+                                        <option  value="{{ rol[0] }}">{{ rol[1] }}</option>
+                                        {%endif%}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="col-5">
+                                <div class="form-outline">
+                                    <label class="form-label" for="proveedor">Cargo {{i[6]}}</label>
+                                    <select class="form-select" id="cargo" aria-label="Default select example">
+                                        
+                                        {% for cargo in cargos %}
+                                        {%if cargo[1] == i[6] %}
+                                        <option selected="selected" value="{{ cargo[0] }}">{{ i[6] }}</option>
+                                        {%else%}
+                                        <option  value="{{ cargo[0] }}">{{ cargo[1] }}</option>
+                                        {%endif%}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="okis" >
+                            <div class="row mb-4 mt-2">
+                                <label for=""><input type="checkbox" name="cambio"> Cambiar Credenciales</label>
+                            </div>
+                            <div class="row mt-1" id="credenciales">
+                                <div class="col-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="form3Example1">Contraseña</label>
+                                        <input type="password" id="contra" name="contra" placeholder="Ingrese la contraseña..." required="required" class="form-control" value=""/>
+                                        <label id="mensaje_error" class="control-label col-md-12 text-danger" style="display: block;">Las
+                                                                                                                    constraseñas no coinciden</label>
+                                        <label id="passstrength" class="control-label col-md-12 text-danger" style="display: block;">Las
+                                                                                                                    constraseñas no coinciden</label>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="form3Example1">Contraseña</label>
+                                        <input type="password" id="contra1" name="contra1" placeholder="Repita la contraseña..." required="required" class="form-control" value=""/>
+                                        </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-12">
+                                <button type="button" id="agregar" class="btn btn-success col-12" id="boton-enviar" onclick="actualizar()">
+                                    <i class="fas fa-calendar-check" style="margin-right: 5px"></i>Actualizar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- INICIO DE LA FUNCIONALIDAD DE LOS BOTONES CON JQUERY  DE LA PRIMERA PANTALLA-->
+
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+{%elif flagUSuario == 'nuevo'%}
+<div class="modal fade" id="usuarioDetalles" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
+        {%for i in info%}
+        <div class="modal-content" style="background-color: #E4E9F7;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Información del Usuario</h5>
+                <button type="button" class="btn-close" onclick="cerrar()"></button>
+            </div>
+            <div
+                class="modal-body" style="height: clac(100vh -300px);">
+                <input type="hidden" name="id" id="id" value="">
+                <!--  -->
+                <div class="tab-pane fade show active mt-3 p-3 bg-light" style="height: 900px;" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="form-group" id="detalles">
+
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <div class="form-outline">
+                                    <label class="form-label" for="proveedor">Nombre del Empleado</label>
+                                    <input type="text" id="nombres" name="nombres" style="text-transform:uppercase;" onkeyup="this.value=this.value.toUpperCase()" style="text-transform:uppercase;" placeholder="Ingrese el nombre..." required="required" class="form-control"  value=""/>
                                     <label id="mensaje_error_input" class="control-label col-md-12 text-danger"
                                 style="display: block;">Las
                                 constraseñas no coinciden</label>
@@ -31,12 +155,24 @@
                                                                     usuario ya existe</label>
                                 </div>
                             </div>
+                            <div class="col-5">
+                                <div class="form-outline">
+                                    <label class="form-label" for="proveedor">Cédula</label>
+                                    <input type="text" id="cedula" name="cedula" value="{{info}}" placeholder="Ingrese la cédula..." required="required" class="form-control"  value=""/>
+                                    
+                                </div>
+                            </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label" for="proveedor">Rol</label>
-                                    <input type="text" id="proveedor" name="proveedor" placeholder="Ingrese el nombre..." required="required" class="form-control"  value=""/>
+                                    <select class="form-select" id="rol" aria-label="Default select example">
+                                        
+                                        {% for rol in roles %}
+                                        <option  value="{{ rol[0] }}">{{ rol[1] }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
 
                             </div>
@@ -44,13 +180,17 @@
                             <div class="col-5">
                                 <div class="form-outline">
                                     <label class="form-label" for="proveedor">Cargo</label>
-                                    <input type="text" id="proveedor" name="proveedor" placeholder="Ingrese el usuario..." required="required" class="form-control"  value=""/>
-
+                                    <select class="form-select" id="cargo" aria-label="Default select example">
+                                        
+                                        {% for cargo in cargos %}
+                                        <option  value="{{ cargo[0] }}">{{ cargo[1] }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                         </div>
-                        <div id="form">
-                            <div class="row mt-2">
+                        <div id="okis" >
+                            <div class="row mt-1">
                                 <div class="col-4">
                                     <div class="form-outline">
                                         <label class="form-label" for="form3Example1">Contraseña</label>
@@ -65,24 +205,17 @@
                                     <div class="form-outline">
                                         <label class="form-label" for="form3Example1">Contraseña</label>
                                         <input type="password" id="contra1" name="contra1" placeholder="Repita la contraseña..." required="required" class="form-control" value=""/>
-                                        <label id="mensaje_error" class="control-label col-md-12 text-danger" style="display: block;">Las
-                                                                                                                    constraseñas no coinciden</label>
-                                        <label id="passstrength" class="control-label col-md-12 text-danger" style="display: block;">Las
-                                                                                                                    constraseñas no coinciden</label>
-                                    </div>
-                                </div>
-
-                                <div class="col mt-4 pt-2">
-
-                                    <button type="button" class="btn btn-link border-light" onclick="mostrarDetalle()">
-                                        <i class="fa-sharp fa-solid fa-circle-info"></i>
-                                    </button>
-                                    <button type="button" disabled id="agregar" class="btn btn-success ml-5" id="boton-enviar" onclick="añadir()">
-                                        <i class="fas fa-calendar-check" style="margin-right: 5px"></i>Añadir
-                                    </button>
+                                        </div>
                                 </div>
                             </div>
 
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-12">
+                                <button type="button" id="agregar" class="btn btn-success col-12" id="boton-enviar" onclick="agregar()">
+                                    <i class="fas fa-calendar-check" style="margin-right: 5px"></i>Agregar
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -93,11 +226,30 @@
             </div>
             <div class="modal-footer"></div>
         </div>
+        {%endfor%}
     </div>
 </div>
+{%endif%}
 <script>
+    $('#okis input[name=cambio]').on('click', function () {
+            if ($(this).is(':checked')) {
+                // Hacer algo si el checkbox ha sido seleccionado
+                $('#credenciales').show();
+                $('#usuario').show();
+                $('#contra').show();
+                $('#contra1').show();
+                $('#usuario').attr("required", true);
+                $('#contra').attr("required", true);
+                $('#contra1').attr("required", true);
+            }else{
+                $('#credenciales').hide();
+            }
+    });
     $(document).ready(function () {
+        $('#credenciales').hide();
         $('#mensaje_error_usu').hide();
+        $('#mensaje_error_input').hide();
+        $('#mensaje_error').hide();
         $('#passstrength').hide();
         $('#mensaje_error_input_a').hide();
     });
@@ -134,4 +286,152 @@
         });
     }
     $("#usuario").on('keyup', buscarUsuario);
+
+    var cambioDePass = function () {
+      var cont = $('#contra').val()
+      var cont2 = $('#contra1').val()
+      if (cont == '') {
+        $('#mensaje_error').hide()
+        $('#passstrength').hide()
+      } else if (cont == cont2) {
+        $('#mensaje_error').hide()
+        $('#mensaje_error').attr('class', 'control-label col-md-12 text-success')
+        $('#mensaje_error').show()
+        $('#passstrength').show()
+        $('#mensaje_error').html('Las constraseñas si coinciden')
+        var strongRegex = new RegExp(
+          '^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$',
+          'g',
+        )
+        var mediumRegex = new RegExp(
+          '^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$',
+          'g',
+        )
+        var enoughRegex = new RegExp('(?=.{6,}).*', 'g')
+        if (false == enoughRegex.test(cont)) {
+          $('#passstrength').html('Más caracteres.')
+        } else if (strongRegex.test(cont)) {
+          $('#passstrength').className = 'ok'
+          $('#passstrength').attr('class', 'control-label col-md-12 text-success')
+          $('#passstrength').html(' Contraseña es fuerte!')
+          $('#passstrength').show()
+          $('#boton-enviar').removeAttr('disabled')
+        } else if (mediumRegex.test(cont)) {
+          $('#passstrength').className = 'alert'
+          $('#passstrength').attr('class', 'control-label col-md-12 text-warning')
+          $('#passstrength').html('Contraseña es media!')
+          $('#passstrength').show()
+        } else {
+          $('#passstrength').className = 'error'
+          $('#passstrength').show()
+          $('#passstrength').attr('class', 'control-label col-md-12 text-danger')
+          $('#passstrength').html('Contraseña es débil!')
+        }
+        // $('#boton-enviar').removeAttr("disabled");
+      } else {
+        $('#mensaje_error').html('Las constraseñas no coinciden')
+        $('#mensaje_error').attr('class', 'control-label col-md-12 text-danger')
+        $('#mensaje_error').show()
+      }
+    }
+  
+    $('#contra').on('keyup', cambioDePass)
+    $('#contra1').on('keyup', cambioDePass)
+
+    function actualizar() {
+        if ($('#okis input[name=cambio]').is(':checked')) {
+            $.ajax({
+                url: "/actUsu",
+                type: "POST",
+                data: {
+                    id: $('#id').val(),
+                    flag: "contra",
+                    nombre: $('#nombres').val(),
+                    loginUser: $('#loginUser').val(),
+                    cedula: $('#cedula').val(),
+                    rol: $("#rol option:selected").val(),
+                    cargo: $("#cargo option:selected").val(),
+                    contra: $('#contra').val(),
+                    
+
+                },
+                success: function (response) {
+
+
+                    Swal.fire({icon: 'success', title: 'Datos Actuzalizados', text: 'Se actualizaron los datos.'}).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#launchdetallemodal').click();
+                            vacioUsuario();
+                        }
+                    })
+
+                },
+                error: function (error) { // console.log(error);
+                }
+            });
+        }else{
+            $.ajax({
+                url: "/actUsu",
+                type: "POST",
+                data: {
+                    id: $('#id').val(),
+                    flag: "nocontra",
+                    nombre: $('#nombres').val(),
+                    loginUser: $('#loginUser').val(),
+                    cedula: $('#cedula').val(),
+                    rol: $("#rol option:selected").val(),
+                    cargo: $("#cargo option:selected").val(),
+                    contra: ""
+                    
+
+                },
+                success: function (response) {
+
+
+                    Swal.fire({icon: 'success', title: 'Datos Actuzalizados', text: 'Se actualizaron los datos.'}).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#launchdetallemodal').click();
+                            vacioUsuario();
+                        }
+                    })
+
+                },
+                error: function (error) { // console.log(error);
+                }
+            });
+        }
+            
+        }
+        // ESCRIBIR EL CODIGO PARA AGREGAR USUARIOS
+        function agregar() {
+            $.ajax({
+                url: "/addUsu",
+                type: "POST",
+                data: {
+                    nombre: $('#nombres').val(),
+                    loginUser: $('#loginUser').val(),
+                    cedula: $('#cedula').val(),
+                    rol: $("#rol option:selected").val(),
+                    cargo: $("#cargo option:selected").val(),
+                    contra: $('#contra').val(),
+                    
+
+                },
+                success: function (response) {
+
+
+                    Swal.fire({icon: 'success', title: 'Datos Ingresados', text: 'Se agregaron los datos.'}).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#launchdetallemodal').click();
+                            $('#buscarUsu').val("");
+                            vacioUsuario();
+                        }
+                    })
+
+                },
+                error: function (error) { // console.log(error);
+                }
+            });
+        }
+            
 </script>

@@ -92,7 +92,6 @@
         $("#usuario").on('keyup', buscarUsuario);
 
         function actualizar() {
-            alert($('#nombresProv').val())
             $.ajax({
                 url: "/actProve",
                 type: "POST",
