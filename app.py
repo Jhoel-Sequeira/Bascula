@@ -699,10 +699,11 @@ def traerUsuarios():
 @app.route('/insertarProveedor', methods =["POST","GET"])
 def insertarProveedor():
     if request.method == "POST":
+        cedula = request.form['cedula']
         proveedor = request.form['proveedor']
         #INSERTAMOS EL NUEVO PROVEEDOR EN LA BASE
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO tb_proveedor (NombreProveedor,IdEstado) VALUES (%s,1)",[proveedor])
+        cur.execute("INSERT INTO tb_proveedor (NombreProveedor,Cedula,IdEstado) VALUES (%s,%s,1)",(proveedor.upper(),cedula))
         mysql.connection.commit()
         return "done"
     else:
