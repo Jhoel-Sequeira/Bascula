@@ -105,6 +105,7 @@ def home():
     Proveedores = cur.fetchall()
     #CONSULTA PARA LOS PUNTOS DE COMPRA
     cur = mysql.connection.cursor()
+    
     cur.execute("select * from tb_puntocompra Where IdEstado = 1")
     punto = cur.fetchall()
     #CONSULTA PARA LOS MATERIALES
