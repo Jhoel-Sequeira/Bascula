@@ -744,8 +744,9 @@ def valorTablaAdmin():
 
 @app.route('/ajustes')
 def ajustes():
-   
+    
     return render_template('ajustes.html')
+
 
 # APARTADO DE VER PROVEEDORES
 @app.route('/verProveedores', methods =["POST","GET"])
