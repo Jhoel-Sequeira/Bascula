@@ -19,53 +19,56 @@
     </thead>
     <tbody>
         {%for i in prov%}
-            <tr>
-                <td>
-                    {%if i[0] == None%}--{%else%}{{i[0]}}{%endif%}</td>
-                </td>
-                <td align="center" style="padding-right: 100px">
-                    {%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
-                </td>
-                <td align="center" style="padding-right: 100px">
-                    {%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
-                </td>
-                <!-- viene el rol -->
-                <td align="center" style="padding-right: 100px">
-                    {%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>
-                </td>
-                
-                <td align="center" style="padding-right: 100px">
-                    {%if i[6] == None%}--{%else%}{{i[6]}}{%endif%}</td>
-                    <!--  cargo -->
-                <td align="center" style="padding-right: 100px">
-                    {%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
-                </td>
-                <td align="center" style="padding-right: 100px">
-                    {%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
+        <tr>
+            <td>
+                {%if i[0] == None%}--{%else%}{{i[0]}}{%endif%}</td>
+            </td>
+            <td align="center" style="padding-right: 100px">
+                {%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
+            </td>
+            <td align="center" style="padding-right: 100px">
+                {%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
+            </td>
+            <!-- viene el rol -->
+            <td align="center" style="padding-right: 100px">
+                {%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>
+            </td>
 
-                    {%if i[4] == 'Inactivo'%}
-                        <td>
-                            <button type="button" class="btn btn-success" value="{{i[0]}}" id="habilitarUsuario" name="habilitarUsuario">
-                                <i class="fas fa-power-off"></i>
-                            </button>
-                        </td>
-                        {%else%}
-                        <td>
-                            <button type="button" class="btn btn-danger" value="{{i[0]}}" id="inhabilitarusuario" name="inhabilitarusuario">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                        {%endif%}
-                        <td>
-                            <button type="button" class="btn btn-primary" value="{{i[0]}}" id="editarUsuario" name="editarUsuario">
-                                <i class="fas fa-user-edit"></i>
-                            </button>
-                        </td>
+            <td align="center" style="padding-right: 100px">
+                {%if i[6] == None%}--{%else%}{{i[6]}}{%endif%}</td>
+            <!--  cargo -->
+            <td align="center" style="padding-right: 100px">
+                {%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
+            </td>
+            <td align="center" style="padding-right: 100px">
+                {%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
 
-                    </tr>
-                    {%endfor%}</td>
-            </tr>
-        </tbody>
+            {%if i[4] == 'Inactivo'%}
+            <td>
+                <button type="button" class="btn btn-success" value="{{i[0]}}" id="habilitarUsuario"
+                    name="habilitarUsuario">
+                    <i class="fas fa-power-off"></i>
+                </button>
+            </td>
+            {%else%}
+            <td>
+                <button type="button" class="btn btn-danger" value="{{i[0]}}" id="inhabilitarusuario"
+                    name="inhabilitarusuario">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+            {%endif%}
+            <td>
+                <button type="button" class="btn btn-primary" value="{{i[0]}}" id="editarUsuario" name="editarUsuario">
+                    <i class="fas fa-user-edit"></i>
+                </button>
+            </td>
+
+        </tr>
+        </td>
+        </tr>
+        {%endfor%}
+    </tbody>
     </tbody>
 </table>
 <input id="launch3" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacion">
@@ -79,6 +82,7 @@
 
     $("#tabla-usuario1 button[name=editarUsuario]").click(function () {
         id = $(this).val();
+
         $.ajax({
             url: "/detalleUsuarios",
             type: "POST",
@@ -105,7 +109,7 @@
             text: "El usuario se inhabilitará",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: "Sí, aceptar",
+            confirmButtonText: "Aceptar",
             cancelButtonText: "Cancelar"
         }).then(resultado => {
             if (resultado.value) {
@@ -131,19 +135,34 @@
     });
     $("#tabla-usuario1 button[name=habilitarUsuario]").click(function () {
         id = $(this).val();
-        $.ajax({
-            url: "/habilitarUsuario",
-            type: "POST",
-            data: {
-                id: id
-            },
-            success: function (response) {
-                if (response == "done") {
-                    vacioUsuario();
+        Swal.fire({
+            title: "Usuario habilitado",
+            text: "El usuario se habilitó",
+            icon: 'success',
+            showCancelButton: true,
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar"
+        }).then(resultado => {
 
-                }
-            },
-            error: function (error) { // console.log(error);
+            if (resultado.value) {
+                id = $(this).val();
+                $.ajax({
+                    url: "/habilitarUsuario",
+                    type: "POST",
+                    data: {
+                        id: id
+                    },
+                    success: function (response) {
+                        if (response == "done") {
+                            vacioUsuario();
+
+                        }
+                    },
+                    error: function (error) { // console.log(error);
+                    }
+                });
+            } else { // Dijeron que no
+                console.log("*NO se elimina la venta*");
             }
         });
     });

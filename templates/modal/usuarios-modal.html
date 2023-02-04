@@ -15,13 +15,13 @@
                                 <div class="form-outline">
                                     <label class="form-label" for="form3Example3">Usuarios</label>
                                     <input type="search" class="form-control" id="buscarUsu" style="text-transform: uppercase"
-                                        placeholder="Buscar usuario..." aria-label="Buscar" />
+                                        placeholder="Cédula Usuario" aria-label="Buscar" />
                                 </div>
                             </div>
 
                             <div class="col mt-4 pt-2">
-                                <button type="button" disabled="disabled" id="agregar" class="btn btn-success ml-5"
-                                    id="boton-enviar" onclick="añadirUsuario()">
+                                <button type="button" id="agregar" class="btn btn-success ml-5"
+                                    id="boton-enviar" onclick="añadirUsuario()" disabled="disabled">
                                     <i class="fas fa-calendar-check" style="margin-right: 5px"></i>Añadir
                                 </button>
                             </div>
@@ -68,7 +68,7 @@
                 text: "No se encontró en la base de datos, ¿Desea agregar?",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: "Sí, agregar",
+                confirmButtonText: "Agregar",
                 cancelButtonText: "Cancelar",
             })
             .then(resultado => {
@@ -99,7 +99,7 @@
         var material = $('#buscarUsu').val();
         if (material != "") {
             $.ajax({
-                url: "/traerUsuarios",
+                url: "/buscarUsuariosAdmin",
                 type: "POST",
                 data: {
                     usuario: material
@@ -108,15 +108,15 @@
                 success: function (response) {
                     if (response == "no") {
                         if (material != "") {
-                            $("#agregar").removeAttr('disabled');
+                            $("#agregar").removeAttr("disabled");
                         } else {
-                            $("#agregar").removeAttr('disabled');
+                            $("#agregar").attr("disabled", "true");
                         }
 
                     } else {
-                        $("#agregar").removeAttr('disabled');
                         $('#tabla-usuario').html(response);
                         $('#tabla-usuario').append(response.htmlresponse);
+                        
                     }
 
 
@@ -127,7 +127,7 @@
             });
         } else {
             vacioUsuario();
-            $("#agregar").removeAttr('disabled');
+            $("#agregar").attr("disabled", "true");
         }
 
     }

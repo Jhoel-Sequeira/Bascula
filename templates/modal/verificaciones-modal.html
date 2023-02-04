@@ -6,7 +6,7 @@
         <div class="modal-content" style="background-color: #e4e9f7">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">
-                    Detalle de verificacion
+                    Detalle de verificación
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                     onclick="cargarLista()"></button>
@@ -19,7 +19,7 @@
                             <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label" for="proveedor"><strong>Proveedor </strong></label>
-                                    <input type="text" id="proveedor" name="proveedor" placeholder="PO"
+                                    <input type="text" id="proveedor" name="proveedor" placeholder="cédula proveedor"
                                         required="required" class="form-control" disabled value="{{ verifi[6] }}" />
                                 </div>
                             </div>
@@ -289,7 +289,7 @@
                                         icon: "success",
                                         title: "Exito",
                                         confirmButtonText: "Ok",
-                                        text: "Verificacion registrada exitosamente",
+                                        text: "Verificación registrada exitosamente",
                                     }).then((result) => {
                                         /* Read more about isConfirmed, isDenied below */
                                         if (result.isConfirmed) {
@@ -400,7 +400,7 @@
                                         icon: "success",
                                         title: "Exito",
                                         confirmButtonText: "Ok",
-                                        text: "Verificacion registrada exitosamente",
+                                        text: "Verificación registrada exitosamente",
                                     }).then((result) => {
                                         /* Read more about isConfirmed, isDenied below */
                                         if (result.isConfirmed) {
@@ -538,7 +538,7 @@
                         } else if (bruto < 0 || tara < 0 || destare < 0) {
                             Swal.fire({
                                 icon: "error",
-                                title: "Datos Invalidos",
+                                title: "Datos Inválidos",
                                 confirmButtonText: "Ok",
                                 text: "El valor de los pesos es menor a 0.",
                             }).then((result) => {
@@ -549,7 +549,7 @@
                         } else if (tara >= bruto || tara <= destare) {
                             Swal.fire({
                                 icon: "error",
-                                title: "Datos Invalidos",
+                                title: "Datos Inválidos",
                                 confirmButtonText: "Ok",
                                 text: "El valor de la tara es invalido.",
                             }).then((result) => {
@@ -560,7 +560,7 @@
                         } else if (destare >= bruto - tara) {
                             Swal.fire({
                                 icon: "error",
-                                title: "Datos Invalidos",
+                                title: "Datos Inválidos",
                                 confirmButtonText: "Ok",
                                 text: "El valor del destare no puede ser mayor o igual a la resta P.bruto - P.tara.",
                             }).then((result) => {

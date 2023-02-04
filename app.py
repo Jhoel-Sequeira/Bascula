@@ -132,7 +132,11 @@ def buscarProveedor():
         cur.execute("select * from tb_proveedor Where IdEstado = 1 and Cedula like %s",[proveedor+'%'])
         proveedores = cur.fetchall()
         print(proveedores)
-        return render_template('otros/proveedor-busqueda.html',proveedores = proveedores)
+        if proveedores:
+
+            return render_template('otros/proveedor-busqueda.html',proveedores = proveedores)
+        else:
+            return "no"
    else:
         return "No"
 
@@ -147,6 +151,22 @@ def buscarProveedorAdmin():
         if proveedores :
 
             return render_template('tablas/tabla-proveedornuevo.html',prov = proveedores)
+        else:
+            return "no"
+   else:
+        return "No"
+
+#BUSCAR LOS USUARIOS PARA VER SI EXISTEN O NO EXISTEN
+@app.route('/buscarUsuariosAdmin', methods =["POST","GET"])
+def buscarUsuariosAdmin():
+   if request.method == "POST":
+        cedula = request.form['usuario']
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado,u.Cedula,car.NombreCargo FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol  inner join tb_estado as e on u.IdEstado = e.Id_Estado inner join tb_cargo as car on u.IdCargo = car.Id_Cargo where u.Cedula like %s",[cedula+'%'])
+        proveedores = cur.fetchall()
+        if proveedores :
+
+            return render_template('tablas/tabla-usuario.html',prov = proveedores)
         else:
             return "no"
    else:
@@ -345,8 +365,9 @@ def detalleUsuarios():
         if flagUSuario == "editar":
             id = request.form['id']
             cur = mysql.connection.cursor()
-            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado,u.Cedula,car.NombreCargo FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on u.Id_Usuario = r.Id_Rol inner join tb_estado as e on u.IdEstado = e.Id_Estado inner join tb_cargo as car on u.IdCargo = car.Id_Cargo where Id_Usuario = %s",[id])
+            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado,u.Cedula,car.NombreCargo FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol inner join tb_estado as e on u.IdEstado = e.Id_Estado inner join tb_cargo as car on u.IdCargo = car.Id_Cargo where u.Id_Usuario = %s",[id])
             usuario = cur.fetchall()
+            
             
         #TRAEMOS LOS CARGOS
         cur = mysql.connection.cursor()
@@ -773,7 +794,6 @@ def traerUsuarios():
             cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado,u.Cedula,car.NombreCargo FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol  inner join tb_estado as e on u.IdEstado = e.Id_Estado inner join tb_cargo as car on u.IdCargo = car.Id_Cargo where u.Cedula like %s",[cedula+'%'])
             proveedores = cur.fetchall()
 
-            print(proveedores)
         return render_template('tablas/tabla-usuario.html',prov = proveedores)
 
 #INSERTAMOS LOS PESOS DEL MATERIALE SELECCIONADO

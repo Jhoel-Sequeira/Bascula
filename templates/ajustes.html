@@ -37,6 +37,7 @@ encabezado %}
                     </a>
                 </div>
             </div>
+            {% endif %}{% endif %}
             <br>
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
@@ -49,14 +50,15 @@ encabezado %}
                         <br>
                     </div>
                     <div class="icon mr-1">
-                        <i class="fa-solid fa-users"></i>
+                        <i class="fa-solid fa-calendar-check delgado"></i>
                     </div>
-                    <a style="cursor: pointer;" onclick="verUsuarios()" class="card-footer">
-                        Usuarios
+                    <a href="/home" class="card-footer">
+                        Verificacion
                     </a>
                 </div>
             </div>
             <br>
+            {% if session.user %} {% if session.userrole == 1%}
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
                 <div class="card cartas" style="padding: 5px; background-color: #b4583f">
@@ -76,7 +78,7 @@ encabezado %}
                 </div>
             </div>
             <br>
-            {% endif %}{% endif %}
+            
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
                 <div class="card cartas" style="padding: 5px; background-color: #b4583f">
@@ -88,13 +90,17 @@ encabezado %}
                         <br>
                     </div>
                     <div class="icon mr-1">
-                        <i class="fa-solid fa-calendar-check delgado"></i>
+                        <i class="fa-solid fa-users"></i>
                     </div>
-                    <a href="/home" class="card-footer">
-                        Verificacion
+                    <a style="cursor: pointer;" onclick="verUsuarios()" class="card-footer">
+                        Usuarios
                     </a>
                 </div>
             </div>
+            {% endif %}{% endif %}
+            
+            
+            
 
         </div>
     </div>
