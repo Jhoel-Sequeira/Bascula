@@ -123,6 +123,22 @@
                         if (response == "done") {
                             vacioUsuario();
 
+                        } else if (response == "no") {
+                            Swal
+                                .fire({
+                                    title: "Error!!!",
+                                    text: "No se puede eliminar usted mismo",
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: "Aceptar"
+                                })
+                                .then(resultado => {
+                                    if (resultado.value) {
+
+                                    }
+                                });
+
+
                         }
                     },
                     error: function (error) { // console.log(error);

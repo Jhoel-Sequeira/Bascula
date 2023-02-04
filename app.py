@@ -295,12 +295,15 @@ def eliminarProveedor():
 def eliminarUsuario():
    if request.method == "POST":
         id = request.form['id']
-        cur = mysql.connection.cursor()
-        cur.execute("Update tb_usuarios set IdEstado = 2 Where Id_Usuario = %s",[id])
+        if int(id) == int(session['userId']):
+            return "no"
+        else:
+            cur = mysql.connection.cursor()
+            cur.execute("Update tb_usuarios set IdEstado = 2 Where Id_Usuario = %s",[id])
+            
+            mysql.connection.commit()
         
-        mysql.connection.commit()
-        
-        return "done"
+            return "done"
    else:
         return "No"
 

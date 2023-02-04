@@ -103,7 +103,7 @@
                                     <div class="form-outline">
                                         <label class="form-label" for="form3Example1"><strong>PO</strong></label>
                                         {% if verifi[2] %}
-                                        <input type="text" id="po" name="nombre" disabled placeholder="PO"
+                                        <input type="text" id="po" name="nombre" style="text-transform:uppercase;" onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="PO"
                                             required="required" class="form-control" value="{{ verifi[2] }}" />
                                         {% else %}
                                         <input type="text" id="po" name="nombre" placeholder="PO" required="required"
@@ -125,7 +125,7 @@
                                     <div class="form-outline">
                                         <label class="form-label" for="form3Example2"><strong>No Boleta</strong></label>
                                         {% if verifi[3] %}
-                                        <input type="text" id="nboleta" name="nboleta" disabled placeholder="PO"
+                                        <input type="text" id="nboleta" name="nboleta" style="text-transform:uppercase;" onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="PO"
                                             required="required" class="form-control" value="{{ verifi[3] }}" />
                                         {% else %}
                                         <input type="text" id="nboleta" name="nboleta" required="required"
@@ -287,7 +287,7 @@
                                 success: function (response) {
                                     Swal.fire({
                                         icon: "success",
-                                        title: "Exito",
+                                        title: "Éxito",
                                         confirmButtonText: "Ok",
                                         text: "Verificación registrada exitosamente",
                                     }).then((result) => {
@@ -398,7 +398,7 @@
                                 success: function (response) {
                                     Swal.fire({
                                         icon: "success",
-                                        title: "Exito",
+                                        title: "Éxito",
                                         confirmButtonText: "Ok",
                                         text: "Verificación registrada exitosamente",
                                     }).then((result) => {
