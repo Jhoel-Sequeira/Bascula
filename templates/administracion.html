@@ -16,7 +16,8 @@ encabezado %}
     <div class="container d-flex flex-wrap mt-2">
 
         <div class="col-12 mb-3 mb-lg-0" id="filtros" role="search">
-            <input type="text" id="buscarAdmin" name="buscarAdmin" placeholder="Ingrese la PO" required="required"
+            <input type="text" id="buscarAdmin" name="buscarAdmin" onkeyup="this.value=this.value.toUpperCase()"
+                style="text-transform:uppercase;" placeholder="Ingrese la PO" required="required"
                 class="form-control" />
 
         </div>
@@ -72,7 +73,7 @@ encabezado %}
                     }
                 });
             } else {
-               vacioVer();
+                vacioVer();
 
                 $('#contenerLista').hide();
             }
