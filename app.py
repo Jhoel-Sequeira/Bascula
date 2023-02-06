@@ -100,6 +100,7 @@ def login():
 @app.route('/home')
 def home():
     try:
+        if session['userrole'] == 1:
             #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
             #CONSULTA PARA LOS PROVEEDORES
             cur = mysql.connection.cursor()
@@ -126,7 +127,8 @@ def home():
         
             return render_template('home.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
           
-        
+        else:
+            return render_template('otros/error.html')
     except:
         return render_template('otros/error.html')
              
