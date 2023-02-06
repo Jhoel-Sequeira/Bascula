@@ -6,41 +6,41 @@
             </th>
         </tr>
         <tr>
-            <th style="width: 450px">Material</th>
-            <th align="center" style="padding-left: 30px">Peso Bruto</th>
-            <th align="center" style="padding-left: 30px">Peso Tara</th>
-            <th align="center" style="padding-left: 30px">Destare</th>
-            <th align="center" style="padding-left: 30px">Peso Neto</th>
+            <th style="width: 450px" class="fuente-tabla">Material</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Bruto</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Tara</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">Destare</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Neto</th>
 
         </tr>
     </thead>
     <tbody>
         {%for i in pesos%}
-        <tr>
+        <tr class="fuente-tabla">
             <td>{{i[2]}}</td>
-            <td align="center" style="padding-right: 100px">{{i[3]}}</td>
-            <td align="center" style="padding-right: 100px">{{i[4]}}</td>
-            <td align="center" style="padding-right: 100px">{{i[5]}}</td>
-            <td align="center" style="padding-right: 100px">{{i[6]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[3]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[4]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[5]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[6]}}</td>
             
         </tr>
         {%endfor%}
 
         <tr>
-            <td colspan="1" align="center" style="margin-right: 100px">
-                <strong>Total</strong>
+            <td colspan="1" align="center" class="fuente-tabla" style="margin-right: 100px">
+                <strong >Total</strong>
             </td>
-            <td colspan="1" align="center">
-                <strong>{{sumaBruto[0]}} Lb</strong>
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaBruto[0]%}{{sumaBruto[0]}}{%else%}0.00{%endif%} Lb</strong>
             </td>
-            <td colspan="1" align="center">
-                <strong>{{sumaTara[0]}} Lb</strong>
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaTara[0]%}{{sumaTara[0]}}{%else%}0.00{%endif%} Lb</strong>
             </td>
-            <td colspan="1" align="center">
-                <strong>{{sumaDestare[0]}} Lb</strong>
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaDestare[0]%}{{sumaDestare[0]}}{%else%}0.00{%endif%} Lb</strong>
             </td>
-            <td colspan="1" align="center">
-                <strong>{{sumaNeto[0]}} Lb</strong>
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaNeto[0]%}{{sumaNeto[0]}}{%else%}0.00{%endif%} Lb</strong>
             </td>
         </tr>
     </tbody>

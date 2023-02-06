@@ -12,8 +12,8 @@ encabezado %}
 </div>
 {% endblock %}
 {% block content %}
-<div class="container ">
-    <div class="container d-flex flex-wrap mt-2">
+<div class="">
+    <div class="d-flex flex-wrap mt-2 justify-content-md-center" >
 
         <div class="col-10 mb-3 mb-lg-0" role="search">
             <input type="search" class="form-control" id="buscar" onkeyup="this.value=this.value.toUpperCase()" style="text-transform:uppercase;" placeholder="Cédula proveedor" aria-label="Buscar">
@@ -25,13 +25,13 @@ encabezado %}
                 Crear</button></div>
 
     </div>
-    <div style="background-color:#fff; position:relative; height: 70%; width: 81%; margin-left: 15px;">
+    <div style="background-color:#fff; position:relative; height: 70%; width: 81%; margin-left: 50px;">
         <div class="info" id="listaproveedor">
         </div>
     </div>
 
     <div class="row justify-content-md-center">
-        <div class="col mt-3 overflow-auto rounded bg-light" id="tabla-prov" style="height: 70vh;">
+        <div class="col mt-3 overflow-auto rounded bg-light" id="tabla-prov" style="height: 77vh;">
 
         </div>
     </div>

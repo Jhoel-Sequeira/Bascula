@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
             <div class="modal-content" style="background-color: #E4E9F7;">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Detalle proveedor</h5>
+                    <h5 class="modal-title fuente-grande-titulo" id="exampleModalLabel">Detalle proveedor</h5>
                     <button type="button" class="btn-close" onclick="cerrarProv()"></button>
                 </div>
                 <div
@@ -16,16 +16,16 @@
                             <div class="row mt-2">
                                 <div class="col-6">
                                     <div class="form-outline">
-                                        <label class="form-label" for="proveedor">Proveedor</label>
+                                        <label class="form-label fuentelabel" for="proveedor">Nombre proveedor</label>
                                         <input type="text" id="nombresProv" value="{{i[1]}}" style="text-transform:uppercase;" onkeyup="this.value=this.value.toUpperCase()" style="text-transform:uppercase;" name="nombresProv" placeholder="Ingrese el nombre..." required="required" class="form-control" value=""/>
 
                                     </div>
 
                                 </div>
 
-                                <div class="col-5">
+                                <div class="col-6">
                                     <div class="form-outline">
-                                        <label class="form-label" for="proveedor">Cédula</label>
+                                        <label class="form-label fuentelabel" for="proveedor">Cédula</label>
                                         <input type="text" id="cedula" value="{{i[2]}}" name="cedula" placeholder="Ingrese la cédula..." required="required" class="form-control" value=""/>
                                         <label id="mensaje_error_usu" class="control-label col-md-12 text-danger" style="display: block;">La cedula ya existe</label>
                                     </div>

@@ -1,29 +1,29 @@
 
-<table class="table rounded" id="tabla-prov">
+<table class="table rounded" id="tabla-prov" style=" width:200vw">
     <thead>
         <!-- <tr>
             <th colspan="6" class="" style="text-align: center; font-size: 35px;">
                 Tabla</th>
         </tr> -->
-        <tr>
-            <th style="width: 450px">Proveedor</th>
-            <th>Fecha</th>
-            <th>Po</th>
-            <th>NoBoleta</th>
-            <th>Punto de Compra</th>
-            <th>Estado</th>
+        <tr class="fuente-tabla">
+            <th >Proveedor</th>
+            <th style="padding-left:120px ;" >Fecha</th>
+            <th style="padding-left:120px ;">Po</th>
+            <th style="padding-left:120px ;">NoBoleta</th>
+            <th style="padding-left:120px ;">Punto de Compra</th>
+            <th style="padding-left:120px ;">Estado</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         {%for i in verificaciones%}
-        <tr>
-            <td>{{i[6]}}</td>
-            <td align="center" style="padding-right: 100px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
-            <td align="center" style="padding-right: 100px">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
-            <td align="center" style="padding-right: 100px">{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
-            <td align="center" style="padding-right: 100px">{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
-            <td align="center" style="padding-right: 100px">{%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>
+        <tr class="fuente-tabla">
+            <td >{{i[6]}}</td>
+            <td align="center" >{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
+            <td align="center" >{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
+            <td align="center" >{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
+            <td align="center" >{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
+            <td align="center" >{%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>
 
             <td>
                 <button type="button" class="btn btn-primary" value="{{i[0]}}" id="detallever" name="detallever">

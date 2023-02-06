@@ -1,12 +1,12 @@
-<table class="table rounded" id="tabla-usuario1">
+<table class="table rounded" id="tabla-usuario1" style=" width:200vw">
     <thead>
         <tr>
             <th colspan="6" class="" style="text-align: center; font-size: 35px;">
                 Usuarios
             </th>
         </tr>
-        <tr>
-            <th style="width: 450px">Id Usuario</th>
+        <tr class="fuente-tabla">
+            <th style="width: 10px">Id Usuario</th>
             <th>Nombre</th>
             <th>Usuario</th>
             <th>Cedula</th>
@@ -19,7 +19,7 @@
     </thead>
     <tbody>
         {%for i in prov%}
-        <tr>
+        <tr class="fuente-tabla">
             <td>
                 {%if i[0] == None%}--{%else%}{{i[0]}}{%endif%}</td>
             </td>

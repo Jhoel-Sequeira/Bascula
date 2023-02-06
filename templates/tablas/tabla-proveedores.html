@@ -10,24 +10,24 @@
                 Verificaciones
                 Activas</th>
         </tr>
-        <tr>
-            <th style="width: 150px">Proveedor</th>
-            <th>Fecha</th>
-            <th>Po</th>
-            <th>NoBoleta</th>
-            <th>Punto de Compra</th>
+        <tr class="fuente-tabla">
+            <th style="width: 350px">Proveedor</th>
+            <th style="width: 200px; padding-left: 80px;">Fecha</th>
+            <th style="width: 200px; padding-left: 50px;">Po</th>
+            <th style="width: 200px; padding-left: 20px;">NoBoleta</th>
+            <th style="width: 200px">P.Compra</th>
 
             <th></th>
         </tr>
     </thead>
     <tbody>
         {%for i in verificaciones%}
-        <tr>
+        <tr class="fuente-tabla">
             <td>{{i[6]}}</td>
-            <td align="center" style="padding-right: 100px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
-            <td align="center" style="padding-right: 100px">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
-            <td align="center" style="padding-right: 100px">{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
-            <td align="center" style="padding-right: 100px">{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
+            <td align="center" style="width: 350px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
+            <td align="center" style="width:200px">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
+            <td align="center" style="width:200px">{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
+            <td align="center" style="width:200px">{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
 
             <td>
                 <button type="button" class="btn btn-primary" value="{{i[0]}}" id="detallever" name="detallever">

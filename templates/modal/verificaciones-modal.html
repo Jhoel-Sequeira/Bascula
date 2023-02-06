@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
         <div class="modal-content" style="background-color: #e4e9f7">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
+                <h5 class="modal-title fuente-grande-titulo" id="exampleModalLabel">
                     Detalle de verificación
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
@@ -18,7 +18,7 @@
                         <div class="row mt-2">
                             <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="proveedor"><strong>Proveedor </strong></label>
+                                    <label class="form-label fuentelabel" for="proveedor"><strong>Proveedor </strong></label>
                                     <input type="text" id="proveedor" name="proveedor" placeholder="cédula proveedor"
                                         required="required" class="form-control" disabled value="{{ verifi[6] }}" />
                                 </div>
@@ -26,7 +26,7 @@
 
                             <div class="col-4">
                                 <div class="form-outline">
-                                    <label class="form-label" for="form3Example3"><strong>Punto de
+                                    <label class="form-label fuentelabel" for="form3Example3"><strong>Punto de
                                             compra</strong></label>
                                     {% if (verifi[4]) and (verifi[4] != 'Sin Punto') %}
 
@@ -54,12 +54,12 @@
                         <div class="row mt-2">
                             <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="form3Example3"><strong>Verificador</strong></label>
+                                    <label class="form-label fuentelabel" for="form3Example3"><strong>Verificador</strong></label>
                                     {% if verifi[7] %}
                                     <input type="text" id="verificador" name="verificador" placeholder="Punto de Compra"
                                         required="required" class="form-control" disabled value="{{ verifi[7] }}" />
                                     {% else %}
-                                    <select class="form-select" id="verificador" aria-label="Default select example">
+                                    <select class="form-select " id="verificador" aria-label="Default select example">
                                         <option selected="selected" disabled hidden>
                                             Seleccionar Verificador
                                         </option>
@@ -76,7 +76,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="form3Example3"><strong>Digitador</strong></label>
+                                    <label class="form-label fuentelabel" for="form3Example3"><strong>Digitador</strong></label>
                                     {% if verifi[8] %}
                                     <input type="text" id="digitador" name="digitador" placeholder="Punto de Compra"
                                         required="required" class="form-control" disabled value="{{ verifi[8] }}" />
@@ -101,7 +101,7 @@
                             <div class="row mt-2">
                                 <div class="col-3">
                                     <div class="form-outline">
-                                        <label class="form-label" for="form3Example1"><strong>PO</strong></label>
+                                        <label class="form-label fuentelabel" for="form3Example1"><strong>PO</strong></label>
                                         {% if verifi[2] %}
                                         <input type="text" id="po" name="nombre" style="text-transform:uppercase;" onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="PO"
                                             required="required" class="form-control" value="{{ verifi[2] }}" />
@@ -113,7 +113,7 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="form-outline">
-                                        <label class="form-label" for="form3Example1"><strong>Fecha</strong></label>
+                                        <label class="form-label fuentelabel" for="form3Example1"><strong>Fecha</strong></label>
                                         <input type="text" id="fecha" disabled name="nombre" placeholder="nombres"
                                             required="required" class="form-control" value="{{ verifi[1] }}" />
                                         <!-- <label id="mensaje_error_input" class="control-label col-md-12 text-danger"
@@ -123,7 +123,7 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="form-outline">
-                                        <label class="form-label" for="form3Example2"><strong>No Boleta</strong></label>
+                                        <label class="form-label fuentelabel" for="form3Example2"><strong>No Boleta</strong></label>
                                         {% if verifi[3] %}
                                         <input type="text" id="nboleta" name="nboleta" style="text-transform:uppercase;" onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="PO"
                                             required="required" class="form-control" value="{{ verifi[3] }}" />
@@ -135,7 +135,7 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="form-outline">
-                                        <label class="form-label" for="form3Example2"><strong>Bahia</strong></label>
+                                        <label class="form-label fuentelabel" for="form3Example2"><strong>Bahia</strong></label>
                                         {% if verifi[9] %}
                                         <input type="text" id="bahia" name="bahia" disabled placeholder="PO"
                                             required="required" class="form-control" value="{{ verifi[9] }}" />
@@ -181,7 +181,7 @@
                                                                                                                     <option value="{{ i[0] }}">{{ i[1] }}</option>
                                                                                                                     {% endfor %}
                                                                                                                 </select> -->
-                                <label class="form-label" for="form3Example3"><strong>Material</strong></label>
+                                <label class="form-label fuentelabel" for="form3Example3"><strong>Material</strong></label>
                                 <input type="search" class="form-control" id="buscarmat" disabled
                                     placeholder="Buscar material..." aria-label="Buscar" />
                             </div>
@@ -196,32 +196,32 @@
                         </div>
                         <div class="col-2">
                             <div class="form-outline">
-                                <label class="form-label" for="form3Example3"><strong>Peso Bruto</strong></label>
+                                <label class="form-label fuentelabel" for="form3Example3"><strong>P.Bruto</strong></label>
                                 <input type="number" id="bruto" value="0" disabled maxlength="8" name="celular"
                                     required="required" class="form-control" />
                             </div>
                         </div>
                         <div class="col-2">
                             <div class="form-outline">
-                                <label class="form-label" for="form3Example3"><strong>Peso Tara</strong></label>
+                                <label class="form-label fuentelabel" for="form3Example3"><strong>P.Tara</strong></label>
                                 <input type="number" id="tara" value="0" disabled maxlength="8" name="celular"
                                     required="required" class="form-control" />
                             </div>
                         </div>
                         <div class="col-2">
                             <div class="form-outline">
-                                <label class="form-label" for="form3Example3"><strong>Destare</strong></label>
+                                <label class="form-label fuentelabel" for="form3Example3"><strong>Destare</strong></label>
                                 <input type="number" id="destare" disabled maxlength="8" value="0" name="celular"
                                     required="required" class="form-control" />
                             </div>
                         </div>
 
-                        <div class="col mt-4 pt-2">
-                            <button type="button" disabled id="agregar" class="btn btn-success ml-5" id="boton-enviar"
+                        <div class="col mt-3 pt-3">
+                            <button type="button" disabled id="agregar" class="btn btn-success mt-3 ml-5" id="boton-enviar"
                                 onclick="añadir()">
                                 <i class="fas fa-calendar-check" style="margin-right: 5px"></i>Añadir
                             </button>
-                            <button type="button" class="btn btn-link border-light" onclick="mostrarDetalle()">
+                            <button type="button" class="btn btn-link border-light mt-3 pt-2" onclick="mostrarDetalle()">
                                 <i class="fa-sharp fa-solid fa-circle-info"></i>
                             </button>
                         </div>

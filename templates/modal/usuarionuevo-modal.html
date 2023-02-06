@@ -4,7 +4,7 @@
         {%for i in info%}
         <div class="modal-content" style="background-color: #E4E9F7;">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Información del Usuario</h5>
+                <h5 class="modal-title fuente-grande-titulo" id="exampleModalLabel">Información del Usuario</h5>
                 <button type="button" class="btn-close" onclick="cerrar()"></button>
             </div>
             <div
@@ -14,10 +14,10 @@
                 <div class="tab-pane fade show active mt-3 p-3 bg-light" style="height: 900px;" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <div class="form-group" id="detalles">
 
-                        <div class="row mt-2">
-                            <div class="col-6">
+                        <div class="row mt-3">
+                            <div class="col">
                                 <div class="form-outline">
-                                    <label class="form-label" for="proveedor">Nombre del Empleado</label>
+                                    <label class="fuentelabel form-label " for="proveedor">Nombre del Empleado</label>
                                     <input type="text" id="nombres" name="nombres" style="text-transform:uppercase;" onkeyup="this.value=this.value.toUpperCase()" style="text-transform:uppercase;" value="{{i[1]}}" placeholder="Ingrese el nombre..." required="required" class="form-control"  value=""/>
                                     <label id="mensaje_error_input" class="control-label col-md-12 text-danger"
                                 style="display: block;">Las
@@ -25,27 +25,29 @@
                                 </div>
 
                             </div>
+                        </div>
+                        <div class="row mt-3">
 
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="proveedor">Usuario</label>
+                                    <label class="form-label fuentelabel" for="proveedor">Usuario</label>
                                     <input type="text" id="loginUser" name="loginUser" value="{{i[2]}}" placeholder="Ingrese el usuario..." required="required" class="form-control"  value=""/>
                                     <label id="mensaje_error_usu" class="control-label col-md-12 text-danger" style="display: block;">El
                                                                     usuario ya existe</label>
                                 </div>
                             </div>
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="proveedor">Cédula</label>
+                                    <label class="form-label fuentelabel" for="proveedor">Cédula</label>
                                     <input type="text" id="cedula" name="cedula" value="{{i[5]}}" placeholder="Ingrese la cédula..." required="required" class="form-control"  value=""/>
                                     
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-2">
+                        <div class="row mt-3">
                             <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="proveedor">Rol</label>
+                                    <label class="form-label fuentelabel" for="proveedor">Rol</label>
                                     <select class="form-select" id="rol" aria-label="Default select example">
                                         
                                         {% for rol in roles %}
@@ -60,9 +62,9 @@
 
                             </div>
 
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="proveedor">Cargo {{i[6]}}</label>
+                                    <label class="form-label fuentelabel" for="proveedor">Cargo</label>
                                     <select class="form-select" id="cargo" aria-label="Default select example">
                                         
                                         {% for cargo in cargos %}
@@ -78,12 +80,12 @@
                         </div>
                         <div id="okis" >
                             <div class="row mb-4 mt-2">
-                                <label for=""><input type="checkbox" name="cambio"> Cambiar Credenciales</label>
+                                <label for="" class="fuentelabel"><input type="checkbox" name="cambio"> Cambiar Credenciales</label>
                             </div>
                             <div class="row mt-1" id="credenciales">
-                                <div class="col-4">
+                                <div class="col-6">
                                     <div class="form-outline">
-                                        <label class="form-label" for="form3Example1">Contraseña</label>
+                                        <label class="form-label fuentelabel" for="form3Example1">Contraseña</label>
                                         <input type="password" id="contra" name="contra" placeholder="Ingrese la contraseña..." required="required" class="form-control" value=""/>
                                         <label id="mensaje_error" class="control-label col-md-12 text-danger" style="display: block;">Las
                                                                                                                     constraseñas no coinciden</label>
@@ -91,9 +93,9 @@
                                                                                                                     constraseñas no coinciden</label>
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-6">
                                     <div class="form-outline">
-                                        <label class="form-label" for="form3Example1">Contraseña</label>
+                                        <label class="form-label fuentelabel" for="form3Example1">Contraseña</label>
                                         <input type="password" id="contra1" name="contra1" placeholder="Repita la contraseña..." required="required" class="form-control" value=""/>
                                         </div>
                                 </div>
@@ -125,7 +127,7 @@
         {%for i in info%}
         <div class="modal-content" style="background-color: #E4E9F7;">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Información del Usuario</h5>
+                <h5 class="modal-title fuente-grande-titulo" id="exampleModalLabel">Información del Usuario</h5>
                 <button type="button" class="btn-close" onclick="cerrar()"></button>
             </div>
             <div

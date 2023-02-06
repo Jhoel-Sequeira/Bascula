@@ -1,13 +1,13 @@
 <table class="table rounded" id="tabla-prov1">
-    <thead>
+    <thead class="fuente-tabla">
         <tr>
 
         </tr>
         <tr>
             <th style="width: 20px">Id</th>
             <th style="padding-left: 50px">Nombre</th>
-            <th style="padding-left: 80px">Cédula</th>
-            <th style="padding-left: 50px">Estado</th>
+            <th style="padding-left: 200px">Cédula</th>
+            <th style="padding-left: 20px">Estado</th>
 
             <th></th>
             <th></th>
@@ -15,22 +15,22 @@
     </thead>
     <tbody>
         {%for i in prov%}
-        <tr>
+        <tr class="fuente-tabla">
             <td>
                 {%if i[0] == None%}--{%else%}{{i[0]}}{%endif%}</td>
             </td>
-            <td align="center" style="padding-right: 100px">
+            <td align="center" >
                 {%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
             </td>
-            <td align="center" style="padding-right: 100px">
+            <td align="center" style="width:500px;">
                 {%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
             </td>
-            <td align="center" style="padding-right: 100px">
+            <td align="center" style="padding-right: 50px;" >
                 {%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
 
 
             {%if i[2] == 'Inactivo'%}
-            <td>
+            <td >
                 <button type="button" class="btn btn-success" value="{{i[0]}}" id="habilitarProveedor"
                     name="habilitarProveedor">
                     <i class="fas fa-power-off"></i>

@@ -283,6 +283,19 @@
   font-size: 26px;
   font-weight: 600;
 }
+.fuente-tabla{
+  font-size: 25px;
+}
+.fuente-grande-titulo{
+  font-size: 50px;
+}
+.fuente-grande-subtitulo{
+  font-size: 30px;
+}
+.fuentelabel{
+  font-size: 30px !important;
+}
+
 
 @media (max-width: 12000px) {
   .modal-backdrop {
