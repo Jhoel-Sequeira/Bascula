@@ -60,6 +60,7 @@ def login():
                 session["userId"] = results[0]
                 session["user"] = results[1]
                 session["userrole"] = results[3]
+                print(session['userrole'])
                 #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
                 #CONSULTA PARA LOS PROVEEDORES
                 cur = mysql.connection.cursor()
@@ -98,32 +99,37 @@ def login():
         
 @app.route('/home')
 def home():
-    #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
-    #CONSULTA PARA LOS PROVEEDORES
-    cur = mysql.connection.cursor()
-    cur.execute("select * from tb_proveedor Where IdEstado = 1")
-    Proveedores = cur.fetchall()
-    #CONSULTA PARA LOS PUNTOS DE COMPRA
-    cur = mysql.connection.cursor()
-    
-    cur.execute("select * from tb_puntocompra Where IdEstado = 1")
-    punto = cur.fetchall()
-    #CONSULTA PARA LOS MATERIALES
-    cur = mysql.connection.cursor()
-    cur.execute("select * from tb_material Where Id_Estado = 1")
-    material = cur.fetchall()
-    #CONSULTA PARA LOS VERIFICADORES
-    cur = mysql.connection.cursor()
-    cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
-    verificador = cur.fetchall()
-    #CONSULTA PARA LOS DIGITADOR
-    cur = mysql.connection.cursor()
-    cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
-    digitador = cur.fetchall()
-    print(digitador)
-   
-    return render_template('home.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
-                   
+    try:
+            #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
+            #CONSULTA PARA LOS PROVEEDORES
+            cur = mysql.connection.cursor()
+            cur.execute("select * from tb_proveedor Where IdEstado = 1")
+            Proveedores = cur.fetchall()
+            #CONSULTA PARA LOS PUNTOS DE COMPRA
+            cur = mysql.connection.cursor()
+            
+            cur.execute("select * from tb_puntocompra Where IdEstado = 1")
+            punto = cur.fetchall()
+            #CONSULTA PARA LOS MATERIALES
+            cur = mysql.connection.cursor()
+            cur.execute("select * from tb_material Where Id_Estado = 1")
+            material = cur.fetchall()
+            #CONSULTA PARA LOS VERIFICADORES
+            cur = mysql.connection.cursor()
+            cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+            verificador = cur.fetchall()
+            #CONSULTA PARA LOS DIGITADOR
+            cur = mysql.connection.cursor()
+            cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+            digitador = cur.fetchall()
+            print(digitador)
+        
+            return render_template('home.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
+          
+        
+    except:
+        return render_template('otros/error.html')
+             
 @app.route('/buscarProveedor', methods =["POST","GET"])
 def buscarProveedor():
    if request.method == "POST":
@@ -681,8 +687,14 @@ def finalizarVerificacion():
 #MODULO DE ADMINISTRACION 
 @app.route('/administracion')
 def administracion():
-
-    return render_template('administracion.html')
+    try:
+        if session['userrole'] == 1:
+            return render_template('administracion.html')
+        else:
+            return render_template('otros/error.html')
+    except:
+        return render_template('otros/error.html')
+       
 
 #VALOR DE LA TABLA DE ADMINISTRACION 
 @app.route('/valorTablaAdmin', methods =["POST","GET"])
@@ -744,8 +756,15 @@ def valorTablaAdmin():
 
 @app.route('/ajustes')
 def ajustes():
+    try:
+        if session['userrole'] == 1:
+            return render_template('ajustes.html')
+        else:
+            return render_template('otros/error.html')
+    except:
+        return render_template('otros/error.html')
     
-    return render_template('ajustes.html')
+    
 
 
 # APARTADO DE VER PROVEEDORES
@@ -762,14 +781,21 @@ def verProveedores():
 # APARTADO DE VER USUARIOS
 @app.route('/verUsuarios', methods =["POST","GET"])
 def verUsuarios():
-    if request.method == "POST":
+    try:
+        if session['userrole'] == 1:
+            if request.method == "POST":
+                #SELECCIONAR EL ID DEL PROVEEDOR
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_usuarios Where IdEstado = 3")
+                proveedores = cur.fetchall()
 
-        #SELECCIONAR EL ID DEL PROVEEDOR
-        cur = mysql.connection.cursor()
-        cur.execute("select * from tb_usuarios Where IdEstado = 3")
-        proveedores = cur.fetchall()
-
-        return render_template('modal/usuarios-modal.html')
+            return render_template('modal/usuarios-modal.html')
+        else:
+            return render_template('otros/error.html')
+    except:
+        return render_template('otros/error.html')
+    
+    
 
 
 #TRAER TODOS LOS PROVEEDORES
@@ -870,4 +896,4 @@ def deslog():
     return redirect(url_for('Index'))
  
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host = '0.0.0.0',port = 3134, debug=True)

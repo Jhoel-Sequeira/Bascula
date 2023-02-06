@@ -57,7 +57,7 @@
   background-color: #17a2b8 !important;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
   .centrar {
     justify-items: start;
     background-color: transparent;
