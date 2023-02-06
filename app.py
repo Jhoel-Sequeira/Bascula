@@ -562,7 +562,7 @@ def buscarMaterial():
    if request.method == "POST":
         material = request.form['material']
         cur = mysql.connection.cursor()
-        cur.execute("select * from tb_material Where Id_Estado = 1 AND NombreMaterial like %s",[material+'%'])
+        cur.execute("select * from tb_material Where Id_Estado = 1 AND NombreMaterial like %s",['%'+material+'%'])
         materiales = cur.fetchall()
         print(materiales)
         return render_template('otros/material-busqueda.html',materiales = materiales)
