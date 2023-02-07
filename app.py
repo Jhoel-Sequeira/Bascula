@@ -556,6 +556,24 @@ def listaPesos():
     else:
         return "No"
 
+#CARGAR LOS PESOS GENERALES DE LAS VERIFICACIONES
+@app.route('/generalPesos', methods =["POST","GET"])
+def generalPesos():
+    if request.method == "POST":
+        id = request.form['id']
+        if id != "":
+            #total de materiales
+            cur = mysql.connection.cursor()
+            cur.execute('SELECT m.NombreMaterial,sum(ver.PesoBruto) as bruto,sum(ver.PesoTara) as tara,SUM(ver.PesoNeto) as neto FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
+            mat = cur.fetchall()
+            mysql.connection.commit()
+            return render_template('tablas/tabla-mat-general.html',mat = mat)
+        else:
+            pesos =""
+            return render_template('tablas/tabla-mat-general.html',mat = mat)
+    else:
+        return "No"
+
 #BUSCAMOS MATERIALES
 @app.route('/buscarMaterial', methods =["POST","GET"])
 def buscarMaterial():

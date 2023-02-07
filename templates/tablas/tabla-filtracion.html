@@ -1,4 +1,3 @@
-
 <table class="table rounded" id="tabla-prov" style=" width:200vw">
     <thead>
         <!-- <tr>
@@ -6,8 +5,8 @@
                 Tabla</th>
         </tr> -->
         <tr class="fuente-tabla">
-            <th >Proveedor</th>
-            <th style="padding-left:120px ;" >Fecha</th>
+            <th>Proveedor</th>
+            <th style="padding-left:120px ;">Fecha</th>
             <th style="padding-left:120px ;">Po</th>
             <th style="padding-left:120px ;">NoBoleta</th>
             <th style="padding-left:120px ;">Punto de Compra</th>
@@ -17,20 +16,20 @@
     </thead>
     <tbody>
         {%for i in verificaciones%}
-        <tr class="fuente-tabla">
-            <td >{{i[6]}}</td>
-            <td align="center" >{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
-            <td align="center" >{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
-            <td align="center" >{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
-            <td align="center" >{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
-            <td align="center" >{%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>
+            <tr class="fuente-tabla">
+                <td>{{i[6]}}</td>
+                <td align="center">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
+                <td align="center">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
+                <td align="center">{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
+                <td align="center">{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
+                <td align="center">{%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>
 
-            <td>
-                <button type="button" class="btn btn-primary" value="{{i[0]}}" id="detallever" name="detallever">
-                    <i class="fa-sharp fa-solid fa-eye"></i>
-                </button>
-            </td>
-        </tr>
+                <td>
+                    <button type="button" class="btn btn-primary" value="{{i[0]}}" id="detallever" name="detallever">
+                        <i class="fa-sharp fa-solid fa-eye"></i>
+                    </button>
+                </td>
+            </tr>
         {%endfor%}
 
     </tbody>
@@ -41,6 +40,7 @@
 
 </div>
 <script>
+
 
     $("#tabla-prov button[name=detallever]").click(function () {
         id = $(this).val();

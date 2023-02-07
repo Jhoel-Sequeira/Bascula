@@ -2,9 +2,9 @@
 
 <div class="modal fade" id="detalleVerificacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
-        <div class="modal-content" style="background-color: #E4E9F7;">
+        <div class="modal-content " style="background-color: #E4E9F7;">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Información historial</h5>
+                <h5 class="modal-title fuente-grande-titulo" id="exampleModalLabel">Información historial</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                     onclick="cargarLista()"></button>
             </div>
@@ -16,7 +16,7 @@
                         <div class="row mt-2">
                             <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="proveedor">Proveedor</label>
+                                    <label class="form-label fuentelabel" for="proveedor">Proveedor</label>
                                     <input type="text" id="proveedor" name="proveedor" placeholder="PO"
                                         required="required" class="form-control" disabled="disabled"
                                         value="{{ verifi[6] }}" />
@@ -26,7 +26,7 @@
 
                             <div class="col-5">
                                 <div class="form-outline">
-                                    <label class="form-label" for="form3Example3">Punto de Compra</label>
+                                    <label class="form-label fuentelabel" for="form3Example3">Punto de Compra</label>
                                     {% if (verifi[4]) and (verifi[4] != 'Sin Punto') %}
 
                                     <input type="text" id="puntoCompra" name="puntoCompra" placeholder="Punto de Compra"
@@ -55,7 +55,7 @@
                         <div class="row mt-2">
                             <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="form3Example3">Nombre Verificador</label>
+                                    <label class="form-label fuentelabel" for="form3Example3">Nombre Verificador</label>
                                     {% if verifi[7] %}
                                     <input type="text" id="verificador" name="verificador" placeholder="Punto de Compra"
                                         required="required" class="form-control" disabled="disabled"
@@ -77,7 +77,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-outline">
-                                    <label class="form-label" for="form3Example3">Nombre Digitador</label>
+                                    <label class="form-label fuentelabel" for="form3Example3">Nombre Digitador</label>
                                     {% if verifi[8] %}
                                     <input type="text" id="digitador" name="digitador" placeholder="Punto de Compra"
                                         required="required" class="form-control" disabled="disabled"
@@ -101,7 +101,7 @@
                             <div class="row mt-2">
                                 <div class="col-3">
                                     <div class="form-outline">
-                                        <label class="form-label" for="form3Example1">PO</label>
+                                        <label class="form-label fuentelabel" for="form3Example1">PO</label>
                                         {% if verifi[2] %}
                                         <input type="text" id="po" name="nombre" disabled="disabled" placeholder="PO"
                                             required="required" class="form-control" value="{{ verifi[2] }}" />
@@ -114,7 +114,7 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="form-outline">
-                                        <label class="form-label" for="form3Example1">Fecha</label>
+                                        <label class="form-label fuentelabel" for="form3Example1">Fecha</label>
                                         <input type="text" id="fecha" disabled="disabled" name="nombre"
                                             placeholder="nombres" required="required" class="form-control"
                                             value="{{ verifi[1] }}" />
@@ -125,7 +125,7 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="form-outline">
-                                        <label class="form-label" for="form3Example2">No Boleta</label>
+                                        <label class="form-label fuentelabel" for="form3Example2">No Boleta</label>
                                         {% if verifi[3] %}
                                         <input type="text" id="nboleta" name="nboleta" disabled="disabled"
                                             placeholder="PO" required="required" class="form-control"
@@ -138,7 +138,7 @@
                                 </div>
                                 <div class="col-3">
                                     <div class="form-outline">
-                                        <label class="form-label" for="form3Example2">Bahia</label>
+                                        <label class="form-label fuentelabel" for="form3Example2">Bahia</label>
                                         {% if verifi[9] %}
                                         <input type="text" id="bahia" name="bahia" disabled="disabled" placeholder="PO"
                                             required="required" class="form-control" value="{{ verifi[9] }}" />
@@ -186,7 +186,11 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col mt-3 bg-light" id="tabla-peso"></div>
+                            <div class="col mt-3 bg-light overflow-scroll" id="tabla-peso"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col mt-3 bg-light overflow-scroll" id="tabla-general"></div>
                         </div>
 
                     </div>
@@ -352,6 +356,39 @@
                                 success: function (response) {
                                     $('#tabla-peso').html(response);
                                     $('#tabla-peso').append(response.htmlresponse);
+                                    $.ajax({
+                                        url: "/listaPesos",
+                                        type: "POST",
+                                        data: {
+                                            id: $('#id').val()
+
+                                        },
+                                        success: function (response) {
+                                            $('#tabla-peso').html(response);
+                                            $('#tabla-peso').append(response.htmlresponse);
+
+                                            $.ajax({
+                                                url: "/generalPesos",
+                                                type: "POST",
+                                                data: {
+                                                    id: $('#id').val()
+
+                                                },
+                                                success: function (response) {
+                                                    $('#tabla-general').html(response);
+                                                    $('#tabla-general').append(response.htmlresponse);
+
+                                                },
+                                                error: function (error) { // console.log(error);
+                                                }
+                                            });
+
+
+
+                                        },
+                                        error: function (error) { // console.log(error);
+                                        }
+                                    });
                                 },
                                 error: function (error) { // console.log(error);
                                 }

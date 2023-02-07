@@ -1,0 +1,27 @@
+<table class=" table-borderless" style="border-spacing: 3px; font-size: 12px;">
+    <thead class="fuente-tabla">
+        <tr>
+            <th colspan="4" style="text-align: center;">Resumen</th>
+        
+        </tr>
+        <th style="width: 350px" >Material</th>
+        <th style=" padding-left: 50px;width: 200px;">P.Bruto</th>
+        <th style="padding-left: 50px;width: 200px;">P.Tara</th>
+        <th style="padding-left: 50px;width: 200px;">P.Neto</th>
+       
+    </thead>
+    <tbody class="fuente-tabla">
+        {%for mate in mat%}
+        <tr>
+        <th>{{mate[0]}}</th>
+        <td align="center" >{{mate[1]}} Lb</td>
+        <td align="center">{{mate[2]}} Lb</td>
+        <td align="center">{{mate[3]}} Lb</td>
+        </tr>
+         {%endfor%}
+    </tbody>
+       
+    
+    
+    
+</table>
