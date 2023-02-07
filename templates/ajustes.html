@@ -21,7 +21,7 @@ encabezado %}
             {% if session.user %} {% if session.userrole == 1%}
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
-                <div class="card cartas" style="padding: 5px; background-color: #b4583f">
+                <div class="card cartas" onclick="verProveedores()" style="padding: 5px; background-color: #b4583f">
                     <div class="inner">
                         <h3>
                             <sup style="font-size: 20px"></sup>
@@ -41,7 +41,7 @@ encabezado %}
             <br>
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
-                <div class="card cartas" style="padding: 5px; background-color: #b4583f">
+                <div class="card cartas" onclick="homeMenu()" style="padding: 5px; background-color: #b4583f">
                     <div class="inner">
                         <h3>
                             <sup style="font-size: 20px"></sup>
@@ -52,16 +52,21 @@ encabezado %}
                     <div class="icon mr-1">
                         <i class="fa-solid fa-calendar-check delgado"></i>
                     </div>
-                    <a href="/home" class="card-footer">
+                    <a href="/home" id="home" class="card-footer">
                         Verificacion
                     </a>
                 </div>
             </div>
+            <script>
+                function homeMenu(){
+                    window.location = '/home'
+                }
+            </script>
             <br>
             {% if session.user %} {% if session.userrole == 1%}
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
-                <div class="card cartas" style="padding: 5px; background-color: #b4583f">
+                <div class="card cartas" onclick="administracionMenu()" style="padding: 5px; background-color: #b4583f">
                     <div class="inner">
                         <h3>
                             <sup style="font-size: 20px"></sup>
@@ -77,11 +82,16 @@ encabezado %}
                     </a>
                 </div>
             </div>
+            <script>
+                function administracionMenu(){
+                    window.location = '/administracion'
+                }
+            </script>
             <br>
             
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
-                <div class="card cartas" style="padding: 5px; background-color: #b4583f">
+                <div class="card cartas" onclick="verUsuarios()" style="padding: 5px; background-color: #b4583f">
                     <div class="inner">
                         <h3>
                             <sup style="font-size: 20px"></sup>

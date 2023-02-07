@@ -85,6 +85,22 @@
 
     </body>
     <script>
+        var button1 = document.getElementById("verContra");
+       
+       
+        button1.addEventListener("touchstart", onlyTouch, false);
+ 
+        function onlyTouch(ev) {
+           
+            $('#contra').attr('type', 'text');
+        }
+        button1.addEventListener("touchend", aftertouch, false);
+ 
+        function aftertouch(ev) {
+            $('#contra').attr('type', 'password');
+        }
+ 
+       
         $('#verContra').mousedown(function () {
             $('#contra').attr('type', 'text');
         });

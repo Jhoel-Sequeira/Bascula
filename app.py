@@ -137,7 +137,7 @@ def buscarProveedor():
    if request.method == "POST":
         proveedor = request.form['proveedor']
         cur = mysql.connection.cursor()
-        cur.execute("select * from tb_proveedor Where IdEstado = 1 and Cedula like %s",[proveedor+'%'])
+        cur.execute("select * from tb_proveedor Where IdEstado = 1 and NombreProveedor like %s",[proveedor+'%'])
         proveedores = cur.fetchall()
         print(proveedores)
         if proveedores:
