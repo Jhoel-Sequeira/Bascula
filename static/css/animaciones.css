@@ -10,3 +10,26 @@
     transition: visibility 2s ease-in-out;
     /* Otros estilos */
 }
+.anim{
+    position: absolute;
+    top: 30vh;
+    right: 10vw;
+}
+.prueba {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    animation-name: example;
+    animation-duration: 3s;
+    animation-iteration-count:infinite;
+    margin: 0 auto;
+    text-align: center;
+}
+
+
+/* Standard syntax */
+@keyframes example {
+    0%   {/*background-color:red;*/ left:600px; top:200px;}
+    50%  {/*background-color:green;*/ left:650px; top:200px;}
+    100% {/*background-color:red;*/ left:600px; top:200px;}
+}
