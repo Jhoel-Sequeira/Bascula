@@ -154,7 +154,7 @@ def buscarProveedorAdmin():
         proveedor = request.form['proveedor']
         print(proveedor)
         cur = mysql.connection.cursor()
-        cur.execute("SELECT p.Id_Proveedor,p.NombreProveedor,p.Cedula,e.NombreEstado FROM tb_proveedor as p inner join tb_estado as e ON p.IdEstado = e.Id_Estado where p.Cedula like %s",[proveedor+'%'])
+        cur.execute("SELECT p.Id_Proveedor,p.NombreProveedor,p.Cedula,e.NombreEstado FROM tb_proveedor as p inner join tb_estado as e ON p.IdEstado = e.Id_Estado where p.NombreProveedor like %s",[proveedor+'%'])
         proveedores = cur.fetchall()
         if proveedores :
 
