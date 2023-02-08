@@ -29,9 +29,10 @@
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel" for="form3Example3"><strong>Punto de
                                             compra</strong></label>
-                                            <input type="text" value="{{usuariopunto[1]}}" name="" id="" disabled="disabled" required="required" class="form-control">
-                                        <input type="hidden" value="{{usuariopunto[0]}}" name="" id="idpunto">
-                                    
+                                    <input type="text" value="{{usuariopunto[1]}}" name="" id="" disabled="disabled"
+                                        required="required" class="form-control">
+                                    <input type="hidden" value="{{usuariopunto[0]}}" name="" id="idpunto">
+
                                 </div>
                             </div>
                             <div class="col-1 mt-4 pt-2">
@@ -46,8 +47,9 @@
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel"
                                         for="form3Example3"><strong>Verificador</strong></label>
-                                        <input type="text" value="{{usuariolog[1]}}" name="" id="" disabled="disabled" required="required" class="form-control">
-                                        <input type="hidden" value="{{usuariolog[0]}}" name="" id="idusuariolog">
+                                    <input type="text" value="{{usuariolog[1]}}" name="" id="" disabled="disabled"
+                                        required="required" class="form-control">
+                                    <input type="hidden" value="{{usuariolog[0]}}" name="" id="idusuariolog">
                                     <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
                                                                                                                                                                                                                                                                                                                                                                                                         style="display: none;">Las
                                                                                                                                                                                                                                                                                                                                                                                                         constraseñas no coinciden</label> -->
@@ -57,7 +59,7 @@
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel"
                                         for="form3Example3"><strong>Digitador</strong></label>
-                                        
+
                                     {% if verifi[8] %}
                                     <input type="text" id="digitador" name="digitador" placeholder="Punto de Compra"
                                         required="required" class="form-control" disabled value="{{ verifi[8] }}" />
@@ -136,24 +138,12 @@
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
-                                            <option value="1">4</option>
-                                            <option value="2">5</option>
-                                            <!-- <option value="3">6</option>
-                                                                                                                                                                                                                                                                <option value="1">7</option>
-                                                                                                                                                                                                                                                                <option value="2">8</option>
-                                                                                                                                                                                                                                                                <option value="3">9</option>
-                                                                                                                                                                                                                                                                <option value="1">10</option>
-                                                                                                                                                                                                                                                                <option value="2">11</option>
-                                                                                                                                                                                                                                                                <option value="3">12</option>
-                                                                                                                                                                                                                                                                <option value="1">13</option>
-                                                                                                                                                                                                                                                                <option value="2">14</option>
-                                                                                                                                                                                                                                                                <option value="3">15</option>
-                                                                                                                                                                                                                                                                <option value="1">16</option>
-                                                                                                                                                                                                                                                                <option value="2">17</option>
-                                                                                                                                                                                                                                                                <option value="3">18</option>
-                                                                                                                                                                                                                                                                <option value="2">19</option>
-                                                                                                                                                                                                                                                                <option value="3">20</option> -->
-                                        </select>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            </select>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -223,7 +213,7 @@
                     <div class="row">
                         <div class="col mt-3 bg-light" id="tabla-peso"></div>
                     </div>
-                    
+
                 </div>
 
                 <!-- INICIO DE LA FUNCIONALIDAD DE LOS BOTONES CON JQUERY  DE LA PRIMERA PANTALLA-->
@@ -716,73 +706,73 @@
         }).then(resultado => {
             if (resultado.value) {
 
-                
-                        $.ajax({
-                            url: "/finalizarVerificacion",
-                            type: "POST",
-                            data: {
-                                id: $("#id").val(),
-                            },
-                            success: function (response) {
-                                if (response == "vacio") {
-                                    Swal.fire({
-                                        icon: "warning",
-                                        title: "Datos faltantes",
-                                        confirmButtonText: "Ok",
-                                        text: "Esta verificacion no posee pesajes",
-                                    }).then((result) => {
-                                        /* Read more about isConfirmed, isDenied below */
-                                        if (result.isConfirmed) {
-                                        }
-                                    });
-                                } else {
-                                    
-                                    $("#factura").html(response);
-                                    $("#factura").append(response.htmlresponse);
-                                    // Escuchamos el click del botón
-                                    elementoParaConvertir = document.querySelector(".div-verpdf"); // <-- Aquí puedes elegir cualquier elemento del DOM
-                                    elementoParaConvertir.style.display = "block";
-                                    html2pdf()
-                                        .set({
-                                            filename: "Factura.pdf",
-                                            image: {
-                                                type: "jpeg",
-                                                quality: 0.98,
-                                            },
-                                            html2canvas: {
-                                                scale: 5, // A mayor escala, mejores gráficos, pero más peso
-                                                letterRendering: false,
-                                            },
-                                            jsPDF: {
-                                                unit: "in",
-                                                format: "a4",
-                                                orientation: "portrait", // landscape o portrait
-                                            },
-                                        })
-                                        .from(elementoParaConvertir)
-                                        .save();
-                                    setTimeout(() => {
-                                        Swal.fire({
-                                            icon: "success",
-                                            title: "Factura impresa",
-                                            confirmButtonText: "Ok",
-                                            text: "Se generó el pdf de la factura.",
-                                        }).then((result) => {
-                                            /* Read more about isConfirmed, isDenied below */
-                                            if (result.isConfirmed) {
-                                                elementoParaConvertir.style.display = "none";
-                                                window.location = "/home";
-                                            }
-                                        });
-                                        
-                                        
-                                    }, 1000);
+
+                $.ajax({
+                    url: "/finalizarVerificacion",
+                    type: "POST",
+                    data: {
+                        id: $("#id").val(),
+                    },
+                    success: function (response) {
+                        if (response == "vacio") {
+                            Swal.fire({
+                                icon: "warning",
+                                title: "Datos faltantes",
+                                confirmButtonText: "Ok",
+                                text: "Esta verificacion no posee pesajes",
+                            }).then((result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
                                 }
-                            },
-                            error: function (error) {
-                                // console.log(error);
-                            },
-                        });
+                            });
+                        } else {
+
+                            $("#factura").html(response);
+                            $("#factura").append(response.htmlresponse);
+                            // Escuchamos el click del botón
+                            elementoParaConvertir = document.querySelector(".div-verpdf"); // <-- Aquí puedes elegir cualquier elemento del DOM
+                            elementoParaConvertir.style.display = "block";
+                            html2pdf()
+                                .set({
+                                    filename: "Factura.pdf",
+                                    image: {
+                                        type: "jpeg",
+                                        quality: 0.98,
+                                    },
+                                    html2canvas: {
+                                        scale: 5, // A mayor escala, mejores gráficos, pero más peso
+                                        letterRendering: false,
+                                    },
+                                    jsPDF: {
+                                        unit: "in",
+                                        format: "a4",
+                                        orientation: "portrait", // landscape o portrait
+                                    },
+                                })
+                                .from(elementoParaConvertir)
+                                .save();
+                            setTimeout(() => {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Factura impresa",
+                                    confirmButtonText: "Ok",
+                                    text: "Se generó el pdf de la factura.",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        elementoParaConvertir.style.display = "none";
+                                        window.location = "/home";
+                                    }
+                                });
+
+
+                            }, 1000);
+                        }
+                    },
+                    error: function (error) {
+                        // console.log(error);
+                    },
+                });
 
             } else { // Dijeron que no
                 console.log("*NO se elimina la venta*");
