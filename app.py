@@ -32,6 +32,7 @@ hi = datetime.now()
 
 @app.route('/')
 def Index():
+    session.clear()
    
     return render_template('login.html')
 
@@ -100,6 +101,7 @@ def login():
 @app.route('/home')
 def home():
     try:
+        if session['userId']:
             #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
             #CONSULTA PARA LOS PROVEEDORES
             cur = mysql.connection.cursor()
@@ -125,7 +127,8 @@ def home():
             print(digitador)
         
             return render_template('home.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
-          
+        else:
+            return render_template('otros/error.html')
         
     except:
         return render_template('otros/error.html')
@@ -780,7 +783,10 @@ def valorTablaAdmin():
 @app.route('/ajustes')
 def ajustes():
     try:
+        if session['userId']:
             return render_template('ajustes.html')
+        else:
+            return render_template('otros/error.html')
         
     except:
         return render_template('otros/error.html')
