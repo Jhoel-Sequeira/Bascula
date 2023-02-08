@@ -29,20 +29,9 @@
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel" for="form3Example3"><strong>Punto de
                                             compra</strong></label>
-                                    {% if (verifi[4]) and (verifi[4] != 'Sin Punto') %}
-
-                                    <input type="text" id="puntoCompra" name="puntoCompra" placeholder="Punto de Compra"
-                                        required="required" class="form-control" disabled value="{{ verifi[4] }}" />
-                                    {% else %}
-                                    <select class="form-select" id="puntoCompra" aria-label="Default select example">
-                                        <option selected="selected" hidden>
-                                            Seleccionar Punto
-                                        </option>
-                                        {% for punto in Punto %} {% if punto[1] != 'Sin Punto' %}
-                                        <option value="{{ punto[0] }}">{{ punto[1] }}</option>
-                                        {% endif %} {% endfor %}
-                                    </select>
-                                    {% endif %}
+                                            <input type="text" value="{{usuariopunto[1]}}" name="" id="" disabled="disabled" required="required" class="form-control">
+                                        <input type="hidden" value="{{usuariopunto[0]}}" name="" id="idpunto">
+                                    
                                 </div>
                             </div>
                             <div class="col-1 mt-4 pt-2">
@@ -68,6 +57,7 @@
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel"
                                         for="form3Example3"><strong>Digitador</strong></label>
+                                        
                                     {% if verifi[8] %}
                                     <input type="text" id="digitador" name="digitador" placeholder="Punto de Compra"
                                         required="required" class="form-control" disabled value="{{ verifi[8] }}" />
@@ -250,7 +240,7 @@
                         if (
                             $("#proveedor option:selected").val() !=
                             "Seleccionar Proveedor" &&
-                            $("#puntoCompra option:selected").val() != "Seleccionar Punto" &&
+                            $("#idpunto").val() != "" &&
                             $("#idusuariologd").val() !=
                             "" &&
                             $("#digitador option:selected").val() !=
@@ -263,7 +253,7 @@
                             $("#id").val() == ""
                         ) {
                             $("#proveedor").attr("disabled", "true");
-                            $("#puntoCompra").attr("disabled", "true");
+                            $("#idpunto").attr("disabled", "true");
                             $("#idusuariolog").attr("disabled", "true");
                             $("#digitador").attr("disabled", "true");
                             $("#po").attr("disabled", "true");
@@ -282,7 +272,7 @@
                                 type: "POST",
                                 data: {
                                     id: $("#id").val(),
-                                    puntoCompra: $("#puntoCompra").val(),
+                                    puntoCompra: $("#idpunto").val(),
                                     verificador: $("#idusuariolog").val(),
                                     digitador: $("#digitador").val(),
                                     po: $("#po").val(),
@@ -307,7 +297,7 @@
                             });
                         } else if ($("#id").val() != "" && $("#po").val() != "") {
                             $("#proveedor").attr("disabled", "true");
-                            $("#puntoCompra").attr("disabled", "true");
+                            $("#idpunto").attr("disabled", "true");
                             $("#idusuariolog").attr("disabled", "true");
                             $("#digitador").attr("disabled", "true");
                             $("#bloquear").attr("disabled", "true");
@@ -326,8 +316,8 @@
                             !(
                                 $("#proveedor option:selected").val() !=
                                 "Seleccionar Proveedor" &&
-                                $("#puntoCompra option:selected").val() !=
-                                "Seleccionar Punto" &&
+                                $("#idpunto").val() !=
+                                "" &&
                                 $("#idusuariolog").val() !=
                                 "" &&
                                 $("#digitador option:selected").val() !=
@@ -361,7 +351,7 @@
                         if (
                             $("#proveedor option:selected").val() !=
                             "Seleccionar Proveedor" &&
-                            $("#puntoCompra option:selected").val() != "Seleccionar Punto" &&
+                            $("#idpunto").val() != "" &&
                             $("#idusuariolog").val() !=
                             "" &&
                             $("#digitador option:selected").val() !=
@@ -374,7 +364,7 @@
                             $("#id").val() != ""
                         ) {
                             $("#proveedor").attr("disabled", "true");
-                            $("#puntoCompra").attr("disabled", "true");
+                            $("#idpunto").attr("disabled", "true");
                             $("#idusuariolog").attr("disabled", "true");
                             $("#digitador").attr("disabled", "true");
                             $("#po").attr("disabled", "true");
@@ -393,7 +383,7 @@
                                 type: "POST",
                                 data: {
                                     id: $("#id").val(),
-                                    puntoCompra: $("#puntoCompra").val(),
+                                    puntoCompra: $("#idpunto").val(),
                                     verificador: $("#idusuariolog").val(),
                                     digitador: $("#digitador").val(),
                                     po: $("#po").val(),
@@ -422,7 +412,7 @@
                             flagbloquear == 1
                         ) {
                             $("#proveedor").attr("disabled", "true");
-                            $("#puntoCompra").attr("disabled", "true");
+                            $("#idpunto").attr("disabled", "true");
                             $("#idusuariolog").attr("disabled", "true");
                             $("#digitador").attr("disabled", "true");
                             $("#po").attr("disabled", "true");
@@ -439,8 +429,8 @@
                             !(
                                 $("#proveedor option:selected").val() !=
                                 "Seleccionar Proveedor" &&
-                                $("#puntoCompra option:selected").val() !=
-                                "Seleccionar Punto" &&
+                                $("#idpunto").val() !=
+                                "" &&
                                 $("#idusuariolog").val() !=
                                 "" &&
                                 $("#digitador option:selected").val() !=

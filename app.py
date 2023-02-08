@@ -409,7 +409,7 @@ def listaProveedores():
             cur.execute("select * from tb_proveedor Where NombreProveedor = %s",[proveedor])
             proveedornuevo = cur.fetchone()
             #INSERTAMOS LA VERIFICACION
-            fecha = datetime.date(hi)
+            fecha = hi.replace(microsecond=0)
             cur = mysql.connection.cursor()
             cur.execute("INSERT INTO tb_verificacion (Fecha,IdProveedor,IdPuntoCompra,IdEstado,IdUsuarioCreacion) VALUES (%s,%s,%s,%s,%s)",(fecha,proveedornuevo[0],5,3,session["userId"]))
             proveedornuevo = cur.fetchone()
@@ -463,8 +463,12 @@ def detalleVerificacion():
         # necesito mandar a llamar los dastos del usuario que esta logueado para ponerlo como verificador
         cur = mysql.connection.cursor()
         cur.execute("select cred.Id_Credenciales,u.NombreUsuario from tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_Credenciales Where cred.Id_Credenciales = %s",[session['userId']])
-        usuariolog = cur.fetchone()   
-        return render_template('modal/verificaciones-modal.html',usuariolog = usuariolog,verificacion = verificacion,Punto = punto,Material = material,Verificador = verificador,Digitador = digitador)
+        usuariolog = cur.fetchone()  
+        # necesito mandar a llamar los dastos del usuario para saber en que punto de venta esta
+        cur = mysql.connection.cursor()
+        cur.execute("select pc.Id_PuntoCompra,pc.NombrePuntoCompra from tb_usuarios as u inner join tb_puntocompra as pc on u.IdPuesto = pc.Id_PuntoCompra inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_Credenciales where cred.Id_Credenciales = %s",[session['userId']])
+        usuariopunto = cur.fetchone()  
+        return render_template('modal/verificaciones-modal.html',usuariopunto = usuariopunto,usuariolog = usuariolog,verificacion = verificacion,Punto = punto,Material = material,Verificador = verificador,Digitador = digitador)
 
 #DETALLE VERIFICACION
 @app.route('/detalleVerificacionAdmin', methods =["POST","GET"])
@@ -537,22 +541,25 @@ def listaPesos():
             #  SUMA DE LA COLUMNA PESOS BRUTOS
             cur = mysql.connection.cursor()
             cur.execute("SELECT SUM(PesoBruto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
-            sumaBruto = cur.fetchone()
-            mysql.connection.commit()
+            sumaBruto1 = cur.fetchone()
+            sumaBruto = round(sumaBruto1[0],2)
             #  SUMA DE LA COLUMNA PESOS TARA
             cur = mysql.connection.cursor()
             cur.execute("SELECT SUM(PesoTara) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
-            sumaTara = cur.fetchone()
+            sumaTara1 = cur.fetchone()
+            sumaTara = round(sumaTara1[0],2)
             #  SUMA DE LA COLUMNA PESOS DESTARE
             cur = mysql.connection.cursor()
             cur.execute("SELECT SUM(Destare) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
-            sumaDestare = cur.fetchone()
+            sumaDestare1 = cur.fetchone()
             mysql.connection.commit()
+            sumaDestare = round(sumaDestare1[0],2)
             #  SUMA DE LA COLUMNA PESOS NETO
             cur = mysql.connection.cursor()
             cur.execute("SELECT SUM(PesoNeto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
-            sumaNeto = cur.fetchone()
+            sumaNeto1 = cur.fetchone()
             mysql.connection.commit()
+            sumaNeto = round(sumaNeto1[0],2)
             print(pesos)
             return render_template('tablas/tabla-pesos.html',pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
         else:
@@ -610,7 +617,8 @@ def insertarPesos():
 
         
         #CREAMOS EL DETALLE VERIFICACION AÑADIENDO LOS PESOS QUE EL USUARIO INGRESO 
-        pNeto = float(float(pBruto)-float(pTara)-float(destare))
+        pNeto = round(float(float(pBruto)-float(pTara)-float(destare)),2)
+        
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO tb_detalleverificacion (IdVerificacion,IdMaterial,PesoBruto,PesoTara,PesoNeto,Destare) VALUES (%s,%s,%s,%s,%s,%s)",(id,materiales[0],pBruto,pTara,pNeto,destare))
         mysql.connection.commit()
@@ -623,23 +631,27 @@ def insertarPesos():
         #  SUMA DE LA COLUMNA PESOS BRUTOS
         cur = mysql.connection.cursor()
         cur.execute("SELECT SUM(PesoBruto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
-        sumaBruto = cur.fetchone()
+        sumaBruto1 = cur.fetchone()
         mysql.connection.commit()
+        sumaBruto = round(sumaBruto1[0],2)
         #  SUMA DE LA COLUMNA PESOS TARA
         cur = mysql.connection.cursor()
         cur.execute("SELECT SUM(PesoTara) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
-        sumaTara = cur.fetchone()
+        sumaTara1 = cur.fetchone()
+        sumaTara = round(sumaTara1[0],2)
         #  SUMA DE LA COLUMNA PESOS DESTARE
         cur = mysql.connection.cursor()
         cur.execute("SELECT SUM(Destare) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
-        sumaDestare = cur.fetchone()
+        sumaDestare1 = cur.fetchone()
         mysql.connection.commit()
+        sumaDestare = round(sumaDestare1[0],2)
         #  SUMA DE LA COLUMNA PESOS NETO
         cur = mysql.connection.cursor()
         cur.execute("SELECT SUM(PesoNeto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
-        sumaNeto = cur.fetchone()
+        sumaNeto1 = cur.fetchone()
         mysql.connection.commit()
-
+        sumaNeto = round(sumaNeto1[0],2)
+        print(sumaNeto)
         return render_template('tablas/tabla-pesos.html',pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
    else:
         return "No"
@@ -665,22 +677,25 @@ def finalizarVerificacion():
             #  SUMA DE LA COLUMNA PESOS BRUTOS
             cur = mysql.connection.cursor()
             cur.execute("SELECT SUM(PesoBruto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
-            sumaBruto = cur.fetchone()
-            mysql.connection.commit()
+            sumaBruto1 = cur.fetchone()
+            sumaBruto = round(sumaBruto1[0],2)
             #  SUMA DE LA COLUMNA PESOS TARA
             cur = mysql.connection.cursor()
             cur.execute("SELECT SUM(PesoTara) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
-            sumaTara = cur.fetchone()
+            sumaTara1 = cur.fetchone()
+            sumaTara = round(sumaTara1[0],2)
             #  SUMA DE LA COLUMNA PESOS DESTARE
             cur = mysql.connection.cursor()
             cur.execute("SELECT SUM(Destare) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
-            sumaDestare = cur.fetchone()
+            sumaDestare1 = cur.fetchone()
             mysql.connection.commit()
+            sumaDestare = round(sumaDestare1[0],2)
             #  SUMA DE LA COLUMNA PESOS NETO
             cur = mysql.connection.cursor()
             cur.execute("SELECT SUM(PesoNeto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
-            sumaNeto = cur.fetchone()
+            sumaNeto1 = cur.fetchone()
             mysql.connection.commit()
+            sumaNeto = round(sumaNeto1[0],2)
             #  FECHA VERIFICACION
             cur = mysql.connection.cursor()
             cur.execute("SELECT Fecha FROM tb_verificacion WHERE Id_Verificacion = %s",[id])
@@ -698,7 +713,7 @@ def finalizarVerificacion():
             mysql.connection.commit()
             #total de materiales
             cur = mysql.connection.cursor()
-            cur.execute('SELECT m.NombreMaterial,sum(ver.PesoBruto) as bruto,sum(ver.PesoTara) as tara,SUM(ver.PesoNeto) as neto FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
+            cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto)) as bruto,round(sum(ver.PesoTara)) as tara,round(SUM(ver.PesoNeto)) as neto FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
             mat = cur.fetchall()
             mysql.connection.commit()
             print(Verificacion)
