@@ -427,11 +427,14 @@ def listaProveedores():
 @app.route('/detalleVerificacion', methods =["POST","GET"])
 def detalleVerificacion():
    if request.method == "POST":
+        print("aqui no")
         id = request.form['id']
+        print(id)
         cur = mysql.connection.cursor()
         cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
         nueva = cur.fetchall()
         mysql.connection.commit()
+        print("nueva")
         print(nueva)
         if nueva:
             cur = mysql.connection.cursor()
@@ -443,6 +446,7 @@ def detalleVerificacion():
             cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
             verificacion = cur.fetchall()
             mysql.connection.commit()
+            
         #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
         #CONSULTA PARA LOS PUNTOS DE COMPRA
         cur = mysql.connection.cursor()
@@ -477,7 +481,7 @@ def detalleVerificacionAdmin():
    if request.method == "POST":
         id = request.form['id']
         cur = mysql.connection.cursor()
-        print(id)
+        
         cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.Id_Verificacion = %s",[id])
         nueva = cur.fetchall()
         mysql.connection.commit()
@@ -538,6 +542,7 @@ def listaPesos():
             cur = mysql.connection.cursor()
             cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_material as m ON dt.IdMaterial = m.Id_Material Where dt.IdVerificacion = %s",[id])
             pesos = cur.fetchall()
+            print(pesos)
             #HACEMOS LOA SUMA DE CADA COLUMNA
             #  SUMA DE LA COLUMNA PESOS BRUTOS
             cur = mysql.connection.cursor()
