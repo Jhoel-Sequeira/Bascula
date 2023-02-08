@@ -531,7 +531,8 @@
                                 if (result.isConfirmed) {
                                 }
                             });
-                        } else if (tara >= bruto || tara <= destare && $("#buscarmat").val() != "JUMBO") {
+                        } 
+                        else if (tara <= destare && $("#buscarmat").val() != "JUMBO") {
                             Swal.fire({
                                 icon: "error",
                                 title: "Datos Inválidos",
@@ -542,18 +543,7 @@
                                 if (result.isConfirmed) {
                                 }
                             });
-                        } else if (destare >= bruto - tara) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Datos Inválidos",
-                                confirmButtonText: "Ok",
-                                text: "El valor del destare no puede ser mayor o igual a la resta P.bruto - P.tara.",
-                            }).then((result) => {
-                                /* Read more about isConfirmed, isDenied below */
-                                if (result.isConfirmed) {
-                                }
-                            });
-                        } else {
+                        }else {
                             $.ajax({
                                 url: "/insertarPesos",
                                 type: "POST",

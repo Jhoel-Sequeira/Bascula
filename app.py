@@ -542,24 +542,40 @@ def listaPesos():
             cur = mysql.connection.cursor()
             cur.execute("SELECT SUM(PesoBruto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
             sumaBruto1 = cur.fetchone()
-            sumaBruto = round(sumaBruto1[0],2)
+            if sumaBruto1[0]:
+                sumaBruto = round(sumaBruto1[0],2)
+            else:
+                sumaBruto = 0.00
+
+            print(sumaBruto)
             #  SUMA DE LA COLUMNA PESOS TARA
             cur = mysql.connection.cursor()
             cur.execute("SELECT SUM(PesoTara) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
             sumaTara1 = cur.fetchone()
-            sumaTara = round(sumaTara1[0],2)
+            if sumaTara1[0]:
+                sumaTara = round(sumaTara1[0],2)
+            else:
+                sumaTara = 0.00
+            
             #  SUMA DE LA COLUMNA PESOS DESTARE
             cur = mysql.connection.cursor()
             cur.execute("SELECT SUM(Destare) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
             sumaDestare1 = cur.fetchone()
             mysql.connection.commit()
-            sumaDestare = round(sumaDestare1[0],2)
+            if sumaDestare1[0]:
+                sumaDestare = round(sumaDestare1[0],2)
+            else:
+                sumaDestare = 0.00
+            
             #  SUMA DE LA COLUMNA PESOS NETO
             cur = mysql.connection.cursor()
             cur.execute("SELECT SUM(PesoNeto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
             sumaNeto1 = cur.fetchone()
             mysql.connection.commit()
-            sumaNeto = round(sumaNeto1[0],2)
+            if sumaNeto1[0]:
+                sumaNeto = round(sumaNeto1[0],2)
+            else:
+                sumaNeto = 0.00
             print(pesos)
             return render_template('tablas/tabla-pesos.html',pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
         else:
@@ -716,7 +732,9 @@ def finalizarVerificacion():
             cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto)) as bruto,round(sum(ver.PesoTara)) as tara,round(SUM(ver.PesoNeto)) as neto FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
             mat = cur.fetchall()
             mysql.connection.commit()
-            print(Verificacion)
+            print(pesos)
+            print("factura aquiii")
+            print(len(pesos))
             return render_template('otros/factura.html',mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
         else:
             print("vacio")
