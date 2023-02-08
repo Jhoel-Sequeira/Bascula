@@ -57,20 +57,8 @@
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel"
                                         for="form3Example3"><strong>Verificador</strong></label>
-                                    {% if verifi[7] %}
-                                    <input type="text" id="verificador" name="verificador" placeholder="Punto de Compra"
-                                        required="required" class="form-control" disabled value="{{ verifi[7] }}" />
-                                    {% else %}
-                                    <select class="form-select " id="verificador" aria-label="Default select example">
-                                        <option selected="selected" disabled hidden>
-                                            Seleccionar Verificador
-                                        </option>
-                                        {% for i in Verificador %}
-                                        <option value="{{ i[0] }}">{{ i[1] }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    {% endif %}
-
+                                        <input type="text" value="{{usuariolog[1]}}" name="" id="" disabled="disabled" required="required" class="form-control">
+                                        <input type="hidden" value="{{usuariolog[0]}}" name="" id="idusuariolog">
                                     <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
                                                                                                                                                                                                                                                                                                                                                                                                         style="display: none;">Las
                                                                                                                                                                                                                                                                                                                                                                                                         constraseñas no coinciden</label> -->
@@ -263,8 +251,8 @@
                             $("#proveedor option:selected").val() !=
                             "Seleccionar Proveedor" &&
                             $("#puntoCompra option:selected").val() != "Seleccionar Punto" &&
-                            $("#verificador option:selected").val() !=
-                            "Seleccionar Verificador" &&
+                            $("#idusuariologd").val() !=
+                            "" &&
                             $("#digitador option:selected").val() !=
                             "Seleccionar Digitador" &&
                             $("#po").val() != "" &&
@@ -276,7 +264,7 @@
                         ) {
                             $("#proveedor").attr("disabled", "true");
                             $("#puntoCompra").attr("disabled", "true");
-                            $("#verificador").attr("disabled", "true");
+                            $("#idusuariolog").attr("disabled", "true");
                             $("#digitador").attr("disabled", "true");
                             $("#po").attr("disabled", "true");
                             $("#fecha").attr("disabled", "true");
@@ -295,7 +283,7 @@
                                 data: {
                                     id: $("#id").val(),
                                     puntoCompra: $("#puntoCompra").val(),
-                                    verificador: $("#verificador").val(),
+                                    verificador: $("#idusuariolog").val(),
                                     digitador: $("#digitador").val(),
                                     po: $("#po").val(),
                                     nboleta: $("#nboleta").val(),
@@ -320,7 +308,7 @@
                         } else if ($("#id").val() != "" && $("#po").val() != "") {
                             $("#proveedor").attr("disabled", "true");
                             $("#puntoCompra").attr("disabled", "true");
-                            $("#verificador").attr("disabled", "true");
+                            $("#idusuariolog").attr("disabled", "true");
                             $("#digitador").attr("disabled", "true");
                             $("#bloquear").attr("disabled", "true");
                             $("#po").attr("disabled", "true");
@@ -340,8 +328,8 @@
                                 "Seleccionar Proveedor" &&
                                 $("#puntoCompra option:selected").val() !=
                                 "Seleccionar Punto" &&
-                                $("#verificador option:selected").val() !=
-                                "Seleccionar Verificador" &&
+                                $("#idusuariolog").val() !=
+                                "" &&
                                 $("#digitador option:selected").val() !=
                                 "Seleccionar Digitador" &&
                                 $("#po").val() != "" &&
@@ -374,8 +362,8 @@
                             $("#proveedor option:selected").val() !=
                             "Seleccionar Proveedor" &&
                             $("#puntoCompra option:selected").val() != "Seleccionar Punto" &&
-                            $("#verificador option:selected").val() !=
-                            "Seleccionar Verificador" &&
+                            $("#idusuariolog").val() !=
+                            "" &&
                             $("#digitador option:selected").val() !=
                             "Seleccionar Digitador" &&
                             $("#po").val() != "" &&
@@ -387,7 +375,7 @@
                         ) {
                             $("#proveedor").attr("disabled", "true");
                             $("#puntoCompra").attr("disabled", "true");
-                            $("#verificador").attr("disabled", "true");
+                            $("#idusuariolog").attr("disabled", "true");
                             $("#digitador").attr("disabled", "true");
                             $("#po").attr("disabled", "true");
                             $("#fecha").attr("disabled", "true");
@@ -406,7 +394,7 @@
                                 data: {
                                     id: $("#id").val(),
                                     puntoCompra: $("#puntoCompra").val(),
-                                    verificador: $("#verificador").val(),
+                                    verificador: $("#idusuariolog").val(),
                                     digitador: $("#digitador").val(),
                                     po: $("#po").val(),
                                     nboleta: $("#nboleta").val(),
@@ -435,7 +423,7 @@
                         ) {
                             $("#proveedor").attr("disabled", "true");
                             $("#puntoCompra").attr("disabled", "true");
-                            $("#verificador").attr("disabled", "true");
+                            $("#idusuariolog").attr("disabled", "true");
                             $("#digitador").attr("disabled", "true");
                             $("#po").attr("disabled", "true");
                             $("#fecha").attr("disabled", "true");
@@ -453,8 +441,8 @@
                                 "Seleccionar Proveedor" &&
                                 $("#puntoCompra option:selected").val() !=
                                 "Seleccionar Punto" &&
-                                $("#verificador option:selected").val() !=
-                                "Seleccionar Verificador" &&
+                                $("#idusuariolog").val() !=
+                                "" &&
                                 $("#digitador option:selected").val() !=
                                 "Seleccionar Digitador" &&
                                 $("#po").val() != "" &&
@@ -738,13 +726,7 @@
         }).then(resultado => {
             if (resultado.value) {
 
-                $.ajax({
-                    url: "/eliminarProveedor",
-                    type: "POST",
-                    data: {
-                        id: id
-                    },
-                    success: function (response) {
+                
                         $.ajax({
                             url: "/finalizarVerificacion",
                             type: "POST",
@@ -812,10 +794,6 @@
                             },
                         });
 
-                    },
-                    error: function (error) { // console.log(error);
-                    }
-                });
             } else { // Dijeron que no
                 console.log("*NO se elimina la venta*");
             }

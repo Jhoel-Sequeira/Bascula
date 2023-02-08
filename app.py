@@ -457,7 +457,11 @@ def detalleVerificacion():
         cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
         digitador = cur.fetchall()        
         print(verificacion)
-        return render_template('modal/verificaciones-modal.html',verificacion = verificacion,Punto = punto,Material = material,Verificador = verificador,Digitador = digitador)
+        # necesito mandar a llamar los dastos del usuario que esta logueado para ponerlo como verificador
+        cur = mysql.connection.cursor()
+        cur.execute("select cred.Id_Credenciales,u.NombreUsuario from tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_Credenciales Where cred.Id_Credenciales = %s",[session['userId']])
+        usuariolog = cur.fetchone()   
+        return render_template('modal/verificaciones-modal.html',usuariolog = usuariolog,verificacion = verificacion,Punto = punto,Material = material,Verificador = verificador,Digitador = digitador)
 
 #DETALLE VERIFICACION
 @app.route('/detalleVerificacionAdmin', methods =["POST","GET"])
@@ -648,7 +652,7 @@ def finalizarVerificacion():
         cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_material as m ON dt.IdMaterial = m.Id_Material Where dt.IdVerificacion = %s",[id])
         pesos = cur.fetchall()
         mysql.connection.commit() 
-        
+        print("pesos")
         if pesos:
             cur = mysql.connection.cursor()
             cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
@@ -694,9 +698,10 @@ def finalizarVerificacion():
             cur.execute('SELECT m.NombreMaterial,sum(ver.PesoBruto) as bruto,sum(ver.PesoTara) as tara,SUM(ver.PesoNeto) as neto FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
             mat = cur.fetchall()
             mysql.connection.commit()
-            print(mat)
+            print(Verificacion)
             return render_template('otros/factura.html',mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
         else:
+            print("vacio")
             return "vacio"
         
    else:
