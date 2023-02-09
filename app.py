@@ -954,6 +954,38 @@ def insertarUsuarioNuevo():
         print(cedula)
         return render_template('modal/usuarionuevo-modal.html',flagUSuario = flagUSuario, info = cedula,cargos = cargos, roles = roles)
 
+#DETALLE DE TARAS PARA AÑADIR LOS OTROS VALORES DE LA TARA
+@app.route('/añadirTarasExtras', methods =["POST","GET"])
+def añadirTarasExtras():
+    if request.method == "POST":
+        id = request.form['id']
+        valor = request.form['valor']
+        tipo = request.form['tipo']
+        print("iddd")
+        print(id)
+        #INSERTAMOS el valor de la tara al detalle
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO tb_detalletara (IdDetalleVerificacion,Contenedor,ValorTaraExtra) VALUES (%s,%s,%s)",(id,tipo,valor))
+        mysql.connection.commit()
+        #TRAEMOS LOS valores de la tara a la tabla
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_detalletara where IdDetalleVerificacion = %s",[id])
+        taras = cur.fetchall()
+       
+        #total del peso de las taras que existen en el pesaje
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT PesoTara as tara from tb_detalleverificacion WHERE Id_DetalleVerificacion = %s',[id])
+        pesotaraviejo = cur.fetchone()
+        mysql.connection.commit()
+        print(pesotaraviejo)
+        taranueva = round(float(pesotaraviejo[0]) + float(valor))
+        cur.execute("UPDATE tb_detalleverificacion set PesoTara = %s Where Id_DetalleVerificacion = %s",(taranueva,id))
+        proveedor = cur.fetchall()
+        mysql.connection.commit()
+        
+        return render_template('tablas/tabla-taras.html',taras = taras,total = taranueva)
+
+
 
 #DESLOGUEO
 @app.route('/deslog')

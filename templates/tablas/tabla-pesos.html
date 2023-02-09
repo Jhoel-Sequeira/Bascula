@@ -11,7 +11,9 @@
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Tara</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">Destare</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Neto</th>
-
+            <th></th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -19,16 +21,26 @@
         <tr class="fuente-tabla">
             <td>{{i[2]}}</td>
             <td align="center" style="padding-right: 10px">{{i[3]}}</td>
-            <td align="center" style="padding-right: 10px">{{i[4]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[4]}} </td>
             <td align="center" style="padding-right: 10px">{{i[5]}}</td>
             <td align="center" style="padding-right: 10px">{{i[6]}}</td>
-            
+            <td><button type="button" class="btn btn-success mt-3 ml-5" value="{{i[0]}}" name="subtara">
+                    <i class="fa-solid fa-plus"></i>
+                </button></td>
+            <td><button type="button" class="btn btn-primary mt-3 ml-5" value="{{i[0]}}" name="vertara">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button></td>
+            <td><button type="button" class="btn btn-danger mt-3 ml-5" value="{{i[0]}}" name="vertara">
+                    <i class="fa-sharp fa-solid fa-circle-minus"></i>
+                </button>
+            </td>
+
         </tr>
         {%endfor%}
 
         <tr>
             <td colspan="1" align="center" class="fuente-tabla" style="margin-right: 100px">
-                <strong >Total</strong>
+                <strong>Total</strong>
             </td>
             <td colspan="1" align="center" class="fuente-tabla">
                 <strong>{%if sumaBruto%}{{sumaBruto}}{%else%}0.00{%endif%} Lb</strong>
@@ -45,3 +57,74 @@
         </tr>
     </tbody>
 </table>
+<script>
+    $("#tabla-peso button[name=subtara]").click(function () {
+
+        idDet = $(this).val();
+        Swal.fire({
+            title: "Tara nuevo!",
+            text: "Ingrese los datos de la tara",
+            html: '<select class="swal2-input" id="tipo"><option selected="selected" hidden>Seleccione una opcion</option><option value="Canasta">Canasta</option><option value="Pana">Pana</option> <option value="Polin">Polin</option><option value="Jumbo">Jumbo</option></select>'+
+            '<input type="number" id="valor" class="swal2-input" placeholder="valor tara">',
+            
+            showCancelButton: true,
+        }).then((result) => {
+            tipo = $("#tipo option:selected").val()
+            valor = $('#valor').val()
+            $.ajax({
+                    url: "/añadirTarasExtras",
+                    type: "POST",
+                    data: {
+                        id: idDet,
+                        valor: valor,
+                        tipo: tipo
+
+                    },
+                    success: function (response) {
+                        $("#tabla-taras").html(response);
+                        $("#tabla-taras").append(response.htmlresponse);
+                        cargarPesos();
+                    },
+                    error: function (error) {
+                        // console.log(error);
+                    },
+                });
+
+        });
+    });
+    $("#tabla-peso button[name=vertara]").click(function () {
+        idDet = $(this).val();
+
+    });
+    $("#tabla-peso button[name=elimtara]").click(function () {
+        idDet = $(this).val();
+        Swal.fire({
+            title: "Tara nuevo!",
+            text: "Ingrese el valor de la tara:",
+            input: "number",
+            showCancelButton: true,
+        }).then((result) => {
+            idDet = $(this).val();
+            if (result.value != "") {
+                $.ajax({
+                    url: "/añadirTarasExtras",
+                    type: "POST",
+                    data: {
+                        id: idDet,
+                        valor: result.value
+
+                    },
+                    success: function (response) {
+                        $("#tabla-taras").html(response);
+                        $("#tabla-taras").append(response.htmlresponse);
+                        cargarPesos();
+                    },
+                    error: function (error) {
+                        // console.log(error);
+                    },
+                });
+            }
+
+        });
+    });
+</script>

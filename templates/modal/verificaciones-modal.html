@@ -1,6 +1,6 @@
 {% for verifi in verificacion %}
 
-<div class="modal fade" id="detalleVerificacionmodal" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="detalleVerificacionmodal" data-bs-focus="false" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
         <div class="modal-content" style="background-color: #e4e9f7">
@@ -30,13 +30,12 @@
                                     <label class="form-label fuentelabel" for="form3Example3"><strong>Punto de
                                             compra</strong></label>
                                     <input type="text" value="{{usuariopunto[1]}}" name="" id="" disabled="disabled"
-                                        required="required" class="form-control">
-                                    <input type="hidden" value="{{usuariopunto[0]}}" name="" id="idpunto">
-
+                                        required="required" class="form-control" />
+                                    <input type="hidden" value="{{usuariopunto[0]}}" name="" id="idpunto" />
                                 </div>
                             </div>
                             <div class="col-1 mt-4 pt-2">
-                                <button type="button" class="btn btn-outline-primary" style="border: none; width: 80px;"
+                                <button type="button" class="btn btn-outline-primary" style="border: none; width: 80px"
                                     id="bloquear" onclick="bloquear()">
                                     <a style="text-decoration: none">Bloquear</a>
                                 </button>
@@ -48,8 +47,8 @@
                                     <label class="form-label fuentelabel"
                                         for="form3Example3"><strong>Verificador</strong></label>
                                     <input type="text" value="{{usuariolog[1]}}" name="" id="" disabled="disabled"
-                                        required="required" class="form-control">
-                                    <input type="hidden" value="{{usuariolog[0]}}" name="" id="idusuariolog">
+                                        required="required" class="form-control" />
+                                    <input type="hidden" value="{{usuariolog[0]}}" name="" id="idusuariolog" />
                                     <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
                                                                                                                                                                                                                                                                                                                                                                                                         style="display: none;">Las
                                                                                                                                                                                                                                                                                                                                                                                                         constraseñas no coinciden</label> -->
@@ -87,11 +86,11 @@
                                         <label class="form-label fuentelabel"
                                             for="form3Example1"><strong>PO</strong></label>
                                         {% if verifi[2] %}
-                                        <input type="text" id="po" name="nombre" style="text-transform:uppercase;"
+                                        <input type="text" id="po" name="nombre" style="text-transform: uppercase"
                                             onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="PO"
                                             required="required" class="form-control" value="{{ verifi[2] }}" />
                                         {% else %}
-                                        <input type="text" id="po" style="text-transform:uppercase;"
+                                        <input type="text" id="po" style="text-transform: uppercase"
                                             onkeyup="this.value=this.value.toUpperCase()" name="nombre" placeholder="PO"
                                             required="required" class="form-control" />
                                         {% endif %}
@@ -113,11 +112,11 @@
                                         <label class="form-label fuentelabel" for="form3Example2"><strong>No
                                                 Boleta</strong></label>
                                         {% if verifi[3] %}
-                                        <input type="text" id="nboleta" name="nboleta" style="text-transform:uppercase;"
+                                        <input type="text" id="nboleta" name="nboleta" style="text-transform: uppercase"
                                             onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="PO"
                                             required="required" class="form-control" value="{{ verifi[3] }}" />
                                         {% else %}
-                                        <input type="text" id="nboleta" style="text-transform:uppercase;"
+                                        <input type="text" id="nboleta" style="text-transform: uppercase"
                                             onkeyup="this.value=this.value.toUpperCase()" name="nboleta"
                                             required="required" placeholder="No Boleta" class="form-control" />
                                         {% endif %}
@@ -143,7 +142,7 @@
                                             <option value="6">6</option>
                                             <option value="7">7</option>
                                             <option value="8">8</option>
-                                            </select>
+                                        </select>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -151,10 +150,29 @@
                         </div>
                     </div>
                     <div class="row mb-4 mt-3">
-                        <label for="" class="fuentelabel"><input type="checkbox" name="cambio"> Añadir suma Taras</label>
+                        <label for="" class="fuentelabel"><input type="checkbox" name="cambio" id="verTaras" disabled />
+                            Ver Taras</label>
                     </div>
-                    <div class="row" id="tabla-tara">
-                        <div class="col mt-3 bg-light" id="tabla-taras"></div>
+                    <div class="row" id="tabla-tara" style="display: none;">
+                        <div class="col">
+                            <div class="row">
+                                <!-- <div class="col-11">
+                                    <label class="form-label fuentelabel" for="form3Example3"><strong>Peso
+                                            Tara</strong></label>
+                                    <input type="search" class="form-control" id="taras" placeholder="Ingrese las taras"
+                                        aria-label="Buscar" />
+                                </div>
+                                <div class="col-1 mt-3 pt-3">
+                                    <button type="button" disabled id="" class="btn btn-success mt-3 ml-5"
+                                        id="boton-enviar" onclick="añadirTara()">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mt-3 bg-light" id="tabla-taras">aaaaaaa</div>
+                        </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-3">
@@ -219,13 +237,21 @@
                     <div class="row">
                         <div class="col mt-3 bg-light" id="tabla-peso"></div>
                     </div>
-
                 </div>
 
                 <!-- INICIO DE LA FUNCIONALIDAD DE LOS BOTONES CON JQUERY  DE LA PRIMERA PANTALLA-->
                 <script>
                     flagbloquear = 0;
                     inicio = 1;
+                    //FUNCION PARA EL BOTON DE PESOS DE TARAS
+                    $("#verTaras").on("click", function () {
+                        if ($(this).is(":checked")) {
+                            // Hacer algo si el checkbox ha sido seleccionado
+                            $("#tabla-tara").show();
+                        } else {
+                            $("#tabla-tara").hide();
+                        }
+                    });
 
                     $(document).ready(function () {
                         $("#totalmat").hide();
@@ -237,8 +263,7 @@
                             $("#proveedor option:selected").val() !=
                             "Seleccionar Proveedor" &&
                             $("#idpunto").val() != "" &&
-                            $("#idusuariologd").val() !=
-                            "" &&
+                            $("#idusuariologd").val() != "" &&
                             $("#digitador option:selected").val() !=
                             "Seleccionar Digitador" &&
                             $("#po").val() != "" &&
@@ -257,6 +282,7 @@
                             $("#nboleta").attr("disabled", "true");
                             $("#bahia").attr("disabled", "true");
                             $("#buscarmat").removeAttr("disabled");
+                            $("#verTaras").removeAttr("disabled");
                             $("#destare").removeAttr("disabled");
                             $("#bruto").removeAttr("disabled");
                             $("#tara").removeAttr("disabled");
@@ -302,6 +328,7 @@
                             $("#nboleta").attr("disabled", "true");
                             $("#bahia").attr("disabled", "true");
                             $("#buscarmat").removeAttr("disabled");
+                            $("#verTaras").removeAttr("disabled");
                             $("#destare").removeAttr("disabled");
                             $("#bruto").removeAttr("disabled");
                             $("#tara").removeAttr("disabled");
@@ -312,10 +339,8 @@
                             !(
                                 $("#proveedor option:selected").val() !=
                                 "Seleccionar Proveedor" &&
-                                $("#idpunto").val() !=
-                                "" &&
-                                $("#idusuariolog").val() !=
-                                "" &&
+                                $("#idpunto").val() != "" &&
+                                $("#idusuariolog").val() != "" &&
                                 $("#digitador option:selected").val() !=
                                 "Seleccionar Digitador" &&
                                 $("#po").val() != "" &&
@@ -342,14 +367,20 @@
                     $(document).on("change", "#proveedor", function (event) {
                         valor = $("#proveedor option:selected").val();
                     });
+                    //funcion para agregar las taras extras
+                   
+                    function añadirTara() {
+                        idDet = $(this).val();
+                        alert(idDet)
+                        
 
+                    }
                     function bloquear() {
                         if (
                             $("#proveedor option:selected").val() !=
                             "Seleccionar Proveedor" &&
                             $("#idpunto").val() != "" &&
-                            $("#idusuariolog").val() !=
-                            "" &&
+                            $("#idusuariolog").val() != "" &&
                             $("#digitador option:selected").val() !=
                             "Seleccionar Digitador" &&
                             $("#po").val() != "" &&
@@ -368,6 +399,7 @@
                             $("#nboleta").attr("disabled", "true");
                             $("#bahia").attr("disabled", "true");
                             $("#buscarmat").removeAttr("disabled");
+                            $("#verTaras").removeAttr("disabled");
                             $("#destare").removeAttr("disabled");
                             $("#bruto").removeAttr("disabled");
                             $("#tara").removeAttr("disabled");
@@ -415,6 +447,7 @@
                             $("#fecha").attr("disabled", "true");
                             $("#nboleta").attr("disabled", "true");
                             $("#bahia").attr("disabled", "true");
+                            $("#verTaras").removeAttr("disabled");
                             $("#buscarmat").removeAttr("disabled");
                             $("#destare").removeAttr("disabled");
                             $("#bruto").removeAttr("disabled");
@@ -425,10 +458,8 @@
                             !(
                                 $("#proveedor option:selected").val() !=
                                 "Seleccionar Proveedor" &&
-                                $("#idpunto").val() !=
-                                "" &&
-                                $("#idusuariolog").val() !=
-                                "" &&
+                                $("#idpunto").val() != "" &&
+                                $("#idusuariolog").val() != "" &&
                                 $("#digitador option:selected").val() !=
                                 "Seleccionar Digitador" &&
                                 $("#po").val() != "" &&
@@ -462,7 +493,6 @@
                                 id: $("#id").val(),
                             },
                             success: function (response) {
-                                alert(response)
                                 $("#tabla-peso").html(response);
                                 $("#tabla-peso").append(response.htmlresponse);
                             },
@@ -538,8 +568,7 @@
                                 if (result.isConfirmed) {
                                 }
                             });
-                        } 
-                        else if (tara <= destare && $("#buscarmat").val() != "JUMBO") {
+                        } else if (tara < destare && $("#buscarmat").val() != "JUMBO") {
                             Swal.fire({
                                 icon: "error",
                                 title: "Datos Inválidos",
@@ -550,7 +579,7 @@
                                 if (result.isConfirmed) {
                                 }
                             });
-                        }else {
+                        } else {
                             $.ajax({
                                 url: "/insertarPesos",
                                 type: "POST",
@@ -579,16 +608,14 @@
                 </script>
             </div>
             <div class="p-2">
-
                 <div class="row">
                     <div class="col-12">
-                        <button type="button" class="btn btn-primary col-12" style="height: 50px;" id="finalizar"
+                        <button type="button" class="btn btn-primary col-12" style="height: 50px" id="finalizar"
                             disabled onclick="finalizar()">
                             Bloquear
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -696,14 +723,12 @@
         Swal.fire({
             title: "¿Desea guardar?",
             text: "Se imprimira una factura con los detalles",
-            icon: 'warning',
+            icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Sí, aceptar",
-            cancelButtonText: "Cancelar"
-        }).then(resultado => {
+            cancelButtonText: "Cancelar",
+        }).then((resultado) => {
             if (resultado.value) {
-
-
                 $.ajax({
                     url: "/finalizarVerificacion",
                     type: "POST",
@@ -723,7 +748,6 @@
                                 }
                             });
                         } else {
-
                             $("#factura").html(response);
                             $("#factura").append(response.htmlresponse);
                             // Escuchamos el click del botón
@@ -761,8 +785,6 @@
                                         window.location = "/home";
                                     }
                                 });
-
-
                             }, 1000);
                         }
                     },
@@ -770,12 +792,11 @@
                         // console.log(error);
                     },
                 });
-
-            } else { // Dijeron que no
+            } else {
+                // Dijeron que no
                 console.log("*NO se elimina la venta*");
             }
         });
-
     }
 </script>
 
