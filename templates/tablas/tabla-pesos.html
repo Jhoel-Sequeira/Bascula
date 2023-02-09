@@ -70,6 +70,13 @@
             text: "Ingrese los datos de la tara",
             html: '<select class="swal2-input" id="tipo"><option selected="selected" hidden>Seleccione una opcion</option><option value="Canasta">Canasta</option><option value="Pana">Pana</option> <option value="Polin">Polin</option><option value="Jumbo">Jumbo</option></select>' +
                 '<input type="number" id="valor" class="swal2-input" placeholder="valor tara">',
+            preConfirm: (value) => {
+                if (($('#tipo option:selected').val() == "Seleccione una opcion") || $('#brutoswal').val() == "") {
+                    Swal.showValidationMessage(
+                        'Debe completar toda la información'
+                    )
+                }
+            },
 
             showCancelButton: true,
         }).then((result) => {
@@ -120,26 +127,34 @@
     $("#tabla-peso button[name=editarbruto]").click(function () {
         idDet = $(this).val();
         Swal.fire({
-            title: "Tara nuevo!",
+            title: "Peso Bruto!",
             text: "Ingrese el valor del peso bruto:",
-            input: "number",
+            html: '<input type="number" id="brutoswal" class="swal2-input" placeholder="valor P.bruto">',
+            preConfirm: (value) => {
+                if ($('#brutoswal').val() == "") {
+                    Swal.showValidationMessage(
+                        'Rellene el campo faltante'
+                    )
+                }
+            },
             showCancelButton: true,
+
         }).then((result) => {
             idDet = $(this).val();
-            if (result.value != "") {
+            if ($('#brutoswal').val() != "") {
                 $.ajax({
                     url: "/modificarPesoBruto",
                     type: "POST",
                     data: {
                         id: idDet,
-                        valor: result.value
+                        valor: $('#brutoswal').val()
 
                     },
                     success: function (response) {
-                        if(response == "done"){
+                        if (response == "done") {
                             cargarPesos();
                         }
-                        
+
                     },
                     error: function (error) {
                         // console.log(error);

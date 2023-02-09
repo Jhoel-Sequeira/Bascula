@@ -978,7 +978,8 @@ def añadirTarasExtras():
         pesotaraviejo = cur.fetchone()
         mysql.connection.commit()
         print(pesotaraviejo)
-        taranueva = round(float(pesotaraviejo[0]) + float(valor))
+        taranueva = round(float(pesotaraviejo[0]) + float(valor),2)
+        print(taranueva)
         cur.execute("UPDATE tb_detalleverificacion set PesoTara = %s Where Id_DetalleVerificacion = %s",(taranueva,id))
         proveedor = cur.fetchall()
         mysql.connection.commit()
@@ -1079,7 +1080,7 @@ def elimLIneaTara():
         pesotaraviejo = cur.fetchone()
         mysql.connection.commit()
 
-        taranueva = round(float(pesotaraviejo[0]) - float(valorTara[1]))
+        taranueva = round(float(pesotaraviejo[0]) - float(valorTara[1]),2)
         cur.execute("UPDATE tb_detalleverificacion set PesoTara = %s Where Id_DetalleVerificacion = %s",(taranueva,valorTara[0]))
         proveedor = cur.fetchall()
         mysql.connection.commit()
