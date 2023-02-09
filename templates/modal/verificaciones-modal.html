@@ -154,7 +154,7 @@
                         <label for="" class="fuentelabel"><input type="checkbox" name="cambio"> Añadir suma Taras</label>
                     </div>
                     <div class="row" id="tabla-tara">
-                        <div class="col mt-3 bg-light" id="tabla-peso"></div>
+                        <div class="col mt-3 bg-light" id="tabla-taras"></div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-3">
@@ -462,6 +462,7 @@
                                 id: $("#id").val(),
                             },
                             success: function (response) {
+                                alert(response)
                                 $("#tabla-peso").html(response);
                                 $("#tabla-peso").append(response.htmlresponse);
                             },
