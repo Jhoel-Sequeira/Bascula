@@ -982,7 +982,24 @@ def añadirTarasExtras():
         cur.execute("UPDATE tb_detalleverificacion set PesoTara = %s Where Id_DetalleVerificacion = %s",(taranueva,id))
         proveedor = cur.fetchall()
         mysql.connection.commit()
+
+        #TRAEMOS LA TARA
+        #PARA HACER LAS OPERACIONES
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT PesoBruto,PesoTara,Destare as tara from tb_detalleverificacion WHERE Id_DetalleVerificacion = %s',[id])
+        datos = cur.fetchone()
+        mysql.connection.commit()
         
+        #AL MODIFICAR EL PESO BRUTO TAMBIEN SE MODIFICA EL PESO NETO
+        
+        pNeto = round(float(float(datos[0])-float(datos[1])-float(datos[2])),2)
+        
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE tb_detalleverificacion set PesoNeto = %s Where Id_DetalleVerificacion = %s",(pNeto,id))
+        mysql.connection.commit()
+        print("pessooooo netooo")
+        print(datos[0])
+        print(pNeto)
         return render_template('tablas/tabla-taras.html',taras = taras,total = taranueva)
 
 #VER TARA ESPECIFICA
@@ -1014,6 +1031,22 @@ def modificarPesoBruto():
         cur.execute("UPDATE tb_detalleverificacion set PesoBruto = %s Where Id_DetalleVerificacion = %s",(valor,id))
         proveedor = cur.fetchall()
         mysql.connection.commit()
+
+        #TRAEMOS LA TARA
+        #PARA HACER LAS OPERACIONES
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT PesoTara,Destare as tara from tb_detalleverificacion WHERE Id_DetalleVerificacion = %s',[id])
+        datos = cur.fetchone()
+        mysql.connection.commit()
+        mysql.connection.commit()
+        #AL MODIFICAR EL PESO BRUTO TAMBIEN SE MODIFICA EL PESO NETO
+        
+        pNeto = round(float(float(valor)-float(datos[0])-float(datos[1])),2)
+        
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE tb_detalleverificacion set PesoNeto = %s Where Id_DetalleVerificacion = %s",(pNeto,id))
+        proveedor = cur.fetchall()
+        mysql.connection.commit()
         
         return "done"
 
@@ -1033,6 +1066,46 @@ def elimLinea():
 def elimLIneaTara():
     if request.method == "POST":
         id = request.form['id']
+
+        #SELECCIONAMOS EL VALOR QUE VAMOS A BORRAR PARA RESTARSELO AL TOTAL
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT IdDetalleVErificacion,ValorTaraExtra from tb_detalletara Where Id_DetalleTara = %s",[id])
+        valorTara = cur.fetchone()
+        mysql.connection.commit()
+
+        #total del peso de las taras que existen en el pesaje
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT PesoTara as tara from tb_detalleverificacion WHERE Id_DetalleVerificacion = %s',[valorTara[0]])
+        pesotaraviejo = cur.fetchone()
+        mysql.connection.commit()
+
+        taranueva = round(float(pesotaraviejo[0]) - float(valorTara[1]))
+        cur.execute("UPDATE tb_detalleverificacion set PesoTara = %s Where Id_DetalleVerificacion = %s",(taranueva,valorTara[0]))
+        proveedor = cur.fetchall()
+        mysql.connection.commit()
+
+         #TRAEMOS LA TARA
+        #PARA HACER LAS OPERACIONES
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT PesoBruto,PesoTara,Destare as tara from tb_detalleverificacion WHERE Id_DetalleVerificacion = %s',[valorTara[0]])
+        datos = cur.fetchone()
+        mysql.connection.commit()
+        
+        #AL MODIFICAR EL PESO BRUTO TAMBIEN SE MODIFICA EL PESO NETO
+
+        pNeto = round(float(float(datos[0])-float(datos[1])-float(datos[2])),2)
+        
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE tb_detalleverificacion set PesoNeto = %s Where Id_DetalleVerificacion = %s",(pNeto,valorTara[0]))
+        mysql.connection.commit()
+
+
+        print("aaaaaaaaaaaaaaa")
+        print(datos)
+        print(pesotaraviejo)
+        print(valorTara[1])
+        print(taranueva)
+
         #MODIFICAMOS EL VALOR DEL PESO BRUTO
         cur = mysql.connection.cursor()
         cur.execute("DELETE from tb_detalletara Where Id_DetalleTara = %s",[id])

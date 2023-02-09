@@ -44,6 +44,7 @@
                 $("#tabla-taras").html(response);
                 $("#tabla-taras").append(response.htmlresponse);
                 $("#verTaras").click();
+                cargarPesos();
             },
             error: function (error) {
                 // console.log(error);
