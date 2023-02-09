@@ -985,6 +985,62 @@ def añadirTarasExtras():
         
         return render_template('tablas/tabla-taras.html',taras = taras,total = taranueva)
 
+#VER TARA ESPECIFICA
+@app.route('/verTaras', methods =["POST","GET"])
+def verTaras():
+    if request.method == "POST":
+        id = request.form['id']
+        #TRAEMOS LOS valores de la tara a la tabla
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_detalletara where IdDetalleVerificacion = %s",[id])
+        taras = cur.fetchall()
+       
+        #total del peso de las taras que existen en el pesaje
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT PesoTara as tara from tb_detalleverificacion WHERE Id_DetalleVerificacion = %s',[id])
+        pesotaraviejo = cur.fetchone()
+        mysql.connection.commit()
+        
+        return render_template('tablas/tabla-taras.html',taras = taras,total = pesotaraviejo)
+
+#MODIFICAR EL PESO BRUTO
+@app.route('/modificarPesoBruto', methods =["POST","GET"])
+def modificarPesoBruto():
+    if request.method == "POST":
+        id = request.form['id']
+        valor = request.form['valor']
+        #MODIFICAMOS EL VALOR DEL PESO BRUTO
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE tb_detalleverificacion set PesoBruto = %s Where Id_DetalleVerificacion = %s",(valor,id))
+        proveedor = cur.fetchall()
+        mysql.connection.commit()
+        
+        return "done"
+
+#MODIFICAR EL PESO BRUTO
+@app.route('/elimLinea', methods =["POST","GET"])
+def elimLinea():
+    if request.method == "POST":
+        id = request.form['id']
+        #MODIFICAMOS EL VALOR DEL PESO BRUTO
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE from tb_detalleverificacion Where Id_DetalleVerificacion = %s",[id])
+        mysql.connection.commit()
+        
+        return "done"
+#ELIMINAR EL VALOR TARA DETALLE
+@app.route('/elimLIneaTara', methods =["POST","GET"])
+def elimLIneaTara():
+    if request.method == "POST":
+        id = request.form['id']
+        #MODIFICAMOS EL VALOR DEL PESO BRUTO
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE from tb_detalletara Where Id_DetalleTara = %s",[id])
+        mysql.connection.commit()
+        
+        return "done"
+
+
 
 
 #DESLOGUEO

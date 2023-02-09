@@ -14,6 +14,7 @@
             <th></th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -28,9 +29,12 @@
                     <i class="fa-solid fa-plus"></i>
                 </button></td>
             <td><button type="button" class="btn btn-primary mt-3 ml-5" value="{{i[0]}}" name="vertara">
+                    <i class="fa-solid fa-info"></i>
+                </button></td>
+            <td><button type="button" class="btn btn-primary mt-3 ml-5" value="{{i[0]}}" name="editarbruto">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </button></td>
-            <td><button type="button" class="btn btn-danger mt-3 ml-5" value="{{i[0]}}" name="vertara">
+            <td><button type="button" class="btn btn-danger mt-3 ml-5" value="{{i[0]}}" name="elimlinea">
                     <i class="fa-sharp fa-solid fa-circle-minus"></i>
                 </button>
             </td>
@@ -64,50 +68,67 @@
         Swal.fire({
             title: "Tara nuevo!",
             text: "Ingrese los datos de la tara",
-            html: '<select class="swal2-input" id="tipo"><option selected="selected" hidden>Seleccione una opcion</option><option value="Canasta">Canasta</option><option value="Pana">Pana</option> <option value="Polin">Polin</option><option value="Jumbo">Jumbo</option></select>'+
-            '<input type="number" id="valor" class="swal2-input" placeholder="valor tara">',
-            
+            html: '<select class="swal2-input" id="tipo"><option selected="selected" hidden>Seleccione una opcion</option><option value="Canasta">Canasta</option><option value="Pana">Pana</option> <option value="Polin">Polin</option><option value="Jumbo">Jumbo</option></select>' +
+                '<input type="number" id="valor" class="swal2-input" placeholder="valor tara">',
+
             showCancelButton: true,
         }).then((result) => {
             tipo = $("#tipo option:selected").val()
             valor = $('#valor').val()
             $.ajax({
-                    url: "/añadirTarasExtras",
-                    type: "POST",
-                    data: {
-                        id: idDet,
-                        valor: valor,
-                        tipo: tipo
+                url: "/añadirTarasExtras",
+                type: "POST",
+                data: {
+                    id: idDet,
+                    valor: valor,
+                    tipo: tipo
 
-                    },
-                    success: function (response) {
-                        $("#tabla-taras").html(response);
-                        $("#tabla-taras").append(response.htmlresponse);
-                        cargarPesos();
-                    },
-                    error: function (error) {
-                        // console.log(error);
-                    },
-                });
+                },
+                success: function (response) {
+                    $("#tabla-taras").html(response);
+                    $("#tabla-taras").append(response.htmlresponse);
+                    $("#verTaras").click();
+                    cargarPesos();
+                },
+                error: function (error) {
+                    // console.log(error);
+                },
+            });
 
         });
     });
     $("#tabla-peso button[name=vertara]").click(function () {
         idDet = $(this).val();
+        $.ajax({
+            url: "/verTaras",
+            type: "POST",
+            data: {
+                id: idDet
+
+            },
+            success: function (response) {
+                $("#tabla-taras").html(response);
+                $("#tabla-taras").append(response.htmlresponse);
+                $("#verTaras").click();
+            },
+            error: function (error) {
+                // console.log(error);
+            },
+        });
 
     });
-    $("#tabla-peso button[name=elimtara]").click(function () {
+    $("#tabla-peso button[name=editarbruto]").click(function () {
         idDet = $(this).val();
         Swal.fire({
             title: "Tara nuevo!",
-            text: "Ingrese el valor de la tara:",
+            text: "Ingrese el valor del peso bruto:",
             input: "number",
             showCancelButton: true,
         }).then((result) => {
             idDet = $(this).val();
             if (result.value != "") {
                 $.ajax({
-                    url: "/añadirTarasExtras",
+                    url: "/modificarPesoBruto",
                     type: "POST",
                     data: {
                         id: idDet,
@@ -115,9 +136,10 @@
 
                     },
                     success: function (response) {
-                        $("#tabla-taras").html(response);
-                        $("#tabla-taras").append(response.htmlresponse);
-                        cargarPesos();
+                        if(response == "done"){
+                            cargarPesos();
+                        }
+                        
                     },
                     error: function (error) {
                         // console.log(error);
@@ -126,5 +148,23 @@
             }
 
         });
+    });
+    $("#tabla-peso button[name=elimlinea]").click(function () {
+        idDet = $(this).val();
+        $.ajax({
+            url: "/elimLinea",
+            type: "POST",
+            data: {
+                id: idDet
+
+            },
+            success: function (response) {
+                cargarPesos();
+            },
+            error: function (error) {
+                // console.log(error);
+            },
+        });
+
     });
 </script>

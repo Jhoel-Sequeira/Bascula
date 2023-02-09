@@ -11,7 +11,7 @@
         </tr>
         <tr class="fuente-tabla">
             <th style="width: 350px">Panas</th>
-            <th style="width: 200px; padding-left: 80px;">Peso</th>
+            <th style="width: 200px;">Peso</th>
 
             <th></th>
         </tr>
@@ -20,14 +20,35 @@
         {%for i in taras%}
         <tr class="fuente-tabla">
             <td>{{i[2]}}</td>
-            <td>{{i[3]}}</td>
+            <td style="width: 550px;">{{i[3]}} Lb</td>
+            <td><button type="button" class="btn btn-danger mt-3 ml-5" value="{{i[0]}}" name="elimLIneaTara">
+                <i class="fa-sharp fa-solid fa-circle-minus"></i>
+            </button>
+        </td>
         </tr>
         {%endfor%}
 
     </tbody>
 </table>
-
 <script>
+    $("#tabla-prov button[name=elimLIneaTara]").click(function () {
+        idDet = $(this).val();
+        $.ajax({
+            url: "/elimLIneaTara",
+            type: "POST",
+            data: {
+                id: idDet
 
-    
+            },
+            success: function (response) {
+                $("#tabla-taras").html(response);
+                $("#tabla-taras").append(response.htmlresponse);
+                $("#verTaras").click();
+            },
+            error: function (error) {
+                // console.log(error);
+            },
+        });
+
+    });
 </script>
