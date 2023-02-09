@@ -735,7 +735,7 @@ def finalizarVerificacion():
             mysql.connection.commit()
             #total de materiales
             cur = mysql.connection.cursor()
-            cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto)) as bruto,round(sum(ver.PesoTara)) as tara,round(SUM(ver.PesoNeto)) as neto FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
+            cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
             mat = cur.fetchall()
             mysql.connection.commit()
             print(pesos)
