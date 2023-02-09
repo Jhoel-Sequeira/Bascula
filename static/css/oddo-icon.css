@@ -81,3 +81,29 @@
     transition: transform 0.3s linear, -webkit-transform 0.3s linear;
   }
 }
+
+/* DIMENSIONES PARA UNA LAPTOP */
+@media (max-width: 2500px) {
+  .centrar {
+    justify-items: start;
+    background-color: transparent;
+    padding: 0;
+  }
+
+  .card .icon>i {
+    position: absolute;
+    right: 30%;
+    top: 15px;
+    transition: -webkit-transform 0.3s linear;
+    transition: transform 0.3s linear;
+    transition: transform 0.3s linear, -webkit-transform 0.3s linear;
+  }
+  .card .icon>.delgado{
+    position: absolute;
+    right: 39%;
+    top: 15px;
+    transition: -webkit-transform 0.3s linear;
+    transition: transform 0.3s linear;
+    transition: transform 0.3s linear, -webkit-transform 0.3s linear;
+  }
+}
