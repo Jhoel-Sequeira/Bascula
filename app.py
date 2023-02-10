@@ -634,7 +634,7 @@ def insertarPesos():
         
         #MANDAMOS A LLAMAR EL ID DEL MATERIAL QUE SELECCIONO EL USUARIO
         cur = mysql.connection.cursor()
-        cur.execute("select * from tb_material Where Id_Estado = 1 AND NombreMaterial like %s",[material+'%'])
+        cur.execute("select * from tb_material Where Id_Estado = 1 AND NombreMaterial = %s",[material])
         materiales = cur.fetchone()
 
         
