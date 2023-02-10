@@ -35,7 +35,7 @@
                     <i class="fa-solid fa-pen-to-square"></i>
                 </button></td>
             <td><button type="button" class="btn btn-danger mt-3 ml-5" value="{{i[0]}}" name="elimlinea">
-                    <i class="fa-sharp fa-solid fa-circle-minus"></i>
+                <i class="fa-solid fa-trash"></i>
                 </button>
             </td>
 
@@ -68,7 +68,7 @@
         Swal.fire({
             title: "Tara nuevo!",
             text: "Ingrese los datos de la tara",
-            html: '<select class="swal2-input" id="tipo"><option selected="selected" hidden>Seleccione una opcion</option><option value="Canasta">Canasta</option><option value="Pana">Pana</option> <option value="Polin">Polin</option><option value="Jumbo">Jumbo</option></select>' +
+            html: '<select class="swal2-input" id="tipo"><option selected="selected" hidden>Seleccione una opcion</option><option value="Canasta">Canasta</option><option value="Cajilla">Cajilla</option><option value="Pana">Pana</option> <option value="Polin">Polin</option><option value="Jumbo">Jumbo</option></select>' +
                 '<input type="number" id="valor" class="swal2-input" placeholder="valor tara">',
             preConfirm: (value) => {
                 if (($('#tipo option:selected').val() == "Seleccione una opcion") || $('#brutoswal').val() == "") {

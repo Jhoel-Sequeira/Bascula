@@ -37,7 +37,7 @@
                             <div class="col-1 mt-4 pt-2">
                                 <button type="button" class="btn btn-outline-primary" style="border: none; width: 80px"
                                     id="bloquear" onclick="bloquear()">
-                                    <a style="text-decoration: none">Bloquear</a>
+                                    <a style="text-decoration: none;padding-right: 5px;">Bloquear</a>
                                 </button>
                             </div>
                         </div>
@@ -722,7 +722,7 @@
     function finalizar() {
         Swal.fire({
             title: "¿Desea guardar?",
-            text: "Se imprimira una factura con los detalles",
+            text: "Se imprimira una verificación con los detalles",
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Sí, aceptar",
@@ -741,7 +741,7 @@
                                 icon: "warning",
                                 title: "Datos faltantes",
                                 confirmButtonText: "Ok",
-                                text: "Esta verificacion no posee pesajes",
+                                text: "Esta verificación no posee pesajes",
                             }).then((result) => {
                                 /* Read more about isConfirmed, isDenied below */
                                 if (result.isConfirmed) {
@@ -775,7 +775,7 @@
                             setTimeout(() => {
                                 Swal.fire({
                                     icon: "success",
-                                    title: "Factura impresa",
+                                    title: "Verificación impresa",
                                     confirmButtonText: "Ok",
                                     text: "Se generó el pdf de la factura.",
                                 }).then((result) => {
