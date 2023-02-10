@@ -1,0 +1,226 @@
+<table class="table" id="tabla-peso">
+    
+    <thead>
+        <tr>
+            <th colspan="5" class="" style="text-align: center; font-size: 35px;">
+                Detalles pesos
+            </th>
+        </tr>
+        <tr>
+            <th style="width: 450px" class="fuente-tabla">Material</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Bruto</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Tara</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">Destare</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Neto</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {%for i in pesosverificador%}
+        <tr class="fuente-tabla">
+            <td>{{i[1]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[3]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[4]}} </td>
+            <td align="center" style="padding-right: 10px">{{i[5]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[6]}}</td>
+           
+
+        </tr>
+        {%endfor%}
+
+        <tr>
+            <td colspan="1" align="center" class="fuente-tabla" style="margin-right: 100px">
+                <strong>Total</strong>
+            </td>
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaBruto%}{{sumaBruto}}{%else%}0.00{%endif%} Lb</strong>
+            </td>
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaTara%}{{sumaTara}}{%else%}0.00{%endif%} Lb</strong>
+            </td>
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaDestare%}{{sumaDestare}}{%else%}0.00{%endif%} Lb</strong>
+            </td>
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaNeto%}{{sumaNeto}}{%else%}0.00{%endif%} Lb</strong>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table class="table" id="tabla-peso">
+    
+    <thead>
+        <tr>
+            <th colspan="5" class="" style="text-align: center; font-size: 35px;">
+                Detalles pesos
+            </th>
+        </tr>
+        <tr>
+            <th style="width: 450px" class="fuente-tabla">Material</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Bruto</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Tara</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">Destare</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Neto</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {%for i in pesosdigitador%}
+        <tr class="fuente-tabla">
+            <td>{{i[1]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[3]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[4]}} </td>
+            <td align="center" style="padding-right: 10px">{{i[5]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[6]}}</td>
+           
+
+        </tr>
+        {%endfor%}
+
+        <tr>
+            <td colspan="1" align="center" class="fuente-tabla" style="margin-right: 100px">
+                <strong>Total</strong>
+            </td>
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaBruto%}{{sumaBruto}}{%else%}0.00{%endif%} Lb</strong>
+            </td>
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaTara%}{{sumaTara}}{%else%}0.00{%endif%} Lb</strong>
+            </td>
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaDestare%}{{sumaDestare}}{%else%}0.00{%endif%} Lb</strong>
+            </td>
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaNeto%}{{sumaNeto}}{%else%}0.00{%endif%} Lb</strong>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<script>
+    $("#tabla-peso button[name=subtara]").click(function () {
+
+        idDet = $(this).val();
+        Swal.fire({
+            title: "Tara nuevo!",
+            text: "Ingrese los datos de la tara",
+            html: '<select class="swal2-input" id="tipo"><option selected="selected" hidden>Seleccione una opcion</option><option value="Canasta">Canasta</option><option value="Cajilla">Cajilla</option><option value="Pana">Pana</option> <option value="Polin">Polin</option><option value="Jumbo">Jumbo</option></select>' +
+                '<input type="number" id="valor" class="swal2-input" placeholder="valor tara">',
+            preConfirm: (value) => {
+                if (($('#tipo option:selected').val() == "Seleccione una opcion") || $('#brutoswal').val() == "") {
+                    Swal.showValidationMessage(
+                        'Debe completar toda la información'
+                    )
+                }
+            },
+
+            showCancelButton: true,
+        }).then((result) => {
+            tipo = $("#tipo option:selected").val()
+            valor = $('#valor').val()
+            $.ajax({
+                url: "/añadirTarasExtras",
+                type: "POST",
+                data: {
+                    id: idDet,
+                    valor: valor,
+                    tipo: tipo
+
+                },
+                success: function (response) {
+                    $("#tabla-taras").html(response);
+                    $("#tabla-taras").append(response.htmlresponse);
+                    $("#verTaras").click();
+                    cargarPesos();
+                },
+                error: function (error) {
+                    // console.log(error);
+                },
+            });
+
+        });
+    });
+    $("#tabla-peso button[name=vertara]").click(function () {
+        idDet = $(this).val();
+        $.ajax({
+            url: "/verTaras",
+            type: "POST",
+            data: {
+                id: idDet
+
+            },
+            success: function (response) {
+                $("#tabla-taras").html(response);
+                $("#tabla-taras").append(response.htmlresponse);
+                $("#verTaras").click();
+            },
+            error: function (error) {
+                // console.log(error);
+            },
+        });
+
+    });
+    $("#tabla-peso button[name=editarbruto]").click(function () {
+        idDet = $(this).val();
+        Swal.fire({
+            title: "Peso Bruto!",
+            text: "Ingrese el valor del peso bruto:",
+            html: '<input type="number" id="brutoswal" class="swal2-input" placeholder="valor P.bruto">',
+            preConfirm: (value) => {
+                if ($('#brutoswal').val() == "") {
+                    Swal.showValidationMessage(
+                        'Rellene el campo faltante'
+                    )
+                }
+            },
+            showCancelButton: true,
+
+        }).then((result) => {
+            idDet = $(this).val();
+            if ($('#brutoswal').val() != "") {
+                $.ajax({
+                    url: "/modificarPesoBruto",
+                    type: "POST",
+                    data: {
+                        id: idDet,
+                        valor: $('#brutoswal').val()
+
+                    },
+                    success: function (response) {
+                        if (response == "done") {
+                            cargarPesos();
+                        }
+
+                    },
+                    error: function (error) {
+                        // console.log(error);
+                    },
+                });
+            }
+
+        });
+    });
+    $("#tabla-peso button[name=elimlinea]").click(function () {
+        idDet = $(this).val();
+        $.ajax({
+            url: "/elimLinea",
+            type: "POST",
+            data: {
+                id: idDet
+
+            },
+            success: function (response) {
+                cargarPesos();
+            },
+            error: function (error) {
+                // console.log(error);
+            },
+        });
+
+    });
+</script>
