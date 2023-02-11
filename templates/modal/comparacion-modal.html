@@ -68,9 +68,15 @@
             </div>
             <div class="p-2">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-6">
                         <button type="button" class="btn btn-primary col-12" style="height: 50px" id="finalizar"
                              onclick="finalizar()">
+                            Validar
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-primary col-12" style="height: 50px" id="finalizar"
+                             onclick="finalizarmal()">
                             Validar
                         </button>
                     </div>
@@ -190,6 +196,85 @@
             if (resultado.value) {
                 $.ajax({
                     url: "/finalizarVerificacion",
+                    type: "POST",
+                    data: {
+                        id: $("#idboleta").val(),
+                    },
+                    success: function (response) {
+                        if (response == "vacio") {
+                            Swal.fire({
+                                icon: "warning",
+                                title: "Datos faltantes",
+                                confirmButtonText: "Ok",
+                                text: "Esta verificación no posee pesajes",
+                            }).then((result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                }
+                            });
+                        } else {
+                            $("#factura").html(response);
+                            $("#factura").append(response.htmlresponse);
+                            // Escuchamos el click del botón
+                            elementoParaConvertir = document.querySelector(".div-verpdf"); // <-- Aquí puedes elegir cualquier elemento del DOM
+                            elementoParaConvertir.style.display = "block";
+                            html2pdf()
+                                .set({
+                                    filename: "Factura.pdf",
+                                    image: {
+                                        type: "jpeg",
+                                        quality: 0.98,
+                                    },
+                                    html2canvas: {
+                                        scale: 5, // A mayor escala, mejores gráficos, pero más peso
+                                        letterRendering: false,
+                                    },
+                                    jsPDF: {
+                                        unit: "in",
+                                        format: "a4",
+                                        orientation: "portrait", // landscape o portrait
+                                    },
+                                })
+                                .from(elementoParaConvertir)
+                                .save();
+                            setTimeout(() => {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Verificación impresa",
+                                    confirmButtonText: "Ok",
+                                    text: "Se generó el pdf de la factura.",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        elementoParaConvertir.style.display = "none";
+                                        window.location = "/home";
+                                    }
+                                });
+                            }, 1000);
+                        }
+                    },
+                    error: function (error) {
+                        // console.log(error);
+                    },
+                });
+            } else {
+                // Dijeron que no
+                console.log("*NO se elimina la venta*");
+            }
+        });
+    }
+    function finalizarmal() {
+        Swal.fire({
+            title: "¿Desea Validar?",
+            text: "Se imprimira una verificación con los detalles",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, aceptar",
+            cancelButtonText: "Cancelar",
+        }).then((resultado) => {
+            if (resultado.value) {
+                $.ajax({
+                    url: "/finalizarVerificacionmal",
                     type: "POST",
                     data: {
                         id: $("#idboleta").val(),
