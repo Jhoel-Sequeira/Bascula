@@ -3,14 +3,13 @@
     <thead>
         <tr>
             <th colspan="5" class="" style="text-align: center; font-size: 35px;">
-                Detalles pesos
+                Detalles pesos Verificador
             </th>
         </tr>
         <tr>
             <th style="width: 450px" class="fuente-tabla">Material</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Bruto</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Tara</th>
-            <th align="center" style="padding-left: 50px" class="fuente-tabla">Destare</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Neto</th>
             <th></th>
             <th></th>
@@ -21,11 +20,10 @@
     <tbody>
         {%for i in pesosverificador%}
         <tr class="fuente-tabla">
-            <td>{{i[1]}}</td>
+            <td>{{i[0]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[1]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[2]}} </td>
             <td align="center" style="padding-right: 10px">{{i[3]}}</td>
-            <td align="center" style="padding-right: 10px">{{i[4]}} </td>
-            <td align="center" style="padding-right: 10px">{{i[5]}}</td>
-            <td align="center" style="padding-right: 10px">{{i[6]}}</td>
            
 
         </tr>
@@ -55,14 +53,13 @@
     <thead>
         <tr>
             <th colspan="5" class="" style="text-align: center; font-size: 35px;">
-                Detalles pesos
+                Detalles pesos Digitador
             </th>
         </tr>
         <tr>
             <th style="width: 450px" class="fuente-tabla">Material</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Bruto</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Tara</th>
-            <th align="center" style="padding-left: 50px" class="fuente-tabla">Destare</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Neto</th>
             <th></th>
             <th></th>
@@ -73,11 +70,10 @@
     <tbody>
         {%for i in pesosdigitador%}
         <tr class="fuente-tabla">
-            <td>{{i[1]}}</td>
+            <td>{{i[0]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[1]}}</td>
+            <td align="center" style="padding-right: 10px">{{i[2]}} </td>
             <td align="center" style="padding-right: 10px">{{i[3]}}</td>
-            <td align="center" style="padding-right: 10px">{{i[4]}} </td>
-            <td align="center" style="padding-right: 10px">{{i[5]}}</td>
-            <td align="center" style="padding-right: 10px">{{i[6]}}</td>
            
 
         </tr>

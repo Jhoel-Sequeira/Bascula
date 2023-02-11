@@ -677,6 +677,22 @@ def listaPesos():
                 return render_template('tablas/tabla-pesos.html',pesos = pesos)
         else:
             if id != "":
+
+                #total de materiales del verificador
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s Group BY ver.IdMaterial',(id,2))
+                matverificador = cur.fetchall()
+                mysql.connection.commit()
+                print(matverificador)
+                print("MAT DEL VERIFICADOR")
+
+                #total de materiales del digitador
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s Group BY ver.IdMaterial',(id,1))
+                matdigitador = cur.fetchall()
+                mysql.connection.commit()
+                print(matdigitador)
+                print("MAT DEL digitador")
                 
                 #LLamar los pesos del verificador
                 cur = mysql.connection.cursor()
@@ -737,7 +753,7 @@ def listaPesos():
                     sumaNeto = 0.00
                 print(pesosverificador)
                 print(pesosdigitador)
-                return render_template('tablas/tabla-pesoscomparacion.html',pesosdigitador = pesosdigitador,ids = ids,pesosverificador = pesosverificador,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
+                return render_template('tablas/tabla-pesoscomparacion.html',pesosdigitador = matdigitador,ids = ids,pesosverificador = matverificador,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:
                 pesos =""
                 return render_template('tablas/tabla-pesoscomparacion.html',pesos = pesosdigitador)
