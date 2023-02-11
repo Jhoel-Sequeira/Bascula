@@ -6,13 +6,13 @@
         <div class="modal-content" style="background-color: #e4e9f7">
             <div class="modal-header">
                 <h5 class="modal-title fuente-grande-titulo" id="exampleModalLabel">
-                    COmparacion de verificación
+                    Comparación de verificación
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                     onclick="cargarLista()"></button>
             </div>
             <div class="modal-body">
-                <input type="text" id="id" value="{{ verifi[2] }}" />
+                <input type="hidden" id="id" value="{{ verifi[2] }}" />
                 <div class="tab-pane fade show active mt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
                     
                    
@@ -70,8 +70,8 @@
                 <div class="row">
                     <div class="col-12">
                         <button type="button" class="btn btn-primary col-12" style="height: 50px" id="finalizar"
-                            disabled onclick="finalizar()">
-                            Bloquear
+                             onclick="finalizar()">
+                            Validar
                         </button>
                     </div>
                 </div>
@@ -180,7 +180,7 @@
     //###########################
     function finalizar() {
         Swal.fire({
-            title: "¿Desea guardar?",
+            title: "¿Desea Validar?",
             text: "Se imprimira una verificación con los detalles",
             icon: "warning",
             showCancelButton: true,
@@ -192,7 +192,7 @@
                     url: "/finalizarVerificacion",
                     type: "POST",
                     data: {
-                        id: $("#id").val(),
+                        id: $("#idboleta").val(),
                     },
                     success: function (response) {
                         if (response == "vacio") {
