@@ -97,7 +97,41 @@
                         <td align="center">{{mate[3]}} Lb</td>
                         </tr>
                         {%endfor%}
-                    
+                        <tr></tr>
+                        {%if primera%}
+                        <tr>
+                            <th>Material</th>
+                        <th style="padding-left: 10px;">P.Bruto</th>
+                        <th style="padding-left: 10px;">P.Tara</th>
+                        <th style="padding-left: 10px;">P.Neto</th>
+                        {%for primera in primera%}
+                        <tr>
+                        <th>Primera</th>
+                        <td align="center">{{primera[1]}} Lb</td>
+                        <td align="center">{{primera[2]}} Lb</td>
+                        <td align="center">{{primera[3]}} Lb</td>
+                        </tr>
+                        {%endfor%}
+                        </tr>
+                        {%endif%}
+                        <tr></tr>
+                        {%if segunda%}
+                        <tr>
+                            <th>Material</th>
+                        <th style="padding-left: 10px;">P.Bruto</th>
+                        <th style="padding-left: 10px;">P.Tara</th>
+                        <th style="padding-left: 10px;">P.Neto</th>
+                        {%for segunda in segunda%}
+                        <tr>
+                        <th>segunda</th>
+                        <td align="center">{{segunda[1]}} Lb</td>
+                        <td align="center">{{segunda[2]}} Lb</td>
+                        <td align="center">{{segunda[3]}} Lb</td>
+                        </tr>
+                        {%endfor%}
+                        </tr>
+                        {%endif%}
+                        
                     
                     </thead>
                 </table>
