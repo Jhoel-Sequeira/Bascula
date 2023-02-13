@@ -15,22 +15,72 @@ encabezado %}
 <div class="">
     <div class="d-flex flex-wrap mt-2">
 
-        <div class="col-12 mb-3 mb-lg-0" id="filtros" role="search">
+        <div class="col-10 mb-3 mb-lg-0" id="filtros" role="search">
             <input type="text" id="buscarAdmin" name="buscarAdmin" onkeyup="this.value=this.value.toUpperCase()"
                 style="text-transform:uppercase;" placeholder="Ingrese la PO" required="required"
                 class="form-control" />
 
         </div>
+        <div class="col " style="color:rgb(121, 121, 121); font-size: 20px; margin-left: 30px; margin-top: 5px;">
+            <i class="fa-solid fa-filter" onclick="verFiltros()"></i>
+        </div>
+
 
     </div>
+    <script>
+        function verFiltros() {
+            if ($('#filtro').is(':visible')) {
+                $('#filtro').hide();
+            } else {
+                $('#filtro').show();
+            }
+        }
+    </script>
+
+    <div class="container mt-3" id="filtro" style="display: none;">
+        <div class="row">
+            <div class="col-8">
+                <select name="filtro" id="filtroOpc" class="form-control">
+
+                    <option value="1">Erroneas</option>
+                    <option value="2">Validadas</option>
+                    <option value="3">Pendientes</option>
+                </select>
+                <script>
+                   // new MultiSelectTag('filtroOpc')  // id
+                </script>
+            </div>
+        </div>
+    </div>
+
+
 
     <div class="row justify-content-md-center">
         <div class="col mt-3 overflow-auto rounded bg-light" id="tabla-adm" style="height: 87vh;"></div>
     </div>
     <div class="row">
         Deslice hacia la derecha para ver mas información
-     </div>
+    </div>
     <script>
+        $(document).on("change", "#filtroOpc", function (event) {
+            var selected = $('#filtroOpc').val();
+            $.ajax({
+                url: "/valorTablaAdmin",
+                type: "POST",
+                data: {
+                    valor: selected,
+                    po: $('#buscarAdmin').val()
+
+                },
+                success: function (response) {
+                    $('#tabla-adm').html(response);
+                    $('#tabla-adm').append(response.htmlresponse);
+                },
+                error: function (error) { // console.log(error);
+                }
+            });
+
+        });
         function vacioVer() {
             opc = "po"
             $.ajax({

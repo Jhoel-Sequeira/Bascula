@@ -1,7 +1,7 @@
 {% for verifi in verificacion %}
 
-<div class="modal fade" id="detalleVerificacionmodal" data-bs-focus="false" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="detalleVerificacionmodal" data-bs-focus="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
         <div class="modal-content" style="background-color: #e4e9f7">
             <div class="modal-header">
@@ -20,10 +20,26 @@
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel" for="proveedor"><strong>Proveedor
                                         </strong></label>
-                                    <input type="text" id="proveedor" name="proveedor" placeholder="cédula proveedor"
-                                        required="required" class="form-control" disabled value="{{ verifi[6] }}" />
+                                    {% if verifi[6] %}
+                                    <input type="text" id="proveedor" name="proveedor" style="text-transform: uppercase"
+                                        onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                                        required="required" disabled class="form-control" value="{{ verifi[6] }}" />
+
+                                    {% else %}
+                                    <input type="text" id="proveedor" style="text-transform: uppercase"
+                                        onkeyup="this.value=this.value.toUpperCase()" name="proveedor"
+                                        placeholder="Nombre proveedor" required="required" class="form-control" />
+
+                                    {% endif %}
+
+                                </div>
+                                <div style="background-color:#fff;position: relative; height: 20%; width: 100%; margin-left: 0px;"
+                                    id="totalprov">
+                                    <div class="info" id="listaproveedor">
+                                    </div>
                                 </div>
                             </div>
+
 
                             <div class="col-4">
                                 <div class="form-outline">
@@ -243,146 +259,16 @@
                 <script>
                     flagbloquear = 0;
                     inicio = 1;
-                    //FUNCION PARA EL BOTON DE PESOS DE TARAS
-                    $("#verTaras").on("click", function () {
-                        if ($(this).is(":checked")) {
-                            // Hacer algo si el checkbox ha sido seleccionado
-                            $("#tabla-tara").show();
-                        } else {
-                            $("#tabla-tara").hide();
-                        }
-                    });
-
-                    $(document).ready(function () {
-                        $("#totalmat").hide();
-                        // MANDAR A LLAMAR LA TABLA
-
-                        cargarPesos();
-                        //
-                        if (
-                            $("#proveedor option:selected").val() !=
-                            "Seleccionar Proveedor" &&
-                            $("#idpunto").val() != "" &&
-                            $("#idusuariologd").val() != "" &&
-                            $("#digitador option:selected").val() !=
-                            "Seleccionar Digitador" &&
-                            $("#po").val() != "" &&
-                            $("#fecha").val() != "" &&
-                            $("#nboleta").val() != "" &&
-                            $("#bahia option:selected").val() != "Seleccionar Bahia" &&
-                            flagbloquear == 0 &&
-                            $("#id").val() == ""
-                        ) {
-                            $("#proveedor").attr("disabled", "true");
-                            $("#idpunto").attr("disabled", "true");
-                            $("#idusuariolog").attr("disabled", "true");
-                            $("#digitador").attr("disabled", "true");
-                            $("#po").attr("disabled", "true");
-                            $("#fecha").attr("disabled", "true");
-                            $("#nboleta").attr("disabled", "true");
-                            $("#bahia").attr("disabled", "true");
-                            $("#buscarmat").removeAttr("disabled");
-                            $("#verTaras").removeAttr("disabled");
-                            $("#destare").removeAttr("disabled");
-                            $("#bruto").removeAttr("disabled");
-                            $("#tara").removeAttr("disabled");
-                            $("#agregar").removeAttr("disabled");
-                            $("#finalizar").removeAttr("disabled");
-                            flagbloquear = 1;
-                            $.ajax({
-                                url: "/datosGeneralesVerificacion",
-                                type: "POST",
-                                data: {
-                                    id: $("#id").val(),
-                                    puntoCompra: $("#idpunto").val(),
-                                    verificador: $("#idusuariolog").val(),
-                                    digitador: $("#digitador").val(),
-                                    po: $("#po").val(),
-                                    nboleta: $("#nboleta").val(),
-                                    bahia: $("#bahia").val(),
-                                },
-                                success: function (response) {
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Éxito",
-                                        confirmButtonText: "Ok",
-                                        text: "Verificación registrada exitosamente",
-                                    }).then((result) => {
-                                        /* Read more about isConfirmed, isDenied below */
-                                        if (result.isConfirmed) {
-                                        }
-                                    });
-                                },
-                                error: function (error) {
-                                    // console.log(error);
-                                },
-                            });
-                        } else if ($("#id").val() != "" && $("#po").val() != "") {
-                            $("#proveedor").attr("disabled", "true");
-                            $("#idpunto").attr("disabled", "true");
-                            $("#idusuariolog").attr("disabled", "true");
-                            $("#digitador").attr("disabled", "true");
-                            $("#bloquear").attr("disabled", "true");
-                            $("#po").attr("disabled", "true");
-                            $("#fecha").attr("disabled", "true");
-                            $("#nboleta").attr("disabled", "true");
-                            $("#bahia").attr("disabled", "true");
-                            $("#buscarmat").removeAttr("disabled");
-                            $("#verTaras").removeAttr("disabled");
-                            $("#destare").removeAttr("disabled");
-                            $("#bruto").removeAttr("disabled");
-                            $("#tara").removeAttr("disabled");
-                            $("#agregar").removeAttr("disabled");
-                            $("#finalizar").removeAttr("disabled");
-                            $("#detalles").hide();
-                        } else if (
-                            !(
-                                $("#proveedor option:selected").val() !=
-                                "Seleccionar Proveedor" &&
-                                $("#idpunto").val() != "" &&
-                                $("#idusuariolog").val() != "" &&
-                                $("#digitador option:selected").val() !=
-                                "Seleccionar Digitador" &&
-                                $("#po").val() != "" &&
-                                $("#fecha").val() != "" &&
-                                $("#nboleta").val() != "" &&
-                                $("#bahia option:selected").val() != "Seleccionar Bahia" &&
-                                flagbloquear != 0
-                            ) &&
-                            inicio == 2
-                        ) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Datos faltantes",
-                                confirmButtonText: "Ok",
-                                text: "Debe Añadir los datos faltantes",
-                            }).then((result) => {
-                                /* Read more about isConfirmed, isDenied below */
-                                if (result.isConfirmed) {
-                                }
-                            });
-                        }
-                    });
-
-                    $(document).on("change", "#proveedor", function (event) {
-                        valor = $("#proveedor option:selected").val();
-                    });
-                    //funcion para agregar las taras extras
-                   
-                    function añadirTara() {
-                        idDet = $(this).val();
-                        alert(idDet)
-                        
-
-                    }
-                    function bloquear() {
-                        if (
-                            $("#proveedor option:selected").val() !=
-                            "Seleccionar Proveedor" &&
+                    $("#listaproveedor").hide();
+                    $("#totalprov").hide();
+                    //validar los campos de entrada
+                    if (
+                            $("#proveedor").val() !=
+                            "" &&
                             $("#idpunto").val() != "" &&
                             $("#idusuariolog").val() != "" &&
-                            $("#digitador option:selected").val() !=
-                            "Seleccionar Digitador" &&
+                            $("#digitador").val() !=
+                            "" &&
                             $("#po").val() != "" &&
                             $("#fecha").val() != "" &&
                             $("#nboleta").val() != "" &&
@@ -405,12 +291,113 @@
                             $("#tara").removeAttr("disabled");
                             $("#agregar").removeAttr("disabled");
                             $("#finalizar").removeAttr("disabled");
+                        }
+
+
+                    // Funcion para poner lista de resultados
+                    var buscarProveedor = function () {
+                        if ($("#proveedor").val() != "") {
+                            $.ajax({
+                                url: "/buscarProveedor",
+                                type: "POST",
+                                data: {
+                                    proveedor: $("#proveedor").val(),
+                                },
+                                success: function (response) {
+                                    $("#listaproveedor").html(response);
+                                    $("#listaproveedor").append(response.htmlresponse);
+                                    $("#listaproveedor").show();
+                                        $("#totalprov").show();
+                                    $("#busqueda button[name=det]").click(function () {
+                                        $("#proveedor").val($(this).text());
+                                        $("#listaproveedor").hide();
+                                        $("#totalprov").hide();
+                                    });
+                                },
+                                error: function (error) {
+                                    // console.log(error);
+                                },
+                            });
+                        } else {
+                            $("#listaproveedor").hide();
+                            $("#totalprov").hide();
+                        }
+
+
+
+
+                    }
+                    $("#proveedor").on('keyup', buscarProveedor);
+                    // FUNCION PARA LA TABLA DE PROVEEDORES
+                    //FUNCION PARA EL BOTON DE PESOS DE TARAS
+                    $("#verTaras").on("click", function () {
+                        if ($(this).is(":checked")) {
+                            // Hacer algo si el checkbox ha sido seleccionado
+                            $("#tabla-tara").show();
+                        } else {
+                            $("#tabla-tara").hide();
+                        }
+                    });
+
+                    $(document).ready(function () {
+                        $("#totalmat").hide();
+                        
+                        // MANDAR A LLAMAR LA TABLA
+                        
+                        cargarPesos();
+                        //
+
+                    });
+
+                    $(document).on("change", "#proveedor", function (event) {
+                        valor = $("#proveedor option:selected").val();
+                    });
+                    //funcion para agregar las taras extras
+
+                    function añadirTara() {
+                        idDet = $(this).val();
+                        alert(idDet)
+
+
+                    }
+                    function bloquear() {
+                        if (
+                            $("#proveedor").val() !=
+                            "" &&
+                            $("#idpunto").val() != "" &&
+                            $("#idusuariolog").val() != "" &&
+                            $("#digitador").val() !=
+                            "" &&
+                            $("#po").val() != "" &&
+                            $("#fecha").val() != "" &&
+                            $("#nboleta").val() != "" &&
+                            $("#bahia option:selected").val() != "Seleccionar Bahia" &&
+                            flagbloquear == 0 &&
+                            $("#id").val() != ""
+                        ) {
+                            $("#proveedor").attr("disabled", "true");
+                            $("#idpunto").attr("disabled", "true");
+                            $("#idusuariolog").attr("disabled", "true");
+                            $("#digitador").attr("disabled", "true");
+                            $("#po").attr("disabled", "true");
+                            $("#fecha").attr("disabled", "true");
+                            $("#nboleta").attr("disabled", "true");
+                            $("#bahia").attr("disabled", "true");
+                            $("#buscarmat").removeAttr("disabled");
+                            $("#verTaras").removeAttr("disabled");
+                            $("#destare").removeAttr("disabled");
+                            $("#bruto").removeAttr("disabled");
+                            $("#tara").removeAttr("disabled");
+                            $("#agregar").removeAttr("disabled");
+                            $("#finalizar").removeAttr("disabled");
+                            
                             flagbloquear = 1;
                             $.ajax({
                                 url: "/datosGeneralesVerificacion",
                                 type: "POST",
                                 data: {
                                     id: $("#id").val(),
+                                    proveedor: $("#proveedor").val(),
                                     puntoCompra: $("#idpunto").val(),
                                     verificador: $("#idusuariolog").val(),
                                     digitador: $("#digitador").val(),

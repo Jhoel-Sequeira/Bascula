@@ -23,7 +23,7 @@
     <tbody>
         {%for i in verificaciones%}
         <tr class="fuente-tabla">
-            <td>{{i[6]}}</td>
+            <td>{%if i[6] == None%}--{%else%}{{i[6]}}{%endif%}</td>
             <td align="center" style="width: 350px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
             <td align="center" style="width:200px">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
             <td align="center" style="width:200px">{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>

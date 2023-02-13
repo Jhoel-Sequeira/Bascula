@@ -2,7 +2,12 @@
 {% block title %}
 Verificacion
 {% endblock %}
+{%block head%}
+<!-- ========= DATERANGEPIECKER ========== -->
 
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+{%endblock%}
 {% block
 encabezado %}
 <div class="row">
@@ -13,22 +18,31 @@ encabezado %}
 {% endblock %}
 {% block content %}
 <div class="">
-    <div class="d-flex flex-wrap mt-2 justify-content-md-center" >
+    <div class="d-flex flex-wrap mt-2 justify-content-md-center">
 
         <div class="col-10 mb-3 mb-lg-0" role="search">
-            <input type="search" class="form-control" id="buscar" onkeyup="this.value=this.value.toUpperCase()" style="text-transform:uppercase;" placeholder="Nombre proveedor" aria-label="Buscar">
+            <input type="search" class="form-control" id="buscar" onkeyup="this.value=this.value.toUpperCase()"
+                style="text-transform:uppercase;" placeholder="Número boleta" aria-label="Buscar">
         </div>
 
         <br>
-        <div class=""><button type="button" class="btn btn-success boton " disabled="disabled" id="verificar" onclick="crearVerificacion()"><i
-                    class="fa-solid fa-plus"></i>
+        <div class=""><button type="button" class="btn btn-success boton " disabled="disabled" id="verificar"
+                onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>
                 Crear</button></div>
 
-    </div>
-    <div style="background-color:#fff; position:relative; height: 70%; width: 81%; margin-left: 50px;">
-        <div class="info" id="listaproveedor">
+        <div class="col " style="color:rgb(121, 121, 121); font-size: 20px; margin-left: 30px; margin-top: 5px;">
+            <i class="fa-solid fa-filter" onclick="verFiltros()"></i>
         </div>
+
     </div>
+
+    <script>
+        function ver() {
+            var selected = $('#filtro').val();
+            alert(selected);
+        }
+    </script>
+    
 
     <div class="row justify-content-md-center">
         <div class="col mt-3 overflow-auto rounded bg-light" id="tabla-prov" style="height: 77vh;">
@@ -38,9 +52,19 @@ encabezado %}
 </div>
 <div id="factura"></div>
 <script>
+
     $(document).ready(function () {
         cargarLista();
     });
+
+    function verFiltros() {
+        if ($('#filtros').is(':visible')) {
+            $('#filtros').hide();
+        } else {
+            $('#filtros').show();
+        }
+    }
+
     function cargarLista() {
         $.ajax({
             url: "/listaProveedores",
@@ -78,51 +102,23 @@ encabezado %}
                 },
             });
         } else {
-            Swal.fire({icon: 'error', title: 'Datos faltantes', text: 'Debe de ingresar la cédula del proveedor para continuar.'}).then((result) => {
-                        if (result.isConfirmed) {
-                            
-                        }
-                    })
+            Swal.fire({ icon: 'error', title: 'Datos faltantes', text: 'Debe de ingresar la cédula del proveedor para continuar.' }).then((result) => {
+                if (result.isConfirmed) {
+
+                }
+            })
         }
     }
     // Funcion para poner lista de resultados
     var buscarProveedor = function () {
-        var proveedor = $('#buscar').val();
-        if (proveedor != "") {
-            $.ajax({
-                url: "/buscarProveedor",
-                type: "POST",
-                data: {
-                    proveedor: proveedor,
-
-                },
-                success: function (response) {
-                    if (response == "no") {
-                        $('#listaproveedor').hide();
-                        $('#verificar').attr('disabled','true');
-                        
-                    } else {
-
-                        $('#listaproveedor').html(response);
-                        $('#listaproveedor').append(response.htmlresponse);
-                        $('#listaproveedor').show();
-
-                        $("#busqueda button[name=det]").click(function () {
-                            $('#buscar').val($(this).text());
-                            $('#listaproveedor').hide();
-                            $('#verificar').removeAttr('disabled')
-
-                        });
-                    }
-                },
-                error: function (error) {
-                    //console.log(error);
-                },
-            });
-        } else {
-            $('#listaproveedor').hide();
-            $('#verificar').attr('disabled','true');
+        
+        if ($('#buscar').val() != ""){
+            $('#verificar').removeAttr('disabled')
+        }else{
+            $('#verificar').attr('disabled', 'true');
         }
+        
+
 
     }
     $("#buscar").on('keyup', buscarProveedor);

@@ -5,7 +5,7 @@
       <div class="modal-header">
         <h5 class="modal-title fuente-grande-titulo" id="exampleModalLabel" >Contacto proveedores</h5>
         <button type="button" class="btn-close p-0" style="width: 50px; height: 50px;" data-bs-dismiss="modal" aria-label="Close"
-          onclick="cargarLista()"></button>
+          onclick=""></button>
       </div>
       <div class="modal-body">
         <div class="tab-pane fade show active mt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -55,6 +55,7 @@
         proveedor: $("#buscarprov").val(),
       },
       success: function (response) {
+        
         $("#tabla-prov").html(response);
         $("#tabla-prov").append(response.htmlresponse);
       },
@@ -68,7 +69,7 @@
 
     // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     Swal.fire({
-      title: "Cédula:" + $("#buscarprov").val(),
+      title: "Proveedor:" + $("#buscarprov").val(),
       text: "¿Desea agregar?",
       icon: "warning",
       showCancelButton: true,

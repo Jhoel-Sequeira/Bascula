@@ -176,7 +176,7 @@ def buscarUsuariosAdmin():
    if request.method == "POST":
         cedula = request.form['usuario']
         cur = mysql.connection.cursor()
-        cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado,u.Cedula,car.NombreCargo FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol  inner join tb_estado as e on u.IdEstado = e.Id_Estado inner join tb_cargo as car on u.IdCargo = car.Id_Cargo where u.Cedula like %s",[cedula+'%'])
+        cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado,u.Cedula,car.NombreCargo FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol  inner join tb_estado as e on u.IdEstado = e.Id_Estado inner join tb_cargo as car on u.IdCargo = car.Id_Cargo where u.NombreUsuario like %s",[cedula+'%'])
         proveedores = cur.fetchall()
         if proveedores :
 
@@ -407,7 +407,7 @@ def listaProveedores():
                 print(session['cargo'])
                 #LLamar la verificacion de ese proveedor
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s",[session["userId"]])
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s",[session["userId"]])
                 verificaciones = cur.fetchall()
                 return render_template('tablas/tabla-proveedores.html',verificaciones = verificaciones)
             else:
@@ -418,14 +418,14 @@ def listaProveedores():
                 #INSERTAMOS LA VERIFICACION
                 fecha = hi.replace(microsecond=0)
                 cur = mysql.connection.cursor()
-                cur.execute("INSERT INTO tb_verificacion (Fecha,IdProveedor,IdPuntoCompra,IdEstado,IdUsuarioCreacion) VALUES (%s,%s,%s,%s,%s)",(fecha,proveedornuevo[0],5,3,session["userId"]))
+                cur.execute("INSERT INTO tb_verificacion (Fecha,NoBoleta,IdPuntoCompra,IdEstado,IdUsuarioCreacion) VALUES (%s,%s,%s,3,%s)",(fecha,proveedor,5,session["userId"]))
                 proveedornuevo = cur.fetchone()
                 #LLAMAMOS LAS VERIFICACIONES DEL USUARIO
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s",[session["userId"]])
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s",[session["userId"]])
                 verificaciones = cur.fetchall()
                 mysql.connection.commit()
-                
+                print("VERIFICADICA")
                 print(verificaciones)
                 return render_template('tablas/tabla-proveedores.html',verificaciones = verificaciones)
         else:
@@ -447,14 +447,14 @@ def listaProveedores():
                 #INSERTAMOS LA VERIFICACION
                 fecha = hi.replace(microsecond=0)
                 cur = mysql.connection.cursor()
-                cur.execute("INSERT INTO tb_verificacion (Fecha,IdProveedor,IdPuntoCompra,IdEstado,IdUsuarioCreacion) VALUES (%s,%s,%s,%s,%s)",(fecha,proveedornuevo[0],5,3,session["userId"]))
+                cur.execute("INSERT INTO tb_verificacion (Fecha,NoBoleta,IdPuntoCompra,IdEstado,IdUsuarioCreacion) VALUES (%s,%s,%s,%s,%s)",(fecha,proveedor,5,3,session["userId"]))
                 proveedornuevo = cur.fetchone()
                 #LLAMAMOS LAS VERIFICACIONES DEL USUARIO
                 cur = mysql.connection.cursor()
                 cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 5 AND v.IdUsuarioCreacion = %s",[session["userId"]])
                 verificaciones = cur.fetchall()
                 mysql.connection.commit()
-                
+                print("VERIFICADICA")
                 print(verificaciones)
                 return render_template('tablas/tabla-comparacion.html',verificaciones = verificaciones)
    else:
@@ -469,21 +469,26 @@ def detalleVerificacion():
             print(id)
             print("aqui no")
             cur = mysql.connection.cursor()
-            cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
-            nueva = cur.fetchall()
+            cur.execute("select IdProveedor from tb_verificacion Where Id_Verificacion = %s",[id])
+            nueva = cur.fetchone()
             mysql.connection.commit()
             print("nueva")
-            print(nueva)
-            if nueva:
+            print(nueva[0])
+            if nueva[0] != None:
+                print("tiene algo")
                 cur = mysql.connection.cursor()
                 cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
                 verificacion = cur.fetchall()
                 mysql.connection.commit()
+                print(verificacion)
             else:
+                #MANDAMOS A LLAMAR LOS DATOS QUE TENEMOS EN UNA VERIFICACION INCOMPLETA
+                print("no tiene algo")
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
                 verificacion = cur.fetchall()
                 mysql.connection.commit()
+                print(verificacion)
                 
             #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
             #CONSULTA PARA LOS PUNTOS DE COMPRA
@@ -505,8 +510,9 @@ def detalleVerificacion():
             
             # necesito mandar a llamar los dastos del usuario que esta logueado para ponerlo como verificador
             cur = mysql.connection.cursor()
-            cur.execute("select cred.Id_Credenciales,u.NombreUsuario from tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_Credenciales Where cred.Id_Credenciales = %s",[session['userId']])
-            usuariolog = cur.fetchone()  
+            cur.execute("select u.Id_Usuario,car.NombreCargo from tb_usuarios as u inner join tb_cargo as car on u.IdCargo = car.Id_Cargo inner join tb_credenciales as cred ON u.IdCredenciales = cred.Id_Credenciales Where cred.Id_Credenciales = %s",[session['userId']])
+            usuariolog = cur.fetchone() 
+            print(usuariolog) 
             # necesito mandar a llamar los dastos del usuario para saber en que punto de venta esta
             cur = mysql.connection.cursor()
             cur.execute("select pc.Id_PuntoCompra,pc.NombrePuntoCompra from tb_usuarios as u inner join tb_puntocompra as pc on u.IdPuesto = pc.Id_PuntoCompra inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_Credenciales where cred.Id_Credenciales = %s",[session['userId']])
@@ -609,11 +615,16 @@ def datosGeneralesVerificacion():
         puntoCompra = request.form['puntoCompra']
         verificador = request.form['verificador']
         digitador = request.form['digitador']
+        proveedor = request.form['proveedor']
         po = request.form['po']
         nboleta = request.form['nboleta']
         bahia = request.form['bahia']
+        #LLAMAMOS AL PROVEEDOR DE NOMBRE TAL
         cur = mysql.connection.cursor()
-        cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s where Id_Verificacion = %s', (po,nboleta,verificador,digitador,puntoCompra,bahia,id))
+        cur.execute('SELECT Id_Proveedor from tb_proveedor where NombreProveedor = %s',[proveedor])
+        idprov = cur.fetchone()
+        cur = mysql.connection.cursor()
+        cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s where Id_Verificacion = %s', (po,nboleta,idprov[0],verificador,digitador,puntoCompra,bahia,id))
         digitador = cur.fetchall()
         mysql.connection.commit()
         return "done" 
@@ -1208,6 +1219,57 @@ def valorTablaAdmin():
     if request.method == "POST":
         opc = request.form['valor']
         print(opc)
+        #OPCIONES DE FILTRO
+        if opc == '1':
+            po = request.form['po']
+            if po != "":
+                
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.PO like %s and v.IdEstado = 6",[po+'%'])
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print(verificaciones)
+                return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
+            else:
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.IdEstado = 6")
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print(verificaciones)
+                return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
+        elif opc == '2':
+            po = request.form['po']
+            if po != "":
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.PO like %s and v.IdEstado = 4",[po+'%'])
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print(verificaciones)
+                return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
+            else:
+                print("validaddas")
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.IdEstado = 4")
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print(verificaciones)
+                return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
+        elif opc == '3':
+            po = request.form['po']
+            if po != "":
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.PO like %s and v.IdEstado = 3",[po+'%'])
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print(verificaciones)
+                return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
+            else:
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.IdEstado = 3")
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print(verificaciones)
+                return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
         if opc == "Usuarios":
             usuario = request.form['proveedor']
             #SELECCIONAR EL ID DEL PROVEEDOR
