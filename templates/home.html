@@ -26,6 +26,7 @@ encabezado %}
         </div>
 
         <br>
+        {%if cargo != 5%}
         <div class=""><button type="button" class="btn btn-success boton " disabled="disabled" id="verificar"
                 onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>
                 Crear</button></div>
@@ -33,6 +34,8 @@ encabezado %}
         <div class="col " style="color:rgb(121, 121, 121); font-size: 20px; margin-left: 30px; margin-top: 5px;">
             <i class="fa-solid fa-filter" onclick="verFiltros()"></i>
         </div>
+
+        {%endif%}
 
     </div>
 
@@ -42,7 +45,7 @@ encabezado %}
             alert(selected);
         }
     </script>
-    
+
 
     <div class="row justify-content-md-center">
         <div class="col mt-3 overflow-auto rounded bg-light" id="tabla-prov" style="height: 77vh;">
@@ -110,19 +113,30 @@ encabezado %}
         }
     }
     // Funcion para poner lista de resultados
-    var buscarProveedor = function () {
-        
-        if ($('#buscar').val() != ""){
-            $('#verificar').removeAttr('disabled')
-        }else{
-            $('#verificar').attr('disabled', 'true');
-        }
-        
+    // Funcion para poner lista de resultados
+    var buscarBoleta = function () {
+        $.ajax({
+            url: "/listaProveedores",
+            type: "POST",
+            data: {
+                proveedor: $('#buscar').text(),
+
+            },
+            success: function (response) {
+
+                $('#tabla-prov').html(response);
+                $('#tabla-prov').append(response.htmlresponse);
+            },
+            error: function (error) {
+                //console.log(error);
+            },
+        });
+
 
 
     }
-    $("#buscar").on('keyup', buscarProveedor);
-    // FUNCION PARA LA TABLA DE PROVEEDORES
+    $("#buscar").on('keyup', buscarBoleta);
+
 
 </script>
 

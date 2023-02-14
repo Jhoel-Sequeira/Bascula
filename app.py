@@ -451,7 +451,7 @@ def listaProveedores():
                 proveedornuevo = cur.fetchone()
                 #LLAMAMOS LAS VERIFICACIONES DEL USUARIO
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 5 AND v.IdUsuarioCreacion = %s",[session["userId"]])
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 5 AND v.NoBoleta LIKE %s",[proveedor + '%'])
                 verificaciones = cur.fetchall()
                 mysql.connection.commit()
                 print("VERIFICADICA")
