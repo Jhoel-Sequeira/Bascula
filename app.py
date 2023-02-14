@@ -407,7 +407,7 @@ def listaProveedores():
                 print(session['cargo'])
                 #LLamar la verificacion de ese proveedor
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s",[session["userId"]])
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s",[session["userId"]])
                 verificaciones = cur.fetchall()
                 return render_template('tablas/tabla-proveedores.html',verificaciones = verificaciones)
             else:
@@ -422,7 +422,7 @@ def listaProveedores():
                 proveedornuevo = cur.fetchone()
                 #LLAMAMOS LAS VERIFICACIONES DEL USUARIO
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s",[session["userId"]])
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s",[session["userId"]])
                 verificaciones = cur.fetchall()
                 mysql.connection.commit()
                 print("VERIFICADICA")
@@ -435,7 +435,7 @@ def listaProveedores():
                 print(session['cargo'])
                 #LLamar la verificacion de ese proveedor
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 5")
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 5")
                 verificaciones = cur.fetchall()
                 print(verificaciones)
                 return render_template('tablas/tabla-comparacion.html',verificaciones = verificaciones)
@@ -451,7 +451,7 @@ def listaProveedores():
                 proveedornuevo = cur.fetchone()
                 #LLAMAMOS LAS VERIFICACIONES DEL USUARIO
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 5 AND v.IdUsuarioCreacion = %s",[session["userId"]])
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 5 AND v.IdUsuarioCreacion = %s",[session["userId"]])
                 verificaciones = cur.fetchall()
                 mysql.connection.commit()
                 print("VERIFICADICA")
