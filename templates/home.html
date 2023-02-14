@@ -18,6 +18,7 @@ encabezado %}
 {% endblock %}
 {% block content %}
 <div class="">
+    <input type="hidden" id="cargo" value="{{cargo}}">
     <div class="d-flex flex-wrap mt-2 justify-content-md-center">
 
         <div class="col-10 mb-3 mb-lg-0" role="search">
@@ -30,10 +31,11 @@ encabezado %}
         <div class=""><button type="button" class="btn btn-success boton " disabled="disabled" id="verificar"
                 onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>
                 Crear</button></div>
-
+        {%if cargo == 3%}
         <div class="col " style="color:rgb(121, 121, 121); font-size: 20px; margin-left: 30px; margin-top: 5px;">
             <i class="fa-solid fa-filter" onclick="verFiltros()"></i>
         </div>
+        {%endif%}
 
         {%endif%}
 
@@ -115,22 +117,32 @@ encabezado %}
     // Funcion para poner lista de resultados
     // Funcion para poner lista de resultados
     var buscarBoleta = function () {
-        $.ajax({
-            url: "/listaProveedores",
-            type: "POST",
-            data: {
-                proveedor: $('#buscar').text(),
+        if ($('#cargo').val() != 5) {
+            if ($('#buscar').val() != "") {
+                $('#verificar').removeAttr('disabled')
+            } else {
+                $('#verificar').attr('disabled', 'true');
+            }
 
-            },
-            success: function (response) {
+        } else {
+            $.ajax({
+                url: "/listaProveedores",
+                type: "POST",
+                data: {
+                    proveedor: $('#buscar').val(),
 
-                $('#tabla-prov').html(response);
-                $('#tabla-prov').append(response.htmlresponse);
-            },
-            error: function (error) {
-                //console.log(error);
-            },
-        });
+                },
+                success: function (response) {
+
+                    $('#tabla-prov').html(response);
+                    $('#tabla-prov').append(response.htmlresponse);
+                },
+                error: function (error) {
+                    //console.log(error);
+                },
+            });
+        }
+
 
 
 
@@ -139,5 +151,6 @@ encabezado %}
 
 
 </script>
+
 
 </div>{% endblock %}
