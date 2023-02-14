@@ -58,35 +58,63 @@
                             </div>
                         </div>
                         <div class="row mt-2">
+                            <!-- PONEMOS UN INPUT CON EL CARGO PARA USARLO COMO BANDERA PARA EL MOMENTO DE BLOQUEAR -->
+                                <input type="hidden" name="" value="{{usuariolog[1]}}" id="banderaRol">
                             <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel"
                                         for="form3Example3"><strong>Verificador</strong></label>
-                                    <input type="text" value="{{usuariolog[1]}}" name="" id="" disabled="disabled"
-                                        required="required" class="form-control" />
-                                    <input type="hidden" value="{{usuariolog[0]}}" name="" id="idusuariolog" />
-                                    <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
-                                                                                                                                                                                                                                                                                                                                                                                                        style="display: none;">Las
-                                                                                                                                                                                                                                                                                                                                                                                                        constraseñas no coinciden</label> -->
-                                </div>
+                                        {% if verifi[7] %}
+                                            <input type="text" id="idusuariolog" name="digitador" placeholder="Punto de Compra"
+                                            required="required" class="form-control" disabled value="{{ verifi[7] }}" />
+                                            {% else %}
+                                                {%if usuariolog[1] == 'Verificador'%}
+                                            <input type="text" value="{{usuariolog[2]}}" name="" id="" disabled="disabled"
+                                                required="required" class="form-control" />
+                                            <input type="hidden" value="{{usuariolog[0]}}" name="" id="idusuariolog" />
+                                            <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
+                                                                                                                                                                                                                                                                                                                                                                                                                style="display: none;">Las
+                                                                                                                                                                                                                                                                                                                                                                                                                constraseñas no coinciden</label> -->
+                                            {%else%}
+                                            <select class="form-select" id="verificador" aria-label="Default select example">
+                                                <option selected="selected" hidden>
+                                                    Seleccionar Verificador
+                                                </option>
+                                                {% for ver in Verificador %}
+                                                <option value="{{ ver[0] }}">{{ ver[1] }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            {%endif%}
+                                        {%endif%}                                                                                                                                                                                                                                                                                                                                                                     </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel"
                                         for="form3Example3"><strong>Digitador</strong></label>
-
+                                    
+                                        
+                                    
                                     {% if verifi[8] %}
                                     <input type="text" id="digitador" name="digitador" placeholder="Punto de Compra"
                                         required="required" class="form-control" disabled value="{{ verifi[8] }}" />
                                     {% else %}
-                                    <select class="form-select" id="digitador" aria-label="Default select example">
-                                        <option selected="selected" hidden>
-                                            Seleccionar Digitador
-                                        </option>
-                                        {% for i in Digitador %}
-                                        <option value="{{ i[0] }}">{{ i[1] }}</option>
-                                        {% endfor %}
-                                    </select>
+                                        {%if usuariolog[1] == 'Digitador'%}
+                                            <input type="text" value="{{usuariolog[2]}}" name="" id="" disabled="disabled"
+                                                required="required" class="form-control" />
+                                            <input type="hidden" value="{{usuariolog[0]}}" name="" id="digitador" />
+                                            <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
+                                                                                                                                                                                                                                                                                                                                                                                                                style="display: none;">Las
+                                                                                                                                                                                                                                                                                                                                                                                                                constraseñas no coinciden</label> -->
+                                        {%else%}
+                                            <select class="form-select" id="digitador" aria-label="Default select example">
+                                                <option selected="selected" hidden>
+                                                    Seleccionar Digitador
+                                                </option>
+                                                {% for digi in Digitador %}
+                                                <option value="{{ digi[0] }}">{{ digi[1] }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        {% endif %}
                                     {% endif %}
 
                                     <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
@@ -361,112 +389,225 @@
 
                     }
                     function bloquear() {
-                        if (
-                            $("#proveedor").val() !=
-                            "" &&
-                            $("#idpunto").val() != "" &&
-                            $("#idusuariolog").val() != "" &&
-                            $("#digitador").val() !=
-                            "" &&
-                            $("#po").val() != "" &&
-                            $("#fecha").val() != "" &&
-                            $("#nboleta").val() != "" &&
-                            $("#bahia option:selected").val() != "Seleccionar Bahia" &&
-                            flagbloquear == 0 &&
-                            $("#id").val() != ""
-                        ) {
-                            $("#proveedor").attr("disabled", "true");
-                            $("#idpunto").attr("disabled", "true");
-                            $("#idusuariolog").attr("disabled", "true");
-                            $("#digitador").attr("disabled", "true");
-                            $("#po").attr("disabled", "true");
-                            $("#fecha").attr("disabled", "true");
-                            $("#nboleta").attr("disabled", "true");
-                            $("#bahia").attr("disabled", "true");
-                            $("#buscarmat").removeAttr("disabled");
-                            $("#verTaras").removeAttr("disabled");
-                            $("#destare").removeAttr("disabled");
-                            $("#bruto").removeAttr("disabled");
-                            $("#tara").removeAttr("disabled");
-                            $("#agregar").removeAttr("disabled");
-                            $("#finalizar").removeAttr("disabled");
-                            
-                            flagbloquear = 1;
-                            $.ajax({
-                                url: "/datosGeneralesVerificacion",
-                                type: "POST",
-                                data: {
-                                    id: $("#id").val(),
-                                    proveedor: $("#proveedor").val(),
-                                    puntoCompra: $("#idpunto").val(),
-                                    verificador: $("#idusuariolog").val(),
-                                    digitador: $("#digitador").val(),
-                                    po: $("#po").val(),
-                                    nboleta: $("#nboleta").val(),
-                                    bahia: $("#bahia").val(),
-                                },
-                                success: function (response) {
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Éxito",
-                                        confirmButtonText: "Ok",
-                                        text: "Verificación registrada exitosamente",
-                                    }).then((result) => {
-                                        /* Read more about isConfirmed, isDenied below */
-                                        if (result.isConfirmed) {
-                                        }
-                                    });
-                                },
-                                error: function (error) {
-                                    // console.log(error);
-                                },
-                            });
-                        } else if (
-                            $("#id").val() != "" &&
-                            $("#po").val() != "" &&
-                            flagbloquear == 1
-                        ) {
-                            $("#proveedor").attr("disabled", "true");
-                            $("#idpunto").attr("disabled", "true");
-                            $("#idusuariolog").attr("disabled", "true");
-                            $("#digitador").attr("disabled", "true");
-                            $("#po").attr("disabled", "true");
-                            $("#fecha").attr("disabled", "true");
-                            $("#nboleta").attr("disabled", "true");
-                            $("#bahia").attr("disabled", "true");
-                            $("#verTaras").removeAttr("disabled");
-                            $("#buscarmat").removeAttr("disabled");
-                            $("#destare").removeAttr("disabled");
-                            $("#bruto").removeAttr("disabled");
-                            $("#tara").removeAttr("disabled");
-                            $("#agregar").removeAttr("disabled");
-                            $("#finalizar").removeAttr("disabled");
-                        } else if (
-                            !(
-                                $("#proveedor option:selected").val() !=
-                                "Seleccionar Proveedor" &&
+                        var flagRol = $('#banderaRol').val();
+                        //AQUI VAN LAS OPCIONES SI EL USUARIO ES VERIFICADOR
+                        if(flagRol == "Verificador"){
+                                if (
+                                $("#proveedor").val() !=
+                                "" &&
                                 $("#idpunto").val() != "" &&
                                 $("#idusuariolog").val() != "" &&
-                                $("#digitador option:selected").val() !=
-                                "Seleccionar Digitador" &&
+                                $("#digitador").val() !=
+                                "" &&
                                 $("#po").val() != "" &&
                                 $("#fecha").val() != "" &&
                                 $("#nboleta").val() != "" &&
                                 $("#bahia option:selected").val() != "Seleccionar Bahia" &&
-                                flagbloquear != 0
-                            )
-                        ) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Datos faltantes",
-                                confirmButtonText: "Ok",
-                                text: "Debe Añadir los datos faltantes",
-                            }).then((result) => {
-                                /* Read more about isConfirmed, isDenied below */
-                                if (result.isConfirmed) {
-                                }
-                            });
+                                flagbloquear == 0 &&
+                                $("#id").val() != ""
+                            ) {
+                                $("#proveedor").attr("disabled", "true");
+                                $("#idpunto").attr("disabled", "true");
+                                $("#idusuariolog").attr("disabled", "true");
+                                $("#digitador").attr("disabled", "true");
+                                $("#po").attr("disabled", "true");
+                                $("#fecha").attr("disabled", "true");
+                                $("#nboleta").attr("disabled", "true");
+                                $("#bahia").attr("disabled", "true");
+                                $("#buscarmat").removeAttr("disabled");
+                                $("#verTaras").removeAttr("disabled");
+                                $("#destare").removeAttr("disabled");
+                                $("#bruto").removeAttr("disabled");
+                                $("#tara").removeAttr("disabled");
+                                $("#agregar").removeAttr("disabled");
+                                $("#finalizar").removeAttr("disabled");
+                                
+                                flagbloquear = 1;
+                                $.ajax({
+                                    url: "/datosGeneralesVerificacion",
+                                    type: "POST",
+                                    data: {
+                                        id: $("#id").val(),
+                                        proveedor: $("#proveedor").val(),
+                                        puntoCompra: $("#idpunto").val(),
+                                        verificador: $("#idusuariolog").val(),
+                                        digitador: $("#digitador").val(),
+                                        po: $("#po").val(),
+                                        nboleta: $("#nboleta").val(),
+                                        bahia: $("#bahia").val(),
+                                    },
+                                    success: function (response) {
+                                        Swal.fire({
+                                            icon: "success",
+                                            title: "Éxito",
+                                            confirmButtonText: "Ok",
+                                            text: "Verificación registrada exitosamente",
+                                        }).then((result) => {
+                                            /* Read more about isConfirmed, isDenied below */
+                                            if (result.isConfirmed) {
+                                            }
+                                        });
+                                    },
+                                    error: function (error) {
+                                        // console.log(error);
+                                    },
+                                });
+                            } else if (
+                                $("#id").val() != "" &&
+                                $("#po").val() != "" &&
+                                flagbloquear == 1
+                            ) {
+                                $("#proveedor").attr("disabled", "true");
+                                $("#idpunto").attr("disabled", "true");
+                                $("#idusuariolog").attr("disabled", "true");
+                                $("#digitador").attr("disabled", "true");
+                                $("#po").attr("disabled", "true");
+                                $("#fecha").attr("disabled", "true");
+                                $("#nboleta").attr("disabled", "true");
+                                $("#bahia").attr("disabled", "true");
+                                $("#verTaras").removeAttr("disabled");
+                                $("#buscarmat").removeAttr("disabled");
+                                $("#destare").removeAttr("disabled");
+                                $("#bruto").removeAttr("disabled");
+                                $("#tara").removeAttr("disabled");
+                                $("#agregar").removeAttr("disabled");
+                                $("#finalizar").removeAttr("disabled");
+                            } else if (
+                                !(
+                                    $("#proveedor option:selected").val() !=
+                                    "Seleccionar Proveedor" &&
+                                    $("#idpunto").val() != "" &&
+                                    $("#idusuariolog").val() != "" &&
+                                    $("#digitador option:selected").val() !=
+                                    "Seleccionar Digitador" &&
+                                    $("#po").val() != "" &&
+                                    $("#fecha").val() != "" &&
+                                    $("#nboleta").val() != "" &&
+                                    $("#bahia option:selected").val() != "Seleccionar Bahia" &&
+                                    flagbloquear != 0
+                                )
+                            ) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Datos faltantes",
+                                    confirmButtonText: "Ok",
+                                    text: "Debe Añadir los datos faltantes",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                    }
+                                });
+                            }
+                        }else if(flagRol == "Digitador"){
+                                if (
+                                $("#proveedor").val() !=
+                                "" &&
+                                $("#idpunto").val() != "" &&
+                                $("#digitador").val() !=
+                                "" &&
+                                $("#po").val() != "" &&
+                                $("#fecha").val() != "" &&
+                                $("#nboleta").val() != "" &&
+                                $("#verificador option:selected").val() != "Seleccionar Verificador" &&
+                                $("#bahia option:selected").val() != "Seleccionar Bahia" &&
+                                flagbloquear == 0 &&
+                                $("#id").val() != ""
+                            ) {
+                                $("#proveedor").attr("disabled", "true");
+                                $("#idpunto").attr("disabled", "true");
+                                $("#idusuariolog").attr("disabled", "true");
+                                $("#digitador").attr("disabled", "true");
+                                $("#po").attr("disabled", "true");
+                                $("#fecha").attr("disabled", "true");
+                                $("#nboleta").attr("disabled", "true");
+                                $("#bahia").attr("disabled", "true");
+                                $("#verificador").attr("disabled", "true");
+                                $("#buscarmat").removeAttr("disabled");
+                                $("#verTaras").removeAttr("disabled");
+                                $("#destare").removeAttr("disabled");
+                                $("#bruto").removeAttr("disabled");
+                                $("#tara").removeAttr("disabled");
+                                $("#agregar").removeAttr("disabled");
+                                $("#finalizar").removeAttr("disabled");
+                                
+                                flagbloquear = 1;
+                                $.ajax({
+                                    url: "/datosGeneralesVerificacion",
+                                    type: "POST",
+                                    data: {
+                                        id: $("#id").val(),
+                                        proveedor: $("#proveedor").val(),
+                                        puntoCompra: $("#idpunto").val(),
+                                        verificador: $("#verificador option:selected").val(),
+                                        digitador: $("#digitador").val(),
+                                        po: $("#po").val(),
+                                        nboleta: $("#nboleta").val(),
+                                        bahia: $("#bahia").val(),
+                                    },
+                                    success: function (response) {
+                                        Swal.fire({
+                                            icon: "success",
+                                            title: "Éxito",
+                                            confirmButtonText: "Ok",
+                                            text: "Verificación registrada exitosamente",
+                                        }).then((result) => {
+                                            /* Read more about isConfirmed, isDenied below */
+                                            if (result.isConfirmed) {
+                                            }
+                                        });
+                                    },
+                                    error: function (error) {
+                                        // console.log(error);
+                                    },
+                                });
+                            } else if (
+                                $("#id").val() != "" &&
+                                $("#po").val() != "" &&
+                                flagbloquear == 1
+                            ) {
+                                $("#proveedor").attr("disabled", "true");
+                                $("#idpunto").attr("disabled", "true");
+                                $("#idusuariolog").attr("disabled", "true");
+                                $("#digitador").attr("disabled", "true");
+                                $("#po").attr("disabled", "true");
+                                $("#fecha").attr("disabled", "true");
+                                $("#nboleta").attr("disabled", "true");
+                                $("#bahia").attr("disabled", "true");
+                                $("#verTaras").removeAttr("disabled");
+                                $("#buscarmat").removeAttr("disabled");
+                                $("#destare").removeAttr("disabled");
+                                $("#bruto").removeAttr("disabled");
+                                $("#tara").removeAttr("disabled");
+                                $("#agregar").removeAttr("disabled");
+                                $("#finalizar").removeAttr("disabled");
+                            } else if (
+                                !(
+                                    $("#proveedor option:selected").val() !=
+                                    "Seleccionar Proveedor" &&
+                                    $("#idpunto").val() != "" &&
+                                    $("#idusuariolog").val() != "" &&
+                                    $("#digitador option:selected").val() !=
+                                    "Seleccionar Digitador" &&
+                                    $("#po").val() != "" &&
+                                    $("#fecha").val() != "" &&
+                                    $("#nboleta").val() != "" &&
+                                    $("#bahia option:selected").val() != "Seleccionar Bahia" &&
+                                    flagbloquear != 0
+                                )
+                            ) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Datos faltantes",
+                                    confirmButtonText: "Ok",
+                                    text: "Debe Añadir los datos faltantes",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                    }
+                                });
+                            }
                         }
+                        
                     }
                     function mostrarDetalle() {
                         if ($("#detalles").is(":hidden")) $("#detalles").show();

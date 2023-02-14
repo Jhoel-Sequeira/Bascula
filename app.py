@@ -510,7 +510,7 @@ def detalleVerificacion():
             
             # necesito mandar a llamar los dastos del usuario que esta logueado para ponerlo como verificador
             cur = mysql.connection.cursor()
-            cur.execute("select u.Id_Usuario,car.NombreCargo from tb_usuarios as u inner join tb_cargo as car on u.IdCargo = car.Id_Cargo inner join tb_credenciales as cred ON u.IdCredenciales = cred.Id_Credenciales Where cred.Id_Credenciales = %s",[session['userId']])
+            cur.execute("select u.Id_Usuario,car.NombreCargo,u.NombreUsuario from tb_usuarios as u inner join tb_cargo as car on u.IdCargo = car.Id_Cargo inner join tb_credenciales as cred ON u.IdCredenciales = cred.Id_Credenciales Where cred.Id_Credenciales = %s",[session['userId']])
             usuariolog = cur.fetchone() 
             print(usuariolog) 
             # necesito mandar a llamar los dastos del usuario para saber en que punto de venta esta
@@ -911,7 +911,9 @@ def insertarPesos():
 @app.route('/finalizarVerificacion', methods =["POST","GET"])
 def finalizarVerificacion():
    if request.method == "POST":
+    print(session['cargo'])
     if session['cargo'] != 5:
+        
         if session['cargo'] == 1:
             #ES DIGITADOR
             id = request.form['id']
