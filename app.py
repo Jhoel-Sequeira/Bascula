@@ -1,7 +1,7 @@
 
 
 from datetime import datetime,date, timedelta
-from flask import Flask, redirect,render_template, request, session, url_for
+from flask import Flask, jsonify, redirect,render_template, request, session, url_for
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -1587,6 +1587,30 @@ def añadirTarasExtras():
         print(pNeto)
         return render_template('tablas/tabla-taras.html',taras = taras,total = taranueva)
 
+#TRAER PESOS NETOS Y DESTARE PARA MODIFICARLOS
+@app.route('/traerPesosNetos', methods =["POST","GET"])
+def traerPesosNetos():
+    if request.method == "POST":
+        id = request.form['id']
+        #TRAEMOS LOS valores de la tara a la tabla
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_detalleverificacion where Id_DetalleVerificacion = %s",[id])
+        detalle = cur.fetchall()
+       
+        return jsonify(detalle[0][3])
+    
+@app.route('/traerDestare', methods =["POST","GET"])
+def traerDestare():
+    if request.method == "POST":
+        id = request.form['id']
+        #TRAEMOS LOS valores de la tara a la tabla
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_detalleverificacion where Id_DetalleVerificacion = %s",[id])
+        detalle = cur.fetchall()
+       
+        return jsonify(detalle[0][6])
+
+
 #VER TARA ESPECIFICA
 @app.route('/verTaras', methods =["POST","GET"])
 def verTaras():
@@ -1611,9 +1635,10 @@ def modificarPesoBruto():
     if request.method == "POST":
         id = request.form['id']
         valor = request.form['valor']
+        destare = request.form['destare']
         #MODIFICAMOS EL VALOR DEL PESO BRUTO
         cur = mysql.connection.cursor()
-        cur.execute("UPDATE tb_detalleverificacion set PesoBruto = %s Where Id_DetalleVerificacion = %s",(valor,id))
+        cur.execute("UPDATE tb_detalleverificacion set PesoBruto = %s, Destare = %s Where Id_DetalleVerificacion = %s",(valor,destare,id))
         proveedor = cur.fetchall()
         mysql.connection.commit()
 
