@@ -34,6 +34,7 @@
                 <thead style="font-size: 11px;">
                     <tr><th colspan="5" style="text-align: center;">Detalles</th>
                     </tr>
+                    <th></th>
                     <th>Material</th>
                     <th style="padding-left: 10px;">P.Bruto</th>
                     <th style="padding-left: 10px;">P.Tara</th>
@@ -43,6 +44,7 @@
                 <tbody style="font-size: 10px; padding: none;">
                     {%for i in pesos%}
                     <tr>
+                        <td>{{loop.index}}</td>
                         <td>{{i[2]}}</td>
                         <td style="padding-left: 10px;">{{i[3]}} Lb</td>
                         <td style="padding-left: 10px;">{{i[4]}} Lb</td>
@@ -55,7 +57,7 @@
                 
                 <thead style="font-size: 10px;">
                     <tr>
-                        <td colspan="1" align="center" style="margin-right: 100px">
+                        <td colspan="2" align="center" style="margin-right: 100px">
                             <strong>Total</strong>
                         </td>
                         <td colspan="1" align="center">
@@ -85,16 +87,21 @@
                             <th colspan="4" style="text-align: center;">Resumen</th>
                         
                         </tr>
+                        
                         <th>Material</th>
                         <th style="padding-left: 10px;">P.Bruto</th>
                         <th style="padding-left: 10px;">P.Tara</th>
+                        <th style="padding-left: 10px;">P.Destare</th>
                         <th style="padding-left: 10px;">P.Neto</th>
                         {%for mate in mat%}
                         <tr>
+                        
                         <th>{{mate[0]}}</th>
                         <td align="center">{{mate[1]}} Lb</td>
                         <td align="center">{{mate[2]}} Lb</td>
+                        <td align="center">{{mate[4]}} Lb</td>
                         <td align="center">{{mate[3]}} Lb</td>
+                        
                         </tr>
                         {%endfor%}
                         <tr></tr>
@@ -103,14 +110,16 @@
                         <br>
                         <tr>
                             <th>Material</th>
-                        <th style="padding-left: 10px;">P.Bruto</th>
-                        <th style="padding-left: 10px;">P.Tara</th>
-                        <th style="padding-left: 10px;">P.Neto</th>
+                            <th style="padding-left: 10px;">P.Bruto</th>
+                            <th style="padding-left: 10px;">P.Tara</th>
+                            <th style="padding-left: 10px;">P.Destare</th>
+                            <th style="padding-left: 10px;">P.Neto</th>
                         {%for primera in primera%}
                         <tr>
                         <th>Primera</th>
                         <td align="center">{{primera[1]}} Lb</td>
                         <td align="center">{{primera[2]}} Lb</td>
+                        <td align="center">{{primera[4]}} Lb</td>
                         <td align="center">{{primera[3]}} Lb</td>
                         </tr>
                         {%endfor%}
@@ -121,14 +130,16 @@
                         <br>
                         <tr>
                             <th>Material</th>
-                        <th style="padding-left: 10px;">P.Bruto</th>
-                        <th style="padding-left: 10px;">P.Tara</th>
-                        <th style="padding-left: 10px;">P.Neto</th>
+                            <th style="padding-left: 10px;">P.Bruto</th>
+                            <th style="padding-left: 10px;">P.Tara</th>
+                            <th style="padding-left: 10px;">P.Destare</th>
+                            <th style="padding-left: 10px;">P.Neto</th>
                         {%for segunda in segunda%}
                         <tr>
                         <th>segunda</th>
                         <td align="center">{{segunda[1]}} Lb</td>
                         <td align="center">{{segunda[2]}} Lb</td>
+                        <td align="center">{{segunda[4]}} Lb</td>
                         <td align="center">{{segunda[3]}} Lb</td>
                         </tr>
                         {%endfor%}

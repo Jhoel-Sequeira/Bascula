@@ -696,17 +696,6 @@
                                 if (result.isConfirmed) {
                                 }
                             });
-                        } else if (tara < destare && $("#buscarmat").val() != "JUMBO") {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Datos Inválidos",
-                                confirmButtonText: "Ok",
-                                text: "El valor de la tara es invalido.",
-                            }).then((result) => {
-                                /* Read more about isConfirmed, isDenied below */
-                                if (result.isConfirmed) {
-                                }
-                            });
                         } else {
                             $.ajax({
                                 url: "/insertarPesos",
@@ -721,7 +710,7 @@
                                 success: function (response) {
                                     $("#tabla-peso").html(response);
                                     $("#tabla-peso").append(response.htmlresponse);
-                                    $("#buscarmat").val("");
+                                    // $("#buscarmat").val("");
                                     $("#bruto").val(0);
                                     $("#tara").val(0);
                                     $("#destare").val(0);

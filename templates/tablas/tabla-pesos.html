@@ -6,6 +6,7 @@
             </th>
         </tr>
         <tr>
+            <th></th>
             <th style="width: 450px" class="fuente-tabla">Material</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Bruto</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Tara</th>
@@ -20,6 +21,7 @@
     <tbody>
         {%for i in pesos%}
         <tr class="fuente-tabla">
+            <td>{{loop.index}}</td>
             <td>{{i[2]}}</td>
             <td align="center" style="padding-right: 10px">{{i[3]}}</td>
             <td align="center" style="padding-right: 10px">{{i[4]}} </td>
@@ -43,7 +45,7 @@
         {%endfor%}
 
         <tr>
-            <td colspan="1" align="center" class="fuente-tabla" style="margin-right: 100px">
+            <td colspan="2" align="center" class="fuente-tabla" style="margin-right: 100px">
                 <strong>Total</strong>
             </td>
             <td colspan="1" align="center" class="fuente-tabla">

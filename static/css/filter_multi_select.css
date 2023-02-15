@@ -45,7 +45,7 @@
     display: inline-flex;
     height: 1.875em;
     color: var(--fms-badge-text-color);
-    background-color: var(--fms-badge-color);
+    background-color:rgb(67,116,19);
     border-radius: 1.1em;
     align-items: center;
     vertical-align: baseline;
@@ -186,6 +186,7 @@
 .filter-multi-select .dropdown-item .custom-checkbox:indeterminate ~ .custom-control-label::before {
     border-color: var(--fms-badge-color);
     background-color: var(--fms-badge-color);
+    background-color: rgb(67,116,19);
 }
 
 .filter-multi-select .dropdown-item .custom-checkbox:checked:disabled ~ .custom-control-label::before,
