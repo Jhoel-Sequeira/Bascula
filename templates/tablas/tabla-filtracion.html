@@ -5,12 +5,12 @@
                 Tabla</th>
         </tr> -->
         <tr class="fuente-tabla">
-            <th>Proveedor</th>
-            <th style="padding-left:120px ;">Fecha</th>
-            <th style="padding-left:120px ;">Po</th>
-            <th style="padding-left:120px ;">NoBoleta</th>
-            <th style="padding-left:120px ;">Punto de Compra</th>
-            <th style="padding-left:120px ;">Estado</th>
+            <th style="width: 350px">Proveedor</th>
+            <th style="width: 200px; padding-left: 80px;">Fecha</th>
+            <th style="width: 200px; padding-left: 60px;">Po</th>
+            <th style="width: 200px; padding-left: 20px;">NoBoleta</th>
+            <th style="width: 200px; padding-left: 10px;">P. Compra</th>
+            <th style="padding-left:50px ;">Estado</th>
             <th></th>
         </tr>
     </thead>
@@ -18,11 +18,11 @@
         {%for i in verificaciones%}
             <tr class="fuente-tabla">
                 <td>{{i[6]}}</td>
-                <td align="center">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
-                <td align="center">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
-                <td align="center">{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
-                <td align="center">{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
-                <td align="center">{%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>
+                <td align="center" style="width: 500px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
+                <td align="center" style="width: 200px">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
+                <td align="center" style="width: 200px">{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
+                <td align="center" style="width: 200px">{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
+                <td align="center" style="width: 200px">{%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>
 
                 <td>
                     <button type="button" class="btn btn-primary" value="{{i[0]}}" id="detallever" name="detallever">
