@@ -33,9 +33,15 @@
             <td><button type="button" class="btn btn-primary mt-3 ml-5" value="{{i[0]}}" name="vertara">
                     <i class="fa-solid fa-info"></i>
                 </button></td>
-            <td><button type="button" class="btn btn-primary mt-3 ml-5" value="{{i[0]}}" name="editarbruto">
+            {%if i[2] == "ALUMINIO MIXTO"%}
+            <td><button type="button" disabled class="btn btn-primary mt-3 ml-5" value="{{i[0]}}" name="editarbruto">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </button></td>
+                {%else%}
+                <td><button type="button" class="btn btn-primary mt-3 ml-5" value="{{i[0]}}" name="editarbruto">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button></td>
+                {%endif%}
             <td><button type="button" class="btn btn-danger mt-3 ml-5" value="{{i[0]}}" name="elimlinea">
                     <i class="fa-solid fa-trash"></i>
                 </button>
