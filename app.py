@@ -439,19 +439,29 @@ def listaProveedores():
                 cur.execute("select v.NoBoleta,v.PO,count(v.NoBoleta) as boleta from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner JOIN tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario inner join tb_cargo as car ON u.IdCargo = car.Id_Cargo Where v.IdEstado = 5 group BY v.NoBoleta,v.PO")
                 verificacionesRep = cur.fetchall()
                 verificaciones =""
+                banderaConsultas = 0
 
                 for ver in verificacionesRep:
                     if ver[2] == 2:
                         consulta_extra += " AND v.NoBoleta = "+ str(ver[0])+" AND v.PO = '"+ str(ver[1])+"'"
                         print(ver)
+                        print("cambiar bandera")
+                        banderaConsultas = 1
                 print(consulta_extra)
-                #LLamar las verificaciones validas
-                cur = mysql.connection.cursor()
-                cur.execute("" + consulta_extra)
-                verificaciones = cur.fetchall()
+                print(banderaConsultas)
+                if banderaConsultas == 1:
+
+                    #LLamar las verificaciones validas
+                    cur = mysql.connection.cursor()
+                    cur.execute("" + consulta_extra)
+                    verificaciones = cur.fetchall()
+                    print("verifi")
+                    return render_template('tablas/tabla-comparacion.html',verificaciones = verificaciones)
+                else:
+                    verificaciones = ""
                 #TENEMOS QUE AGARRAR LA PO Y COMPARARLA PARA VER SI 
-                print(verificaciones)
-                return render_template('tablas/tabla-comparacion.html',verificaciones = verificaciones)
+                    print("fuera")
+                    return render_template('tablas/tabla-comparacion.html',verificaciones = verificaciones)
             else:
                 #SELECCIONAR EL ID DEL PROVEEDOR
                 cur = mysql.connection.cursor()
@@ -1085,7 +1095,6 @@ def finalizarVerificacion():
                 Verificacion = cur.fetchall()
                 mysql.connection.commit()
                 print("VERIFICACION")
-                print(Verificacion[0][2])
                 #HACEMOS LOA SUMA DE CADA COLUMNA
                 #  SUMA DE LA COLUMNA PESOS BRUTOS
                 cur = mysql.connection.cursor()
@@ -1132,7 +1141,7 @@ def finalizarVerificacion():
 
                 #total de materiales
                 cur = mysql.connection.cursor()
-                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto,round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
                 mat = cur.fetchall()
                 mysql.connection.commit()
                 print(pesos)
