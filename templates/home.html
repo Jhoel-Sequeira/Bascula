@@ -89,7 +89,7 @@ encabezado %}
     }
     function crearVerificacion() {
         var proveedor = $('#buscar').val();
-        if (proveedor != "") {
+        if (proveedor != "" && proveedor > 0) {
             $.ajax({
                 url: "/listaProveedores",
                 type: "POST",
@@ -107,7 +107,7 @@ encabezado %}
                 },
             });
         } else {
-            Swal.fire({ icon: 'error', title: 'Datos faltantes', text: 'Debe de ingresar la cédula del proveedor para continuar.' }).then((result) => {
+            Swal.fire({ icon: 'error', title: 'Datos Inválidos', text: 'Debe de ingresar un número de boleta válido.' }).then((result) => {
                 if (result.isConfirmed) {
 
                 }
@@ -118,7 +118,7 @@ encabezado %}
     // Funcion para poner lista de resultados
     var buscarBoleta = function () {
         if ($('#cargo').val() != 5) {
-            if ($('#buscar').val() != "") {
+            if ($('#buscar').val() != "" && $('#buscar').val() > 0) {
                 $('#verificar').removeAttr('disabled')
             } else {
                 $('#verificar').attr('disabled', 'true');
