@@ -40,3 +40,8 @@ def Autenticar(user,contra):
 def buscarIdProveedor(prov):
     id = models.execute_kw(db,uid,password,'res.partner','search_read',[[['supplier','=',True],['name', '=',''+prov]]],{'fields':['id']})
     return id
+
+
+def TraerUsuario(id):
+    info = models.execute_kw(db,uid,password,'res.users','search_read',[[['id', '=',''+id]]],{'fields':['id','name',]})
+    return info

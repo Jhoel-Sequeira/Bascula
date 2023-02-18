@@ -56,7 +56,7 @@ def login():
             print("verrr")
             print(uid[0]['id'])
             cargo = uid[0]['x_studio_field_xql4c']
-            if cargo[1] == "JEFE DE TECNOLOGÍA" or cargo[1] == "SOPORTE DE INFORMATICA":
+            if cargo[1] == "JEFE DE TECNOLOGÍA" or cargo[1] == "SOPORTE DE INFORMATICA" or cargo[1] == "GERENTE ADMINISTRACIÓN":
                 session["userId"] = uid[0]['id']
                 session["user"] = usuario
                 session["userrole"] = 1
@@ -66,6 +66,16 @@ def login():
                 # cargo = cur.fetchone()
                 # print(cargo[0])
                 session['cargo'] = cargo[0]
+                # GUARDAR USUARIOS EN LA BASE DE DATOS
+                cur = mysql.connection.cursor()
+                cur.execute("INSERT INTO tb_credenciales (Usuarios,Contraseñas,IdRol) VALUES (%s,%s,%s)",(session["user"],generate_password_hash(Contraseña),session["userrole"]))
+                
+                mysql.connection.commit()
+
+                # INSERTAMOS EN LA TABLA EL USUARIO COMO TAL
+                user_info = conexion.TraerUsuario(str(session["userId"]))
+                print(user_info)
+                ########################################
                 cur = mysql.connection.cursor()
                 cur.execute("select * from tb_proveedor Where IdEstado = 1")
                 Proveedores = cur.fetchall()
