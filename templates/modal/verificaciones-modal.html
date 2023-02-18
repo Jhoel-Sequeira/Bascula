@@ -325,8 +325,9 @@
                     // Funcion para poner lista de resultados
                     var buscarProveedor = function () {
                         if ($("#proveedor").val() != "") {
+                            
                             $.ajax({
-                                url: "/buscarProveedor",
+                                url: "/buscarProveedorApi",
                                 type: "POST",
                                 data: {
                                     proveedor: $("#proveedor").val(),

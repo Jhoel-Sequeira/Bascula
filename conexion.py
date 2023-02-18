@@ -28,3 +28,10 @@ datos = models.execute_kw(db,uid,password,'res.partner','search',[[['name', '=',
 print(datos)
 
 #print(id)
+def buscarProveedor(prov):
+    proveedores = models.execute_kw(db,uid,password,'res.partner','search_read',[[['supplier','=',True],['name', 'ilike',''+prov+'%']]],{'fields':['id','name'],'limit':5})
+    return proveedores
+
+def buscarIdProveedor(prov):
+    id = models.execute_kw(db,uid,password,'res.partner','search_read',[[['supplier','=',True],['name', '=',''+prov]]],{'fields':['id']})
+    return id

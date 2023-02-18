@@ -6,6 +6,7 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from werkzeug.security import check_password_hash, generate_password_hash
 import config
+import conexion
 import MySQLdb.cursors
 
 app = Flask(__name__)
@@ -149,6 +150,20 @@ def buscarProveedor():
         if proveedores:
 
             return render_template('otros/proveedor-busqueda.html',proveedores = proveedores)
+        else:
+            return "no"
+   else:
+        return "No"
+
+@app.route('/buscarProveedorApi', methods =["POST","GET"])
+def buscarProveedorApi():
+   if request.method == "POST":
+        proveedor = request.form['proveedor']
+        proveedores = conexion.buscarProveedor(proveedor)
+        print(proveedores)
+        if proveedores:
+
+            return render_template('otros/proveedor-busqueda.html',proved = proveedores)
         else:
             return "no"
    else:
@@ -642,14 +657,33 @@ def datosGeneralesVerificacion():
         po = request.form['po']
         nboleta = request.form['nboleta']
         bahia = request.form['bahia']
-        #LLAMAMOS AL PROVEEDOR DE NOMBRE TAL
+
+        print(proveedor)
         cur = mysql.connection.cursor()
         cur.execute('SELECT Id_Proveedor from tb_proveedor where NombreProveedor = %s',[proveedor])
         idprov = cur.fetchone()
         cur = mysql.connection.cursor()
-        cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s where Id_Verificacion = %s', (po,nboleta,idprov[0],verificador,digitador,puntoCompra,bahia,id))
-        digitador = cur.fetchall()
-        mysql.connection.commit()
+
+        if idprov:
+            cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s where Id_Verificacion = %s', (po,nboleta,idprov[0],verificador,digitador,puntoCompra,bahia,id))
+            digitador = cur.fetchall()
+            mysql.connection.commit()
+        else:
+            #llamar el id de oddo
+            idOddo = conexion.buscarIdProveedor(proveedor)
+            #INSERTAMOS EL PROVEEDOR DE ODDO EN LA BASE
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO tb_proveedor (NombreProveedor,IdOddo,IdEstado) VALUES (%s,%s,1)",(proveedor,idOddo))
+            proveedornuevo = cur.fetchone()
+            #LLAMAMOS AL PROVEEDOR DE NOMBRE TAL
+            cur = mysql.connection.cursor()
+            cur.execute('SELECT Id_Proveedor from tb_proveedor where NombreProveedor = %s',[proveedor])
+            idprov = cur.fetchone()
+            cur = mysql.connection.cursor()
+
+            cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s where Id_Verificacion = %s', (po,nboleta,idprov[0],verificador,digitador,puntoCompra,bahia,id))
+            digitador = cur.fetchall()
+            mysql.connection.commit()
         return "done" 
 
 #CARGAR LOS PESOS DE LAS VERIFICACIONES
