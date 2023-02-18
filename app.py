@@ -51,25 +51,21 @@ def login():
         if usuario == "" or Contraseña == "":
             return render_template('login.html', errorlogin=1)
         else:
-
-            cur = mysql.connection.cursor()
-            cur.execute("select * from tb_credenciales Where Usuarios = %s",[usuario])
-            results = cur.fetchone()
-            print(results)
-            if results:
-                #si trae algo
-                # Recordar el usuario y rol que se logeo
-
-                session["userId"] = results[0]
-                session["user"] = results[1]
-                session["userrole"] = results[3]
-                cur = mysql.connection.cursor()
-                cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
-                cargo = cur.fetchone()
-                print(cargo[0])
+            #MANDAMOS A VERIFICAR LOS DATOS EN ODDO
+            uid = conexion.Autenticar(usuario,Contraseña)
+            print("verrr")
+            print(uid[0]['id'])
+            cargo = uid[0]['x_studio_field_xql4c']
+            if cargo[1] == "JEFE DE TECNOLOGÍA" or cargo[1] == "SOPORTE DE INFORMATICA":
+                session["userId"] = uid[0]['id']
+                session["user"] = usuario
+                session["userrole"] = 1
+                #ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
+                # cur = mysql.connection.cursor()
+                # cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
+                # cargo = cur.fetchone()
+                # print(cargo[0])
                 session['cargo'] = cargo[0]
-                #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
-                #CONSULTA PARA LOS PROVEEDORES
                 cur = mysql.connection.cursor()
                 cur.execute("select * from tb_proveedor Where IdEstado = 1")
                 Proveedores = cur.fetchall()
@@ -89,17 +85,87 @@ def login():
                 cur = mysql.connection.cursor()
                 cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
                 digitador = cur.fetchall()
-                
-                #CHEQUEAMOS LAS CONTRASEÑAS PARA VER SI SON IGUALES
-                if not check_password_hash(results[2], Contraseña):
-                    #contraseñas incorrectas
-                    print("contras")
-                    return render_template('login.html', errorlogin=2)
                 return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
-           
             else:
-                #VIENE VACIO
-                return render_template('login.html', errorlogin=1) 
+                session["userId"] = uid[0]['id']
+                session["user"] = usuario
+                session["userrole"] = 2
+                #ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
+                # cur = mysql.connection.cursor()
+                # cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
+                # cargo = cur.fetchone()
+                # print(cargo[0])
+                session['cargo'] = cargo[0]
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_proveedor Where IdEstado = 1")
+                Proveedores = cur.fetchall()
+                #CONSULTA PARA LOS PUNTOS DE COMPRA
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_puntocompra Where IdEstado = 1")
+                punto = cur.fetchall()
+                #CONSULTA PARA LOS MATERIALES
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_material Where Id_Estado = 1")
+                material = cur.fetchall()
+                #CONSULTA PARA LOS VERIFICADORES
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+                verificador = cur.fetchall()
+                #CONSULTA PARA LOS DIGITADOR
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+                digitador = cur.fetchall()
+                return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
+            
+
+            # cur = mysql.connection.cursor()
+            # cur.execute("select * from tb_credenciales Where Usuarios = %s",[usuario])
+            # results = cur.fetchone()
+            # print(results)
+            # if results:
+            #     #si trae algo
+            #     # Recordar el usuario y rol que se logeo
+
+            #     session["userId"] = results[0]
+            #     session["user"] = results[1]
+            #     session["userrole"] = results[3]
+            #     cur = mysql.connection.cursor()
+            #     cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
+            #     cargo = cur.fetchone()
+            #     print(cargo[0])
+            #     session['cargo'] = cargo[0]
+            #     #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
+            #     #CONSULTA PARA LOS PROVEEDORES
+            #     cur = mysql.connection.cursor()
+            #     cur.execute("select * from tb_proveedor Where IdEstado = 1")
+            #     Proveedores = cur.fetchall()
+            #     #CONSULTA PARA LOS PUNTOS DE COMPRA
+            #     cur = mysql.connection.cursor()
+            #     cur.execute("select * from tb_puntocompra Where IdEstado = 1")
+            #     punto = cur.fetchall()
+            #     #CONSULTA PARA LOS MATERIALES
+            #     cur = mysql.connection.cursor()
+            #     cur.execute("select * from tb_material Where Id_Estado = 1")
+            #     material = cur.fetchall()
+            #     #CONSULTA PARA LOS VERIFICADORES
+            #     cur = mysql.connection.cursor()
+            #     cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+            #     verificador = cur.fetchall()
+            #     #CONSULTA PARA LOS DIGITADOR
+            #     cur = mysql.connection.cursor()
+            #     cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+            #     digitador = cur.fetchall()
+                
+            #     #CHEQUEAMOS LAS CONTRASEÑAS PARA VER SI SON IGUALES
+            #     if not check_password_hash(results[2], Contraseña):
+            #         #contraseñas incorrectas
+            #         print("contras")
+            #         return render_template('login.html', errorlogin=2)
+            #     return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
+           
+            # else:
+            #     #VIENE VACIO
+            #     return render_template('login.html', errorlogin=1) 
                     
         return render_template('index.html') 
             
