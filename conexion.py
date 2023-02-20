@@ -45,3 +45,8 @@ def buscarIdProveedor(prov):
 def TraerUsuario(id):
     info = models.execute_kw(db,uid,password,'res.users','search_read',[[['id', '=',''+id]]],{'fields':['id','name',]})
     return info
+
+def buscarProveedor(prov):
+    proveedores = models.execute_kw(db,uid,password,'res.partner','search_read',[[['supplier','=',True],['name', 'ilike',''+prov+'%']]],{'fields':['id','name'],'limit':5})
+    
+    return proveedores

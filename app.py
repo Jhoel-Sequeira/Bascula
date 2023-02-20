@@ -57,24 +57,62 @@ def login():
             print(uid[0]['id'])
             cargo = uid[0]['x_studio_field_xql4c']
             if cargo[1] == "JEFE DE TECNOLOGÍA" or cargo[1] == "SOPORTE DE INFORMATICA" or cargo[1] == "GERENTE ADMINISTRACIÓN":
-                session["userId"] = uid[0]['id']
+                
                 session["user"] = usuario
                 session["userrole"] = 1
                 #ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
                 # cur = mysql.connection.cursor()
                 # cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
                 # cargo = cur.fetchone()
-                # print(cargo[0])
-                session['cargo'] = cargo[0]
+                # print(cargo[0]) cargo de oddo
+                session['cargo'] = 3
                 # GUARDAR USUARIOS EN LA BASE DE DATOS
+
                 cur = mysql.connection.cursor()
-                cur.execute("INSERT INTO tb_credenciales (Usuarios,Contraseñas,IdRol) VALUES (%s,%s,%s)",(session["user"],generate_password_hash(Contraseña),session["userrole"]))
-                
+                cur.execute("SELECT * FROM tb_credenciales Where Usuarios = %s",[session["user"]])
+                usuarioExistente = cur.fetchall()
                 mysql.connection.commit()
 
-                # INSERTAMOS EN LA TABLA EL USUARIO COMO TAL
-                user_info = conexion.TraerUsuario(str(session["userId"]))
-                print(user_info)
+                
+
+                user_info = conexion.TraerUsuario(str(uid[0]['id']))
+                if not usuarioExistente:
+                    cur = mysql.connection.cursor()
+                    cur.execute("INSERT INTO tb_credenciales (Usuarios,Contraseñas,IdRol) VALUES (%s,%s,%s)",(session["user"],generate_password_hash(Contraseña),session["userrole"]))
+                    
+                    mysql.connection.commit()
+                    idcredenciales = cur.lastrowid
+                    #YA TENEMOS LAS CREDENCIALES DE LOS USUARIOS DE ODDO
+                    print(idcredenciales)
+                    # INSERTAMOS EN LA TABLA EL USUARIO COMO TAL
+                    cur = mysql.connection.cursor()
+                    cur.execute("INSERT INTO tb_usuarios (NombreUsuario,IdCargo,IdOddo,IdCredenciales,IdEstado,IdPuesto) VALUES (%s,%s,%s,%s,%s,'1')",(user_info[0]['name'],session['cargo'],user_info[0]['id'],idcredenciales,1))
+                    mysql.connection.commit()
+                    ultimoUsuario = cur.lastrowid
+
+                    id = usuarioExistente[0][0]
+                    cur = mysql.connection.cursor()
+                    cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
+                    ultimoUSuarios = cur.fetchone()
+                    mysql.connection.commit()
+                    print(ultimoUSuarios[0])
+                    session["userId"] = ultimoUSuarios[0]
+
+
+                elif usuarioExistente:
+                    print(usuarioExistente[0][0])
+                    id = usuarioExistente[0][0]
+                    print("ssssssssssss")
+                    cur = mysql.connection.cursor()
+                    cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
+                    ultimoUSuarios = cur.fetchone()
+                    mysql.connection.commit()
+                    print(ultimoUSuarios[0])
+                    session["userId"] = ultimoUSuarios[0]
+                
+                
+                
+                print(user_info[0]['name'])
                 ########################################
                 cur = mysql.connection.cursor()
                 cur.execute("select * from tb_proveedor Where IdEstado = 1")
@@ -96,8 +134,9 @@ def login():
                 cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
                 digitador = cur.fetchall()
                 return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
-            else:
-                session["userId"] = uid[0]['id']
+            elif cargo[1] == "DIGITADOR":
+                #ESTE ES DIGITADOR 
+                
                 session["user"] = usuario
                 session["userrole"] = 2
                 #ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
@@ -105,7 +144,127 @@ def login():
                 # cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
                 # cargo = cur.fetchone()
                 # print(cargo[0])
-                session['cargo'] = cargo[0]
+                #ESCRIBIMOS EL CARGO DE DIGITADOR
+                session['cargo'] = 1
+
+                #vaidamos si el usuario ya esta logueado antes
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT * FROM tb_credenciales Where Usuarios = %s",[session["user"]])
+                usuarioExistente = cur.fetchall()
+                mysql.connection.commit()
+
+                user_info = conexion.TraerUsuario(str(uid[0]['id']))
+                if not usuarioExistente:
+                    cur = mysql.connection.cursor()
+                    cur.execute("INSERT INTO tb_credenciales (Usuarios,Contraseñas,IdRol) VALUES (%s,%s,%s)",(session["user"],generate_password_hash(Contraseña),session["userrole"]))
+                    
+                    mysql.connection.commit()
+                    idcredenciales = cur.lastrowid
+                    #YA TENEMOS LAS CREDENCIALES DE LOS USUARIOS DE ODDO
+                    print(idcredenciales)
+                    # INSERTAMOS EN LA TABLA EL USUARIO COMO TAL
+                    cur = mysql.connection.cursor()
+                    cur.execute("INSERT INTO tb_usuarios (NombreUsuario,IdCargo,IdOddo,IdCredenciales,IdEstado,IdPuesto) VALUES (%s,%s,%s,%s,%s,'1')",(user_info[0]['name'],session['cargo'],user_info[0]['id'],idcredenciales,1))
+                    mysql.connection.commit()
+                    ultimoUsuario = cur.lastrowid
+
+                    cur = mysql.connection.cursor()
+                    cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
+                    ultimoUSuarios = cur.fetchone()
+                    mysql.connection.commit()
+                    print(ultimoUSuarios[0])
+                    session["userId"] = ultimoUSuarios[0]
+                elif usuarioExistente:
+                    print(usuarioExistente[0][0])
+                    id = usuarioExistente[0][0]
+                    print("ssssssssssss")
+                    cur = mysql.connection.cursor()
+                    cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
+                    ultimoUSuarios = cur.fetchone()
+                    mysql.connection.commit()
+                    print(ultimoUSuarios[0])
+                    session["userId"] = ultimoUSuarios[0]
+                
+                
+                #session["userId"] = ultimoUsuario
+
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_proveedor Where IdEstado = 1")
+                Proveedores = cur.fetchall()
+                #CONSULTA PARA LOS PUNTOS DE COMPRA
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_puntocompra Where IdEstado = 1")
+                punto = cur.fetchall()
+                #CONSULTA PARA LOS MATERIALES
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_material Where Id_Estado = 1")
+                material = cur.fetchall()
+                #CONSULTA PARA LOS VERIFICADORES
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+                verificador = cur.fetchall()
+                #CONSULTA PARA LOS DIGITADOR
+                cur = mysql.connection.cursor()
+                cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+                digitador = cur.fetchall()
+                return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
+            else:
+                #ESTE ES VERIFICADOR 
+                
+                session["user"] = usuario
+                session["userrole"] = 2
+                #ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
+                # cur = mysql.connection.cursor()
+                # cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
+                # cargo = cur.fetchone()
+                # print(cargo[0])
+                #ESCRIBIMOS EL CARGO DE VERIFICADOR
+                session['cargo'] = 2
+
+                #vaidamos si el usuario ya esta logueado antes
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT * FROM tb_credenciales Where Usuarios = %s",[session["user"]])
+                usuarioExistente = cur.fetchall()
+                mysql.connection.commit()
+
+
+                
+
+                user_info = conexion.TraerUsuario(str(uid[0]['id']))
+                if not usuarioExistente:
+                    cur = mysql.connection.cursor()
+                    cur.execute("INSERT INTO tb_credenciales (Usuarios,Contraseñas,IdRol) VALUES (%s,%s,%s)",(session["user"],generate_password_hash(Contraseña),session["userrole"]))
+                    
+                    mysql.connection.commit()
+                    idcredenciales = cur.lastrowid
+                    #YA TENEMOS LAS CREDENCIALES DE LOS USUARIOS DE ODDO
+                    print(idcredenciales)
+                    # INSERTAMOS EN LA TABLA EL USUARIO COMO TAL
+                    cur = mysql.connection.cursor()
+                    cur.execute("INSERT INTO tb_usuarios (NombreUsuario,IdCargo,IdOddo,IdCredenciales,IdEstado,IdPuesto) VALUES (%s,%s,%s,%s,%s,'1')",(user_info[0]['name'],session['cargo'],user_info[0]['id'],idcredenciales,1))
+                    mysql.connection.commit()
+                    ultimoUsuario = cur.lastrowid
+
+                    cur = mysql.connection.cursor()
+                    cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
+                    ultimoUSuarios = cur.fetchone()
+                    mysql.connection.commit()
+                    print(ultimoUSuarios[0])
+                    session["userId"] = ultimoUSuarios[0]
+                
+                elif usuarioExistente:
+                    print(usuarioExistente[0][0])
+                    id = usuarioExistente[0][0]
+                    print("ssssssssssss")
+                    cur = mysql.connection.cursor()
+                    cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
+                    ultimoUSuarios = cur.fetchone()
+                    mysql.connection.commit()
+                    print(ultimoUSuarios[0])
+                    session["userId"] = ultimoUSuarios[0]
+                
+                
+
                 cur = mysql.connection.cursor()
                 cur.execute("select * from tb_proveedor Where IdEstado = 1")
                 Proveedores = cur.fetchall()
@@ -127,6 +286,7 @@ def login():
                 digitador = cur.fetchall()
                 return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
             
+
 
             # cur = mysql.connection.cursor()
             # cur.execute("select * from tb_credenciales Where Usuarios = %s",[usuario])
@@ -631,6 +791,7 @@ def detalleVerificacion():
             cur = mysql.connection.cursor()
             cur.execute("select pc.Id_PuntoCompra,pc.NombrePuntoCompra from tb_usuarios as u inner join tb_puntocompra as pc on u.IdPuesto = pc.Id_PuntoCompra inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_Credenciales where cred.Id_Credenciales = %s",[session['userId']])
             usuariopunto = cur.fetchone()  
+            print(usuariopunto)
             return render_template('modal/verificaciones-modal.html',usuariopunto = usuariopunto,usuariolog = usuariolog,verificacion = verificacion,Punto = punto,Material = material,Verificador = verificador,Digitador = digitador)
         else:
             print(id)
@@ -1100,7 +1261,9 @@ def finalizarVerificacion():
                 cur = mysql.connection.cursor()
                 cur.execute('Update tb_verificacion set IdEstado = 5 Where Id_Verificacion = %s',[id])
                 mysql.connection.commit()
-                #total de materiales
+                #total de materiales RESUMEN
+                
+
                 cur = mysql.connection.cursor()
                 cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto,round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
                 mat = cur.fetchall()
@@ -1119,6 +1282,8 @@ def finalizarVerificacion():
                 cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.TipoMaterial = "Segunda" Group BY m.TipoMaterial',[id])
                 segunda = cur.fetchall()
                 mysql.connection.commit()
+
+                # AQUI SE DEBERIA DE MANDAR A LLAMAR LA FUNCION PARA GENERAR LA ORDEN DE COMPRA EN ODDO
 
                 return render_template('otros/factura.html',segunda = segunda,primera = primera,mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:
