@@ -901,6 +901,9 @@ def datosGeneralesVerificacion():
         idprov = cur.fetchone()
         cur = mysql.connection.cursor()
 
+        print("aqui se muestra el proveedor:")
+        print(idprov)
+
         if idprov:
             cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s where Id_Verificacion = %s', (po,nboleta,idprov[0],verificador,digitador,puntoCompra,bahia,id))
             digitador = cur.fetchall()
@@ -1220,7 +1223,7 @@ def finalizarVerificacion():
             print("pesos")
             if pesos:
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia,p.IdOddo from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
                 Verificacion = cur.fetchall()
                 mysql.connection.commit()
                 #HACEMOS LOA SUMA DE CADA COLUMNA
@@ -1283,8 +1286,37 @@ def finalizarVerificacion():
                 segunda = cur.fetchall()
                 mysql.connection.commit()
 
-                # AQUI SE DEBERIA DE MANDAR A LLAMAR LA FUNCION PARA GENERAR LA ORDEN DE COMPRA EN ODDO
+                #TOTAL DE RECHAZOS
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.TipoMaterial = "Segunda" and m.NombreMaterial like "RECHAZO%" Group BY m.TipoMaterial',[id])
+                rechazo = cur.fetchall()
+                mysql.connection.commit()
 
+                #TOTAL DE JUMBOS
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.TipoMaterial = "Segunda" and m.NombreMaterial = "JUMBO" Group BY m.TipoMaterial',[id])
+                jumbo = cur.fetchall()
+                mysql.connection.commit()
+
+                #TOTAL LIQUIDO
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.TipoMaterial = "Segunda" and m.NombreMaterial = "LIQUIDO" Group BY m.TipoMaterial',[id])
+                liquido = cur.fetchall()
+                mysql.connection.commit()
+
+                #TOTAL rechazo Pet
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.TipoMaterial = "Segunda" and m.NombreMaterial = "LIQUIDO" Group BY m.TipoMaterial',[id])
+                rechazoPet = cur.fetchall()
+                mysql.connection.commit()
+
+
+
+                # AQUI SE DEBERIA DE MANDAR A LLAMAR LA FUNCION PARA GENERAR LA ORDEN DE COMPRA EN ODDO
+                #CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rechazoPet,primera,segunda)
+                IdOrden = conexion.CrearOrdenCompra(Verificacion[10],Verificacion[4],rechazo[3],jumbo[3],liquido[3],0,primera[3])
+                print("ORDEN AQUI")
+                print(IdOrden)
                 return render_template('otros/factura.html',segunda = segunda,primera = primera,mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:
                 print("vacio")
@@ -1300,7 +1332,7 @@ def finalizarVerificacion():
             print("pesos")
             if pesos:
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia,p.IdOddo,pc.Id_PuntoCompra from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
                 Verificacion = cur.fetchall()
                 mysql.connection.commit()
                 #HACEMOS LOA SUMA DE CADA COLUMNA
@@ -1346,9 +1378,84 @@ def finalizarVerificacion():
                 cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto,round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
                 mat = cur.fetchall()
                 mysql.connection.commit()
-                print(pesos)
-                print("factura aquiii")
-                print(len(pesos))
+
+                #TOTAL DE MATERIALES DE PRIMERA
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto, round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.TipoMaterial = "Primera" Group BY m.TipoMaterial',[id])
+                primera = cur.fetchall()
+                mysql.connection.commit()
+
+                #TOTAL DE MATERIALES DE SEGUNDA
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.TipoMaterial = "Segunda" Group BY m.TipoMaterial',[id])
+                segunda = cur.fetchall()
+                mysql.connection.commit()
+                
+
+                #TOTAL DE RECHAZOS
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s AND m.NombreMaterial like %s Group BY m.TipoMaterial",(id,'rechazo%'))
+                rechazo = cur.fetchall()
+                mysql.connection.commit()
+
+                #TOTAL DE JUMBOS
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.NombreMaterial like %s Group BY m.TipoMaterial',(id,'jumbo%'))
+                jumbo = cur.fetchall()
+                mysql.connection.commit()
+
+                #TOTAL LIQUIDO
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.NombreMaterial like %s Group BY m.TipoMaterial',(id,'liquido%'))
+                liquido = cur.fetchall()
+                mysql.connection.commit()
+
+                #TOTAL rechazo Pet
+                # cur = mysql.connection.cursor()
+                # cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s m.NombreMaterial = "LIQUIDO" Group BY m.TipoMaterial',[id])
+                # rechazoPet = cur.fetchall()
+                # mysql.connection.commit()
+
+
+
+                # AQUI SE DEBERIA DE MANDAR A LLAMAR LA FUNCION PARA GENERAR LA ORDEN DE COMPRA EN ODDO
+                #CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rechazoPet,primera,segunda)
+                print(jumbo[0][3])
+                if jumbo:
+                    print("jumbo tiene")
+                    jumboNuevo = jumbo[0][3]
+                else:
+                    jumboNuevo = 0.0
+                
+                print(rechazo)
+                if rechazo:
+                    rechazoNuevo = rechazo[0][3]
+                else:
+                    rechazoNuevo = 0.0
+                if liquido:
+                    liquidoNuevo = liquido[0][3]
+                else:
+                    liquidoNuevo = 0.0
+                
+                print(primera)
+                if primera and segunda:
+                    primeraNuevo = primera[0][3]
+                    segundaNuevo = segunda[0][3]
+                elif primera and not segunda:
+                    primeraNuevo = primera[0][3]
+                    segundaNuevo = 0
+                elif not primera and segunda:
+                    primeraNuevo = 0
+                    segundaNuevo = segunda[0][3]
+                else:
+                    primeraNuevo = 1
+                    segundaNuevo = 1
+
+                IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10],Verificacion[0][11],Verificacion[0][3],rechazoNuevo,jumboNuevo,liquidoNuevo,0,primeraNuevo,segundaNuevo)
+                
+                print("ORDEN AQUI")
+                print(IdOrden)
+
                 return render_template('otros/factura.html',segunda = "",primera = "",mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:
                 print("vacio")
