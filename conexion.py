@@ -78,3 +78,5 @@ def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rech
                                            'x_studio_material_de_primera': primera,
                                            'x_studio_material_de_segunda': segunda}])
     return pOrder
+
+
