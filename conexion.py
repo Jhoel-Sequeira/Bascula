@@ -77,6 +77,49 @@ def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rech
                                            'x_studio_rechazo_pet': 0,
                                            'x_studio_material_de_primera': primera,
                                            'x_studio_material_de_segunda': segunda}])
+    
+    
     return pOrder
+
+def IngresarMaterialOrdenCompra(material,monto,pOrder):
+    id = models.execute_kw(db, uid, password, 'product.product', 'search_read', [[['name', '=',material],['purchase_ok','=',True]]],{'fields':['pricelist_id']}) 
+    print("id vacio")
+    print(id)
+    if id:
+        idMaterial = id[0]['id']
+    else:
+        
+        id = models.execute_kw(db, uid, password, 'product.product', 'search_read', [[['name', '=',material+' '],['purchase_ok','=',True]]],{'fields':['pricelist_id']}) 
+        print(id)
+        idMaterial = id[0]['id']
+
+
+    precio = models.execute_kw(db, uid, password, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+
+    if precio:
+        precioUnidad = precio[0]['price']
+        Id = precio[0]['id']
+        print(precio)
+    else:
+        precio = models.execute_kw(db, uid, password, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+' '])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+        precioUnidad = precio[0]['price']
+        Id = precio[0]['id']
+
+
+    #FORMATEAR EL STRING
+    print(float(precioUnidad[0:10]))
+    line_data = {
+        'order_id':pOrder,
+        'name':'PET Rap',
+        'date_planned':'05/05/23',
+        'product_uom':12, #valor de libras es constante
+        'price_unit':float(precioUnidad[0:10]),
+        'product_qty':monto, #aqui van las libras totales
+        'company_id':1,
+        'state':'done',
+        'product_id':id[0]['id']
+    }
+
+    datos = models.execute_kw(db,uid,password,'purchase.order.line','create',[line_data])
 
 
