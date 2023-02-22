@@ -78,10 +78,11 @@ def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rech
                                            'x_studio_material_de_primera': primera,
                                            'x_studio_material_de_segunda': segunda}])
     
-    
+    models.execute_kw(db, uid, password, 'purchase.order', 'write', [pOrder, {'state': 'done'}])
     return pOrder
 
 def IngresarMaterialOrdenCompra(material,monto,pOrder):
+    print(material)
     id = models.execute_kw(db, uid, password, 'product.product', 'search_read', [[['name', '=',material],['purchase_ok','=',True]]],{'fields':['pricelist_id']}) 
     print("id vacio")
     print(id)

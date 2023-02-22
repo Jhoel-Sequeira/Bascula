@@ -1299,10 +1299,10 @@ def finalizarVerificacion():
                 mysql.connection.commit()
 
                 #TOTAL LIQUIDO
-                # cur = mysql.connection.cursor()
-                # cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.NombreMaterial like %s Group BY m.TipoMaterial',(id,'liquido%'))
-                # liquido = cur.fetchall()
-                # mysql.connection.commit()
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.NombreMaterial like %s Group BY m.TipoMaterial',(id,'liquido%'))
+                liquido = cur.fetchall()
+                mysql.connection.commit()
 
                 #TOTAL rechazo Pet
                 # cur = mysql.connection.cursor()
@@ -1327,7 +1327,7 @@ def finalizarVerificacion():
                 else:
                     rechazoNuevo = 0.0
                 
-                liquido =""
+                
                 if liquido:
                     liquidoNuevo = liquido[0][3]
                 else:
@@ -1353,7 +1353,11 @@ def finalizarVerificacion():
                 print(IdOrden)
                 for material in mat:
                     print(material)
-                    #conexion.IngresarMaterialOrdenCompra(material,monto,pOrder)
+                    if material[0] == "Rechazo (cobre)" or material[0] == "RECHAZO" or material[0] == "JUMBO" or material[0] == "Rechazo (Aluminio)" or material[0] == "Rechazo (Acero)" or material[0] == "Rechazo (Bronce)" or material[0] == "Rechazo (Cable)" or material[0] == "Rechazo (lata)" :
+                    
+                        print("sosretroll")
+                    else:
+                        conexion.IngresarMaterialOrdenCompra(material[0],material[3],IdOrden)  
 
                 return render_template('otros/factura.html',segunda = segunda,primera = primera,mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:
