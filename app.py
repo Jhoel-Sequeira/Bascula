@@ -52,6 +52,9 @@ def login():
             return render_template('login.html', errorlogin=1)
         else:
             #MANDAMOS A VERIFICAR LOS DATOS EN ODDO
+            # conexion.username = usuario
+            # conexion.password = Contraseña
+            conexion.conectar(usuario,Contraseña)
             uid = conexion.Autenticar(usuario,Contraseña)
             print("verrr")
             print(uid[0]['id'])
@@ -59,6 +62,7 @@ def login():
             if cargo[1] == "JEFE DE TECNOLOGÍA" or cargo[1] == "SOPORTE DE INFORMATICA" or cargo[1] == "GERENTE ADMINISTRACIÓN":
                 
                 session["user"] = usuario
+                session["pass"] = Contraseña
                 session["userrole"] = 1
                 #ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
                 # cur = mysql.connection.cursor()
