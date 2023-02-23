@@ -59,62 +59,63 @@
                         </div>
                         <div class="row mt-2">
                             <!-- PONEMOS UN INPUT CON EL CARGO PARA USARLO COMO BANDERA PARA EL MOMENTO DE BLOQUEAR -->
-                                <input type="hidden" name="" value="{{usuariolog[1]}}" id="banderaRol">
+                            <input type="hidden" name="" value="{{usuariolog[1]}}" id="banderaRol">
                             <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel"
                                         for="form3Example3"><strong>Verificador</strong></label>
-                                        {% if verifi[7] %}
-                                            <input type="text" id="idusuariolog" name="digitador" placeholder="Punto de Compra"
-                                            required="required" class="form-control" disabled value="{{ verifi[7] }}" />
-                                            {% else %}
-                                                {%if usuariolog[1] == 'Verificador'%}
-                                            <input type="text" value="{{usuariolog[2]}}" name="" id="" disabled="disabled"
-                                                required="required" class="form-control" />
-                                            <input type="hidden" value="{{usuariolog[0]}}" name="" id="idusuariolog" />
-                                            <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
+                                    {% if verifi[7] %}
+                                    <input type="text" id="idusuariolog" name="digitador" placeholder="Punto de Compra"
+                                        required="required" class="form-control" disabled value="{{ verifi[7] }}" />
+                                    {% else %}
+                                    {%if usuariolog[1] == 'Verificador'%}
+                                    <input type="text" value="{{usuariolog[2]}}" name="" id="" disabled="disabled"
+                                        required="required" class="form-control" />
+                                    <input type="hidden" value="{{usuariolog[0]}}" name="" id="idusuariolog" />
+                                    <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
                                                                                                                                                                                                                                                                                                                                                                                                                 style="display: none;">Las
                                                                                                                                                                                                                                                                                                                                                                                                                 constraseñas no coinciden</label> -->
-                                            {%else%}
-                                            <select class="form-select" id="verificador" aria-label="Default select example">
-                                                <option selected="selected" hidden>
-                                                    Seleccionar Verificador
-                                                </option>
-                                                {% for ver in Verificador %}
-                                                <option value="{{ ver[0] }}">{{ ver[1] }}</option>
-                                                {% endfor %}
-                                            </select>
-                                            {%endif%}
-                                        {%endif%}                                                                                                                                                                                                                                                                                                                                                                     </div>
+                                    {%else%}
+                                    <select class="form-select" id="verificador" aria-label="Default select example">
+                                        <option selected="selected" hidden>
+                                            Seleccionar Verificador
+                                        </option>
+                                        {% for ver in Verificador %}
+                                        <option value="{{ ver[0] }}">{{ ver[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {%endif%}
+                                    {%endif%}
+                                </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel"
                                         for="form3Example3"><strong>Digitador</strong></label>
-                                    
-                                        
-                                    
+
+
+
                                     {% if verifi[8] %}
                                     <input type="text" id="digitador" name="digitador" placeholder="Punto de Compra"
                                         required="required" class="form-control" disabled value="{{ verifi[8] }}" />
                                     {% else %}
-                                        {%if usuariolog[1] == 'Digitador'%}
-                                            <input type="text" value="{{usuariolog[2]}}" name="" id="" disabled="disabled"
-                                                required="required" class="form-control" />
-                                            <input type="hidden" value="{{usuariolog[0]}}" name="" id="digitador" />
-                                            <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
+                                    {%if usuariolog[1] == 'Digitador'%}
+                                    <input type="text" value="{{usuariolog[2]}}" name="" id="" disabled="disabled"
+                                        required="required" class="form-control" />
+                                    <input type="hidden" value="{{usuariolog[0]}}" name="" id="digitador" />
+                                    <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
                                                                                                                                                                                                                                                                                                                                                                                                                 style="display: none;">Las
                                                                                                                                                                                                                                                                                                                                                                                                                 constraseñas no coinciden</label> -->
-                                        {%else%}
-                                            <select class="form-select" id="digitador" aria-label="Default select example">
-                                                <option selected="selected" hidden>
-                                                    Seleccionar Digitador
-                                                </option>
-                                                {% for digi in Digitador %}
-                                                <option value="{{ digi[0] }}">{{ digi[1] }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        {% endif %}
+                                    {%else%}
+                                    <select class="form-select" id="digitador" aria-label="Default select example">
+                                        <option selected="selected" hidden>
+                                            Seleccionar Digitador
+                                        </option>
+                                        {% for digi in Digitador %}
+                                        <option value="{{ digi[0] }}">{{ digi[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {% endif %}
                                     {% endif %}
 
                                     <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
@@ -281,6 +282,7 @@
                     <div class="row">
                         <div class="col mt-3 bg-light overflow-scroll" id="tabla-peso"></div>
                     </div>
+                    <div id="content" class="col-lg-12"></div>
                 </div>
 
                 <!-- INICIO DE LA FUNCIONALIDAD DE LOS BOTONES CON JQUERY  DE LA PRIMERA PANTALLA-->
@@ -291,41 +293,41 @@
                     $("#totalprov").hide();
                     //validar los campos de entrada
                     if (
-                            $("#proveedor").val() !=
-                            "" &&
-                            $("#idpunto").val() != "" &&
-                            $("#idusuariolog").val() != "" &&
-                            $("#digitador").val() !=
-                            "" &&
-                            $("#po").val() != "" &&
-                            $("#fecha").val() != "" &&
-                            $("#nboleta").val() != "" &&
-                            $("#bahia option:selected").val() != "Seleccionar Bahia" &&
-                            flagbloquear == 0 &&
-                            $("#id").val() != ""
-                        ) {
-                            $("#proveedor").attr("disabled", "true");
-                            $("#idpunto").attr("disabled", "true");
-                            $("#idusuariolog").attr("disabled", "true");
-                            $("#digitador").attr("disabled", "true");
-                            $("#po").attr("disabled", "true");
-                            $("#fecha").attr("disabled", "true");
-                            $("#nboleta").attr("disabled", "true");
-                            $("#bahia").attr("disabled", "true");
-                            $("#buscarmat").removeAttr("disabled");
-                            $("#verTaras").removeAttr("disabled");
-                            $("#destare").removeAttr("disabled");
-                            $("#bruto").removeAttr("disabled");
-                            $("#tara").removeAttr("disabled");
-                            $("#agregar").removeAttr("disabled");
-                            $("#finalizar").removeAttr("disabled");
-                        }
+                        $("#proveedor").val() !=
+                        "" &&
+                        $("#idpunto").val() != "" &&
+                        $("#idusuariolog").val() != "" &&
+                        $("#digitador").val() !=
+                        "" &&
+                        $("#po").val() != "" &&
+                        $("#fecha").val() != "" &&
+                        $("#nboleta").val() != "" &&
+                        $("#bahia option:selected").val() != "Seleccionar Bahia" &&
+                        flagbloquear == 0 &&
+                        $("#id").val() != ""
+                    ) {
+                        $("#proveedor").attr("disabled", "true");
+                        $("#idpunto").attr("disabled", "true");
+                        $("#idusuariolog").attr("disabled", "true");
+                        $("#digitador").attr("disabled", "true");
+                        $("#po").attr("disabled", "true");
+                        $("#fecha").attr("disabled", "true");
+                        $("#nboleta").attr("disabled", "true");
+                        $("#bahia").attr("disabled", "true");
+                        $("#buscarmat").removeAttr("disabled");
+                        $("#verTaras").removeAttr("disabled");
+                        $("#destare").removeAttr("disabled");
+                        $("#bruto").removeAttr("disabled");
+                        $("#tara").removeAttr("disabled");
+                        $("#agregar").removeAttr("disabled");
+                        $("#finalizar").removeAttr("disabled");
+                    }
 
 
                     // Funcion para poner lista de resultados
                     var buscarProveedor = function () {
                         if ($("#proveedor").val() != "") {
-                            
+
                             $.ajax({
                                 url: "/buscarProveedorApi",
                                 type: "POST",
@@ -336,7 +338,7 @@
                                     $("#listaproveedor").html(response);
                                     $("#listaproveedor").append(response.htmlresponse);
                                     $("#listaproveedor").show();
-                                        $("#totalprov").show();
+                                    $("#totalprov").show();
                                     $("#busqueda button[name=det]").click(function () {
                                         $("#proveedor").val($(this).text());
                                         $("#listaproveedor").hide();
@@ -370,9 +372,9 @@
 
                     $(document).ready(function () {
                         $("#totalmat").hide();
-                        
+
                         // MANDAR A LLAMAR LA TABLA
-                        
+
                         cargarPesos();
                         //
 
@@ -392,8 +394,8 @@
                     function bloquear() {
                         var flagRol = $('#banderaRol').val();
                         //AQUI VAN LAS OPCIONES SI EL USUARIO ES VERIFICADOR
-                        if(flagRol == "Verificador"){
-                                if (
+                        if (flagRol == "Verificador") {
+                            if (
                                 $("#proveedor").val() !=
                                 "" &&
                                 $("#idpunto").val() != "" &&
@@ -421,7 +423,7 @@
                                 $("#tara").removeAttr("disabled");
                                 $("#agregar").removeAttr("disabled");
                                 $("#finalizar").removeAttr("disabled");
-                                
+
                                 flagbloquear = 1;
                                 $.ajax({
                                     url: "/datosGeneralesVerificacion",
@@ -498,8 +500,8 @@
                                     }
                                 });
                             }
-                        }else if(flagRol == "Digitador"){
-                                if (
+                        } else if (flagRol == "Digitador") {
+                            if (
                                 $("#proveedor").val() !=
                                 "" &&
                                 $("#idpunto").val() != "" &&
@@ -529,7 +531,7 @@
                                 $("#tara").removeAttr("disabled");
                                 $("#agregar").removeAttr("disabled");
                                 $("#finalizar").removeAttr("disabled");
-                                
+
                                 flagbloquear = 1;
                                 $.ajax({
                                     url: "/datosGeneralesVerificacion",
@@ -606,8 +608,8 @@
                                     }
                                 });
                             }
-                        }else if(flagRol == "ADMINISTRADOR DE SISTEMA"){
-                                if (
+                        } else if (flagRol == "ADMINISTRADOR DE SISTEMA") {
+                            if (
                                 $("#proveedor").val() !=
                                 "" &&
                                 $("#idpunto").val() != "" &&
@@ -636,7 +638,7 @@
                                 $("#tara").removeAttr("disabled");
                                 $("#agregar").removeAttr("disabled");
                                 $("#finalizar").removeAttr("disabled");
-                                
+
                                 flagbloquear = 1;
                                 $.ajax({
                                     url: "/datosGeneralesVerificacion",
@@ -714,7 +716,7 @@
                                 });
                             }
                         }
-                        
+
                     }
                     function mostrarDetalle() {
                         if ($("#detalles").is(":hidden")) $("#detalles").show();
@@ -803,7 +805,7 @@
                                 if (result.isConfirmed) {
                                 }
                             });
-                        }else if (destare <= 0 && $("#buscarmat").val() == "ALUMINIO MIXTO" ) {
+                        } else if (destare <= 0 && $("#buscarmat").val() == "ALUMINIO MIXTO") {
                             Swal.fire({
                                 icon: "error",
                                 title: "Datos Inválidos",
@@ -855,6 +857,19 @@
         </div>
     </div>
 </div>
+
+<style>
+    .loader {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url('images/pageLoader.gif') 50% 50% no-repeat rgb(249, 249, 249);
+        opacity: .8;
+    }
+</style>
 
 <script>
     var bruto = parseInt($("#bruto").val());
@@ -967,6 +982,16 @@
                 $.ajax({
                     url: "/finalizarVerificacion",
                     type: "POST",
+                    beforeSend: function () {
+                        Swal.fire({
+                            html:'<div class="col-lg-12" style="z-index:99999; display:absolute; width"><img src="../../static/img/loader.gif" alt="loading" /><br/>Generando orden de compra...</div>'
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                            }
+                        });
+
+                    },
                     data: {
                         id: $("#id").val(),
                     },
