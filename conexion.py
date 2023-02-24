@@ -128,7 +128,7 @@ def IngresarMaterialOrdenCompra(material,monto,pOrder):
     print(float(precioUnidad[0:10]))
     line_data = {
         'order_id':pOrder,
-        'name':'PET Rap',
+        'name':material,
         'date_planned':'05/05/23',
         'product_uom':12, #valor de libras es constante
         'price_unit':float(precioUnidad[0:10]),
