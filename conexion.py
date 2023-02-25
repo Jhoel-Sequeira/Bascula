@@ -49,6 +49,49 @@ def conectar(user,contra):
 # traer el cargo del empleado que se logueo
 
 
+def conectarTemp(user,contra,prov):
+    username = ''+user
+    password = ''+contra
+    # HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
+    info1 = xmlrpc.client.ServerProxy(
+        'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/common')
+    info1.version()
+    info = info1
+    uid1 = info1.authenticate(db, username, password, {})
+    uid = uid1
+    # PRUEBAS PARA INSERCION EN UNA TABLA
+    # PRUEBAS DE PERMISOS DE CADA USUARIO
+    # models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
+    models1 = xmlrpc.client.ServerProxy(
+        'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/object')
+    models = models1
+    proveedores = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
+                                        [['supplier', '=', True], ['name', 'ilike', ''+prov+'%']]], {'fields': ['id', 'name'], 'limit': 5})
+    return proveedores
+    # permisos = models.execute_kw(db, uid, password, 'res.partner', 'check_access_rights', [
+    #                              'write'], {})  # esta seria como la consulta que mostraria
+    # CREACION DE REGISTRO DENTRO DE ODDO MEDIANTE LA API
+    # LAS CONSULTAS SE EJECclsUTAN SEGUN EL COMANDO
+    # -WRITE, READ, CREATE, SEARCH
+    # id = models.execute_kw(db, uid, password, 'res.partner', 'create', [{'name': "Prueba2"},{'vat': "123"}]) #ESTA ES LA CONSULTA OARA CREAR LOS REGISTROS
+    # datos = models1.execute_kw(db, uid, password, 'res.partner', 'search', [
+    #                         [['name', '=', 'Prueba']]])  # ESTA ES PARA BUSCAR POR NOMBRE
+
+    # args = [[['1', '=', 1]]]
+    # ids = models.execute_kw(db, uid, password, 'res.partner', 'search', args)
+    # models.execute_kw(db, uid, password, 'res.partner', 'check_access_rights', ['read'], {'raise_exception': False})
+    #print(datos)
+
+# print(id)
+# traer el cargo del empleado que se logueo
+
+
+
+# print(id)
+# traer el cargo del empleado que se logueo
+
+
+
 def Autenticar(user, contra):
     uid = info.authenticate(db, user, contra, {})
     cargo = models.execute_kw(db, uid, contra, 'res.users', 'search_read', 
@@ -80,11 +123,9 @@ def buscarProveedor(prov,cargo):
 
         return proveedores
     else:
-        conectar('doris.fonseca@crn.com.ni','123')
-        proveedores = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
-                                        [['supplier', '=', True], ['name', 'ilike', ''+prov+'%']]], {'fields': ['id', 'name'], 'limit': 5})
-
-        return proveedores
+        # 
+        
+        return conectarTemp('jhoel.sequeira@crn.com.ni','crn2023',prov)
 
 
 def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rechazoPet,primera,segunda):

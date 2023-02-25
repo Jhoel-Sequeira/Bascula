@@ -1319,10 +1319,10 @@ def finalizarVerificacion():
                 mysql.connection.commit()
 
                 #TOTAL LIQUIDO
-                cur = mysql.connection.cursor()
-                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.NombreMaterial like %s Group BY m.TipoMaterial',(id,'liquido%'))
-                liquido = cur.fetchall()
-                mysql.connection.commit()
+                # cur = mysql.connection.cursor()
+                # cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.NombreMaterial like %s Group BY m.TipoMaterial',(id,'liquido%'))
+                # liquido = cur.fetchall()
+                # mysql.connection.commit()
 
                 #TOTAL rechazo Pet
                 # cur = mysql.connection.cursor()
@@ -1348,10 +1348,10 @@ def finalizarVerificacion():
                     rechazoNuevo = 0.0
                 
                 
-                if liquido:
-                    liquidoNuevo = liquido[0][3]
-                else:
-                    liquidoNuevo = 0.0
+                # if liquido:
+                #     liquidoNuevo = liquido[0][3]
+                # else:
+                #     liquidoNuevo = 0.0
                 
                 print(primera)
                 if primera and segunda:
@@ -1367,7 +1367,7 @@ def finalizarVerificacion():
                     primeraNuevo = 1
                     segundaNuevo = 1
                 print(Verificacion)
-                IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10],Verificacion[0][11],Verificacion[0][3],rechazoNuevo,jumboNuevo,liquidoNuevo,0,primeraNuevo,segundaNuevo)
+                IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10],Verificacion[0][11],Verificacion[0][3],rechazoNuevo,jumboNuevo,0,0,primeraNuevo,segundaNuevo)
                 
                 print("ORDEN AQUI")
                 print(IdOrden)
