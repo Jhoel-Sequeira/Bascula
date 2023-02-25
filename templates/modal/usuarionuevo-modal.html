@@ -45,7 +45,7 @@
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-6">
+                            <div class="col-4">
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel" for="proveedor">Rol</label>
                                     <select class="form-select" id="rol" aria-label="Default select example">
@@ -62,7 +62,7 @@
 
                             </div>
 
-                            <div class="col-6">
+                            <div class="col-4">
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel" for="proveedor">Cargo</label>
                                     <select class="form-select" id="cargo" aria-label="Default select example">
@@ -77,6 +77,24 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-4">
+                                <div class="form-outline">
+                                    <label class="form-label fuentelabel" for="proveedor">Punto de venta {{i[7]}}</label>
+                                    <select class="form-select" id="punto" aria-label="Default select example">
+                                        
+                                        {% for p in punto %}
+                                        {%if p[0] == i[7] %}
+                                        <option selected="selected" value="{{ p[0] }}">{{ p[1] }}</option>
+                                        {%else%}
+                                        <option  value="{{ p[0] }}">{{ p[1] }}</option>
+                                        {%endif%}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                            </div>
+
                         </div>
                         <div id="okis" >
                             <div class="row mb-4 mt-2">
@@ -166,7 +184,7 @@
                             </div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-6">
+                            <div class="col-4">
                                 <div class="form-outline">
                                     <label class="form-label" for="proveedor">Rol</label>
                                     <select class="form-select" id="rol" aria-label="Default select example">
@@ -179,7 +197,7 @@
 
                             </div>
 
-                            <div class="col-5">
+                            <div class="col-4">
                                 <div class="form-outline">
                                     <label class="form-label" for="proveedor">Cargo</label>
                                     <select class="form-select" id="cargo" aria-label="Default select example">
@@ -189,6 +207,18 @@
                                         {% endfor %}
                                     </select>
                                 </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-outline">
+                                    <label class="form-label fuentelabel" for="proveedor">Punto de venta</label>
+                                    <select class="form-select" id="punto" aria-label="Default select example">
+                                        
+                                        {% for punto in punto %}
+                                        <option  value="{{ punto[0] }}">{{ punto[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
                             </div>
                         </div>
                         <div id="okis" >
@@ -348,6 +378,7 @@
                 data: {
                     id: $('#id').val(),
                     flag: "contra",
+                    punto: $('#punto option:selected').val(),
                     nombre: $('#nombres').val(),
                     loginUser: $('#loginUser').val(),
                     cedula: $('#cedula').val(),
@@ -379,6 +410,7 @@
                     id: $('#id').val(),
                     flag: "nocontra",
                     nombre: $('#nombres').val(),
+                    punto: $('#punto option:selected').val(),
                     loginUser: $('#loginUser').val(),
                     cedula: $('#cedula').val(),
                     rol: $("#rol option:selected").val(),
@@ -413,6 +445,7 @@
                     nombre: $('#nombres').val(),
                     loginUser: $('#loginUser').val(),
                     cedula: $('#cedula').val(),
+                    punto: $('#punto option:selected').val(),
                     rol: $("#rol option:selected").val(),
                     cargo: $("#cargo option:selected").val(),
                     contra: $('#contra').val(),

@@ -491,12 +491,13 @@ def actUsu():
         loginUser = request.form['loginUser']
         cedula = request.form['cedula']
         rol = request.form['rol']
+        punto = request.form['punto']
         cargo = request.form['cargo']
         contra = request.form['contra']
         flag = request.form['flag']
         if flag == "nocontra":
             cur = mysql.connection.cursor()
-            cur.execute("UPDATE tb_usuarios set NombreUsuario = %s, Cedula = %s, IdCargo = %s Where Id_Usuario = %s",(nombre,cedula,cargo,id))
+            cur.execute("UPDATE tb_usuarios set NombreUsuario = %s, Cedula = %s, IdCargo = %s,IdPuesto = %s Where Id_Usuario = %s",(nombre,cedula,cargo,punto,id))
             proveedor = cur.fetchall()
             mysql.connection.commit()
             #MODIFICAMOS EL ROL
@@ -507,13 +508,13 @@ def actUsu():
         elif flag == "contra":
             contra = request.form['contra']
             cur = mysql.connection.cursor()
-            cur.execute("UPDATE tb_usuarios set NombreUsuario = %s, Cedula = %s, IdCargo = %s Where Id_Usuario = %s",(nombre,cedula,cargo,id))
+            cur.execute("UPDATE tb_usuarios set NombreUsuario = %s, Cedula = %s, IdCargo = %s,IdPuesto = %s Where Id_Usuario = %s",(nombre,cedula,cargo,punto,id))
             proveedor = cur.fetchall()
             mysql.connection.commit()
             #MODIFICAMOS EL ROL
             haseho = generate_password_hash(contra)
             cur = mysql.connection.cursor()
-            cur.execute("UPDATE tb_credenciales set Usuarios = %s,Contraseñas = %s, IdRol = %s Where Id_Credenciales = %s",(loginUser,haseho,rol,id))
+            cur.execute("UPDATE tb_credenciales set Usuarios = %s,Contraseñas = %s, IdRol = %s,IdPuesto = %s Where Id_Credenciales = %s",(loginUser,haseho,rol,punto,id))
             proveedor = cur.fetchall()
             mysql.connection.commit()
 
@@ -529,6 +530,7 @@ def addUsu():
         loginUser = request.form['loginUser']
         cedula = request.form['cedula']
         rol = request.form['rol']
+        punto = request.form['punto']
         cargo = request.form['cargo']
         contra = request.form['contra']
         
@@ -547,7 +549,7 @@ def addUsu():
         print(cred)
         #AHORA CREAMOS EL USUARIO COMO TAL
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO tb_usuarios (NombreUsuario,Cedula,IdCargo,IdCredenciales,IdEstado) VALUES (%s,%s,%s,%s,1)",(nombre,cedula,cargo,cred[0]))
+        cur.execute("INSERT INTO tb_usuarios (NombreUsuario,Cedula,IdCargo,IdCredenciales,IdEstado,IdPuesto) VALUES (%s,%s,%s,%s,1,%s)",(nombre,cedula,cargo,cred[0],punto))
         proveedor = cur.fetchall()
         mysql.connection.commit()
         print("listo")
@@ -647,7 +649,7 @@ def detalleUsuarios():
         if flagUSuario == "editar":
             id = request.form['id']
             cur = mysql.connection.cursor()
-            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado,u.Cedula,car.NombreCargo FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol inner join tb_estado as e on u.IdEstado = e.Id_Estado inner join tb_cargo as car on u.IdCargo = car.Id_Cargo where u.Id_Usuario = %s",[id])
+            cur.execute("SELECT u.Id_Usuario,u.NombreUsuario as Nombre,c.Usuarios as Usuario,r.NombreRol,e.NombreEstado,u.Cedula,car.NombreCargo,u.IdPuesto FROM tb_usuarios as u inner join tb_credenciales as c ON u.IdCredenciales = c.Id_Credenciales inner join tb_roles as r on c.IdRol = r.Id_Rol inner join tb_estado as e on u.IdEstado = e.Id_Estado inner join tb_cargo as car on u.IdCargo = car.Id_Cargo where u.Id_Usuario = %s",[id])
             usuario = cur.fetchall()
             
             
@@ -659,7 +661,11 @@ def detalleUsuarios():
         cur = mysql.connection.cursor()
         cur.execute("SELECT * From tb_roles")
         roles = cur.fetchall()
-        return render_template('modal/usuarionuevo-modal.html',flagUSuario = flagUSuario, info = usuario,cargos = cargos, roles = roles)
+        #TRAEMOS LOS PUNTOS DE VENTA
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_puntocompra")
+        punto = cur.fetchall()
+        return render_template('modal/usuarionuevo-modal.html',punto=punto,flagUSuario = flagUSuario, info = usuario,cargos = cargos, roles = roles)
 
 #LISTA DE PROVEEDORES TABLA
 @app.route('/listaProveedores', methods =["POST","GET"])
@@ -1979,7 +1985,12 @@ def insertarUsuario():
         cur = mysql.connection.cursor()
         cur.execute("SELECT * From tb_roles")
         roles = cur.fetchall()
-        return render_template('modal/usuarionuevo-modal.html',flagUSuario = flagUSuario, info = cedula,cargos = cargos, roles = roles)
+        
+        #TRAEMOS LOS PUNTOS DE VENTA
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_puntocompra")
+        punto = cur.fetchall()
+        return render_template('modal/usuarionuevo-modal.html',punto=punto,flagUSuario = flagUSuario, info = cedula,cargos = cargos, roles = roles)
 
 #INSERTAMOS EL USUARIO NUEVO
 @app.route('/insertarUsuarioNuevo', methods =["POST","GET"])
@@ -1997,7 +2008,11 @@ def insertarUsuarioNuevo():
         cur.execute("SELECT * From tb_roles")
         roles = cur.fetchall()
         print(cedula)
-        return render_template('modal/usuarionuevo-modal.html',flagUSuario = flagUSuario, info = cedula,cargos = cargos, roles = roles)
+        #TRAEMOS LOS PUNTOS DE VENTA
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_puntocompra")
+        punto = cur.fetchall()
+        return render_template('modal/usuarionuevo-modal.html',punto=punto,flagUSuario = flagUSuario, info = cedula,cargos = cargos, roles = roles)
 
 #DETALLE DE TARAS PARA AÑADIR LOS OTROS VALORES DE LA TARA
 @app.route('/añadirTarasExtras', methods =["POST","GET"])
