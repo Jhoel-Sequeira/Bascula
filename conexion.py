@@ -51,9 +51,10 @@ def conectar(user,contra):
 
 def Autenticar(user, contra):
     uid = info.authenticate(db, user, contra, {})
-    cargo = models.execute_kw(db, uid, contra, 'res.users', 'search_read', [
-                              [['login', '=', ''+user]]], {'fields': ['x_studio_field_xql4c']})
+    cargo = models.execute_kw(db, uid, contra, 'res.users', 'search_read', 
+                              [[['login', '=', ''+user]]], {'fields': ['x_studio_field_xql4c']})
     # mandamos a llamar el cargo del usuario logueado
+    print(cargo)
     return cargo
 
 def buscarIdProveedor(prov):
@@ -72,11 +73,18 @@ def TraerUsuario(id):
     return info
 
 
-def buscarProveedor(prov):
-    proveedores = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
-                                    [['supplier', '=', True], ['name', 'ilike', ''+prov+'%']]], {'fields': ['id', 'name'], 'limit': 5})
+def buscarProveedor(prov,cargo):
+    if cargo != 2:
+        proveedores = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
+                                        [['supplier', '=', True], ['name', 'ilike', ''+prov+'%']]], {'fields': ['id', 'name'], 'limit': 5})
 
-    return proveedores
+        return proveedores
+    else:
+        conectar('doris.fonseca@crn.com.ni','123')
+        proveedores = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
+                                        [['supplier', '=', True], ['name', 'ilike', ''+prov+'%']]], {'fields': ['id', 'name'], 'limit': 5})
+
+        return proveedores
 
 
 def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rechazoPet,primera,segunda):

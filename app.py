@@ -214,7 +214,7 @@ def login():
                     digitador = cur.fetchall()
                     return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
                 
-                elif cargo[1] == "VALIDADORA DE DATOS":
+                elif cargo[1] == "VALIDADORA DE DATOS" or cargo[1] == "RESPONSABLE DE VERIFICACION":
                     #ESTE ES VALIDADOR  
                     
                     session["user"] = usuario
@@ -244,7 +244,7 @@ def login():
                         print(idcredenciales)
                         # INSERTAMOS EN LA TABLA EL USUARIO COMO TAL
                         cur = mysql.connection.cursor()
-                        cur.execute("INSERT INTO tb_usuarios (NombreUsuario,IdCargo,IdOddo,IdCredenciales,IdEstado,IdPuesto) VALUES (%s,%s,%s,%s,%s,'1')",(user_info[0]['name'],session['cargo'],user_info[0]['id'],idcredenciales,1))
+                        cur.execute("INSERT INTO tb_usuarios (NombreUsuario,IdCargo,IdOddo,IdCredenciales,IdEstado,IdPuesto) VALUES (%s,%s,%s,%s,%s,'1')",(user_info[0]['name'],5,user_info[0]['id'],idcredenciales,1))
                         mysql.connection.commit()
                         ultimoUsuario = cur.lastrowid
 
@@ -289,136 +289,66 @@ def login():
                     digitador = cur.fetchall()
                     return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
                 
-                else:
-                    #ESTE ES VERIFICADOR 
-                    
-                    session["user"] = usuario
-                    session["userrole"] = 2
-                    #ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
-                    # cur = mysql.connection.cursor()
-                    # cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
-                    # cargo = cur.fetchone()
-                    # print(cargo[0])
-                    #ESCRIBIMOS EL CARGO DE VERIFICADOR
-                    session['cargo'] = 2
-
-                    #vaidamos si el usuario ya esta logueado antes
-                    cur = mysql.connection.cursor()
-                    cur.execute("SELECT * FROM tb_credenciales Where Usuarios = %s",[session["user"]])
-                    usuarioExistente = cur.fetchall()
-                    mysql.connection.commit()
-
-
-                    
-
-                    user_info = conexion.TraerUsuario(str(uid[0]['id']))
-                    if not usuarioExistente:
-                        cur = mysql.connection.cursor()
-                        cur.execute("INSERT INTO tb_credenciales (Usuarios,Contraseñas,IdRol) VALUES (%s,%s,%s)",(session["user"],generate_password_hash(Contraseña),session["userrole"]))
-                        
-                        mysql.connection.commit()
-                        idcredenciales = cur.lastrowid
-                        #YA TENEMOS LAS CREDENCIALES DE LOS USUARIOS DE ODDO
-                        print(idcredenciales)
-                        # INSERTAMOS EN LA TABLA EL USUARIO COMO TAL
-                        cur = mysql.connection.cursor()
-                        cur.execute("INSERT INTO tb_usuarios (NombreUsuario,IdCargo,IdOddo,IdCredenciales,IdEstado,IdPuesto) VALUES (%s,%s,%s,%s,%s,'1')",(user_info[0]['name'],session['cargo'],user_info[0]['id'],idcredenciales,1))
-                        mysql.connection.commit()
-                        ultimoUsuario = cur.lastrowid
-
-                        cur = mysql.connection.cursor()
-                        cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
-                        ultimoUSuarios = cur.fetchone()
-                        mysql.connection.commit()
-                        print(ultimoUSuarios[0])
-                        session["userId"] = ultimoUSuarios[0]
-                    
-                    elif usuarioExistente:
-                        print(usuarioExistente[0][0])
-                        id = usuarioExistente[0][0]
-                        print("ssssssssssss")
-                        cur = mysql.connection.cursor()
-                        cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
-                        ultimoUSuarios = cur.fetchone()
-                        mysql.connection.commit()
-                        print(ultimoUSuarios[0])
-                        session["userId"] = ultimoUSuarios[0]
-                    
-                    
-
-                    cur = mysql.connection.cursor()
-                    cur.execute("select * from tb_proveedor Where IdEstado = 1")
-                    Proveedores = cur.fetchall()
-                    #CONSULTA PARA LOS PUNTOS DE COMPRA
-                    cur = mysql.connection.cursor()
-                    cur.execute("select * from tb_puntocompra Where IdEstado = 1")
-                    punto = cur.fetchall()
-                    #CONSULTA PARA LOS MATERIALES
-                    cur = mysql.connection.cursor()
-                    cur.execute("select * from tb_material Where Id_Estado = 1")
-                    material = cur.fetchall()
-                    #CONSULTA PARA LOS VERIFICADORES
-                    cur = mysql.connection.cursor()
-                    cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
-                    verificador = cur.fetchall()
-                    #CONSULTA PARA LOS DIGITADOR
-                    cur = mysql.connection.cursor()
-                    cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
-                    digitador = cur.fetchall()
-                    return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
                 
-
-
-                # cur = mysql.connection.cursor()
-                # cur.execute("select * from tb_credenciales Where Usuarios = %s",[usuario])
-                # results = cur.fetchone()
-                # print(results)
-                # if results:
-                #     #si trae algo
-                #     # Recordar el usuario y rol que se logeo
-
-                #     session["userId"] = results[0]
-                #     session["user"] = results[1]
-                #     session["userrole"] = results[3]
-                #     cur = mysql.connection.cursor()
-                #     cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
-                #     cargo = cur.fetchone()
-                #     print(cargo[0])
-                #     session['cargo'] = cargo[0]
-                #     #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
-                #     #CONSULTA PARA LOS PROVEEDORES
-                #     cur = mysql.connection.cursor()
-                #     cur.execute("select * from tb_proveedor Where IdEstado = 1")
-                #     Proveedores = cur.fetchall()
-                #     #CONSULTA PARA LOS PUNTOS DE COMPRA
-                #     cur = mysql.connection.cursor()
-                #     cur.execute("select * from tb_puntocompra Where IdEstado = 1")
-                #     punto = cur.fetchall()
-                #     #CONSULTA PARA LOS MATERIALES
-                #     cur = mysql.connection.cursor()
-                #     cur.execute("select * from tb_material Where Id_Estado = 1")
-                #     material = cur.fetchall()
-                #     #CONSULTA PARA LOS VERIFICADORES
-                #     cur = mysql.connection.cursor()
-                #     cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
-                #     verificador = cur.fetchall()
-                #     #CONSULTA PARA LOS DIGITADOR
-                #     cur = mysql.connection.cursor()
-                #     cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
-                #     digitador = cur.fetchall()
-                    
-                #     #CHEQUEAMOS LAS CONTRASEÑAS PARA VER SI SON IGUALES
-                #     if not check_password_hash(results[2], Contraseña):
-                #         #contraseñas incorrectas
-                #         print("contras")
-                #         return render_template('login.html', errorlogin=2)
-                #     return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
-            
-                # else:
-                #     #VIENE VACIO
-                #     return render_template('login.html', errorlogin=1) 
+                    # else:
+                    #     #VIENE VACIO
+                    #     return render_template('login.html', errorlogin=1) 
             except:
-                return render_template('login.html', errorlogin=1)       
+                try:
+
+                    #ESTE ES VERIFICADOR 
+                    print("else")
+                    cur = mysql.connection.cursor()
+                    cur.execute("select * from tb_credenciales Where Usuarios = %s",[usuario])
+                    results = cur.fetchone()
+                    print("aaaa")
+                    print(results)
+                    if results:
+                        #si trae algo
+                        # Recordar el usuario y rol que se logeo
+
+                        session["userId"] = results[0]
+                        session["user"] = results[1]
+                        session["userrole"] = results[3]
+                        cur = mysql.connection.cursor()
+                        cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
+                        cargo = cur.fetchone()
+                        print(cargo[0])
+                        session['cargo'] = cargo[0]
+                        #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
+                        #CONSULTA PARA LOS PROVEEDORES
+                        cur = mysql.connection.cursor()
+                        cur.execute("select * from tb_proveedor Where IdEstado = 1")
+                        Proveedores = cur.fetchall()
+                        #CONSULTA PARA LOS PUNTOS DE COMPRA
+                        cur = mysql.connection.cursor()
+                        cur.execute("select * from tb_puntocompra Where IdEstado = 1")
+                        punto = cur.fetchall()
+                        #CONSULTA PARA LOS MATERIALES
+                        cur = mysql.connection.cursor()
+                        cur.execute("select * from tb_material Where Id_Estado = 1")
+                        material = cur.fetchall()
+                        #CONSULTA PARA LOS VERIFICADORES
+                        cur = mysql.connection.cursor()
+                        cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+                        verificador = cur.fetchall()
+                        #CONSULTA PARA LOS DIGITADOR
+                        cur = mysql.connection.cursor()
+                        cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+                        digitador = cur.fetchall()
+                        
+                        #CHEQUEAMOS LAS CONTRASEÑAS PARA VER SI SON IGUALES
+                        if not check_password_hash(results[2], Contraseña):
+                            #contraseñas incorrectas
+                            print("contras")
+                            return render_template('login.html', errorlogin=2)
+                        return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
+                    else:
+                        #VIENE VACIO
+                        return render_template('login.html', errorlogin=1) 
+                except:
+
+                    return render_template('login.html', errorlogin=1)       
             
                     
         return render_template('index.html') 
@@ -479,7 +409,7 @@ def buscarProveedor():
 def buscarProveedorApi():
    if request.method == "POST":
         proveedor = request.form['proveedor']
-        proveedores = conexion.buscarProveedor(proveedor)
+        proveedores = conexion.buscarProveedor(proveedor,session['cargo'])
         print(proveedores)
         if proveedores:
 
@@ -768,7 +698,7 @@ def listaProveedores():
             if proveedor == "":
                 print("cargooo")
                 print(session['cargo'])
-                consulta_extra = "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 5"
+                consulta_extra = "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 5 AND "
                 #LLamar la verificacion de ese proveedor
                 cur = mysql.connection.cursor()
                 cur.execute("select v.NoBoleta,v.PO,count(v.NoBoleta) as boleta from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner JOIN tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario inner join tb_cargo as car ON u.IdCargo = car.Id_Cargo Where v.IdEstado = 5 group BY v.NoBoleta,v.PO")
@@ -778,7 +708,7 @@ def listaProveedores():
 
                 for ver in verificacionesRep:
                     if ver[2] == 2:
-                        consulta_extra += " AND v.NoBoleta = "+ str(ver[0])+" AND v.PO = '"+ str(ver[1])+"'"
+                        consulta_extra += " v.NoBoleta = "+ str(ver[0])+" AND v.PO = '"+ str(ver[1])+"' OR "
                         print(ver)
                         print("cambiar bandera")
                         banderaConsultas = 1
@@ -788,7 +718,7 @@ def listaProveedores():
 
                     #LLamar las verificaciones validas
                     cur = mysql.connection.cursor()
-                    cur.execute("" + consulta_extra)
+                    cur.execute("" + consulta_extra[:-4])
                     verificaciones = cur.fetchall()
                     print("verifi")
                     return render_template('tablas/tabla-comparacion.html',verificaciones = verificaciones)
