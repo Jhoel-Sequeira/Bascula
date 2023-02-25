@@ -159,7 +159,7 @@
                             <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label" for="proveedor">Nombre del Empleado</label>
-                                    <input type="text" id="nombres" name="nombres" style="text-transform:uppercase;" onkeyup="this.value=this.value.toUpperCase()" style="text-transform:uppercase;" placeholder="Ingrese el nombre..." required="required" class="form-control"  value=""/>
+                                    <input type="text" id="nombres" name="nombres" value="{{info}}" style="text-transform:uppercase;" onkeyup="this.value=this.value.toUpperCase()" style="text-transform:uppercase;" placeholder="Ingrese el nombre..." required="required" class="form-control"  value=""/>
                                     <label id="mensaje_error_input" class="control-label col-md-12 text-danger"
                                 style="display: block;">Las
                                 constraseñas no coinciden</label>
@@ -167,7 +167,7 @@
 
                             </div>
 
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label" for="proveedor">Usuario</label>
                                     <input type="text" id="loginUser" name="loginUser" placeholder="Ingrese el usuario..." required="required" class="form-control"  value=""/>
@@ -175,16 +175,28 @@
                                                                     usuario ya existe</label>
                                 </div>
                             </div>
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label" for="proveedor">Cédula</label>
-                                    <input type="text" id="cedula" name="cedula" value="{{info}}" placeholder="Ingrese la cédula..." required="required" class="form-control"  value=""/>
+                                    <input type="text" id="cedula" name="cedula" placeholder="Ingrese la cédula..." required="required" class="form-control"  value=""/>
                                     
                                 </div>
                             </div>
+                            <div class="col-6">
+                                <div class="form-outline">
+                                    <label class="form-label" for="proveedor">Punto de venta</label>
+                                    <select class="form-select" id="punto" aria-label="Default select example">
+                                        
+                                        {% for punto in punto %}
+                                        <option  value="{{ punto[0] }}">{{ punto[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                            </div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-4">
+                            <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label" for="proveedor">Rol</label>
                                     <select class="form-select" id="rol" aria-label="Default select example">
@@ -197,7 +209,7 @@
 
                             </div>
 
-                            <div class="col-4">
+                            <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label" for="proveedor">Cargo</label>
                                     <select class="form-select" id="cargo" aria-label="Default select example">
@@ -208,22 +220,11 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <div class="form-outline">
-                                    <label class="form-label fuentelabel" for="proveedor">Punto de venta</label>
-                                    <select class="form-select" id="punto" aria-label="Default select example">
-                                        
-                                        {% for punto in punto %}
-                                        <option  value="{{ punto[0] }}">{{ punto[1] }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-
-                            </div>
+                            
                         </div>
                         <div id="okis" >
-                            <div class="row mt-1">
-                                <div class="col-4">
+                            <div class="row mt-2">
+                                <div class="col-6">
                                     <div class="form-outline">
                                         <label class="form-label" for="form3Example1">Contraseña</label>
                                         <input type="password" id="contra" name="contra" placeholder="Ingrese la contraseña..." required="required" class="form-control" value=""/>
@@ -233,7 +234,7 @@
                                                                                                                     constraseñas no coinciden</label>
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-6">
                                     <div class="form-outline">
                                         <label class="form-label" for="form3Example1">Contraseña</label>
                                         <input type="password" id="contra1" name="contra1" placeholder="Repita la contraseña..." required="required" class="form-control" value=""/>
