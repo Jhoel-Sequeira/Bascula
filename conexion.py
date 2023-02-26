@@ -99,8 +99,8 @@ def buscarProveedor(prov,cargo):
 
         return proveedores
     else:
-        # 
-        return conectarTemp('doris.fonseca@crn.com.ni','123',prov)
+        proveedores = conectarTemp('doris.fonseca@crn.com.ni','123',prov)
+        return proveedores
 
 
 def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rechazoPet,primera,segunda):
