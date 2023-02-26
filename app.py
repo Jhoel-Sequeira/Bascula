@@ -43,7 +43,6 @@ def Index():
 
 @app.route('/login',methods=["GET", "POST"])
 def login():
-    session.clear()
     
     if request.method == "POST":
         usuario = request.form['loginUser']
@@ -55,10 +54,13 @@ def login():
             # conexion.username = usuario
             # conexion.password = Contraseña
             try:
-                conexion.conectar(usuario,Contraseña)
-                uid = conexion.Autenticar(usuario,Contraseña)
+                
+                uidUser = conexion.obtenerUid(usuario,Contraseña)
+                print("uidUser:",uidUser)
+                uid = conexion.Autenticar(usuario,Contraseña,uidUser)
+                session['uid'] = uid[0]['id']
                 print("verrr")
-                print(uid[0]['id'])
+                print(uid)
                 cargo = uid[0]['x_studio_field_xql4c']
                 if cargo[1] == "JEFE DE TECNOLOGÍA" or cargo[1] == "SOPORTE DE INFORMATICA" or cargo[1] == "GERENTE ADMINISTRACIÓN":
                     
@@ -80,7 +82,8 @@ def login():
 
                     
 
-                    user_info = conexion.TraerUsuario(str(uid[0]['id']))
+                    user_info = conexion.TraerUsuario(str(uid[0]['id']),session['uid'],session['pass'])
+                    print("user info:",user_info)
                     if not usuarioExistente:
                         cur = mysql.connection.cursor()
                         cur.execute("INSERT INTO tb_credenciales (Usuarios,Contraseñas,IdRol) VALUES (%s,%s,%s)",(session["user"],generate_password_hash(Contraseña),session["userrole"]))
@@ -142,6 +145,7 @@ def login():
                 elif cargo[1] == "DIGITADOR":
                     #ESTE ES DIGITADOR 
                     
+                    session["pass"] = Contraseña
                     session["user"] = usuario
                     session["userrole"] = 2
                     #ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
@@ -158,7 +162,8 @@ def login():
                     usuarioExistente = cur.fetchall()
                     mysql.connection.commit()
 
-                    user_info = conexion.TraerUsuario(str(uid[0]['id']))
+                    user_info = conexion.TraerUsuario(str(uid[0]['id']),session['uid'],session['pass'])
+                    print("user info:",user_info)
                     if not usuarioExistente:
                         cur = mysql.connection.cursor()
                         cur.execute("INSERT INTO tb_credenciales (Usuarios,Contraseñas,IdRol) VALUES (%s,%s,%s)",(session["user"],generate_password_hash(Contraseña),session["userrole"]))
@@ -173,6 +178,7 @@ def login():
                         mysql.connection.commit()
                         ultimoUsuario = cur.lastrowid
 
+                        id = usuarioExistente[0][0]
                         cur = mysql.connection.cursor()
                         cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
                         ultimoUSuarios = cur.fetchone()
@@ -216,7 +222,7 @@ def login():
                 
                 elif cargo[1] == "VALIDADORA DE DATOS" or cargo[1] == "RESPONSABLE DE VERIFICACION":
                     #ESTE ES VALIDADOR  
-                    
+                    session["pass"] = Contraseña
                     session["user"] = usuario
                     session["userrole"] = 2
                     #ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
@@ -233,7 +239,8 @@ def login():
                     usuarioExistente = cur.fetchall()
                     mysql.connection.commit()
 
-                    user_info = conexion.TraerUsuario(str(uid[0]['id']))
+                    user_info = conexion.TraerUsuario(str(uid[0]['id']),session['uid'],session['pass'])
+                    print("user info:",user_info)
                     if not usuarioExistente:
                         cur = mysql.connection.cursor()
                         cur.execute("INSERT INTO tb_credenciales (Usuarios,Contraseñas,IdRol) VALUES (%s,%s,%s)",(session["user"],generate_password_hash(Contraseña),session["userrole"]))
@@ -244,10 +251,11 @@ def login():
                         print(idcredenciales)
                         # INSERTAMOS EN LA TABLA EL USUARIO COMO TAL
                         cur = mysql.connection.cursor()
-                        cur.execute("INSERT INTO tb_usuarios (NombreUsuario,IdCargo,IdOddo,IdCredenciales,IdEstado,IdPuesto) VALUES (%s,%s,%s,%s,%s,'1')",(user_info[0]['name'],5,user_info[0]['id'],idcredenciales,1))
+                        cur.execute("INSERT INTO tb_usuarios (NombreUsuario,IdCargo,IdOddo,IdCredenciales,IdEstado,IdPuesto) VALUES (%s,%s,%s,%s,%s,'1')",(user_info[0]['name'],session['cargo'],user_info[0]['id'],idcredenciales,1))
                         mysql.connection.commit()
                         ultimoUsuario = cur.lastrowid
 
+                        id = usuarioExistente[0][0]
                         cur = mysql.connection.cursor()
                         cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
                         ultimoUSuarios = cur.fetchone()
@@ -305,8 +313,8 @@ def login():
                     print(results)
                     if results:
                         #si trae algo
+                        print("SI TRAE")
                         # Recordar el usuario y rol que se logeo
-
                         session["userId"] = results[0]
                         session["user"] = results[1]
                         session["userrole"] = results[3]
@@ -343,9 +351,10 @@ def login():
                             print("contras")
                             return render_template('login.html', errorlogin=2)
                         return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
-                    else:
-                        #VIENE VACIO
-                        return render_template('login.html', errorlogin=1) 
+                
+                    # else:
+                    #     #VIENE VACIO
+                    #     return render_template('login.html', errorlogin=1) 
                 except:
 
                     return render_template('login.html', errorlogin=1)       
@@ -410,7 +419,7 @@ def buscarProveedorApi():
    if request.method == "POST":
         proveedor = request.form['proveedor']
         proveedores = conexion.buscarProveedor(proveedor,session['cargo'])
-        print(proveedores)
+        #print(proveedores)
         if proveedores:
 
             return render_template('otros/proveedor-busqueda.html',proved = proveedores)
@@ -674,7 +683,7 @@ def listaProveedores():
         proveedor = request.form['proveedor']
         if session['cargo'] != 5:
             if proveedor == "":
-                print("cargooo")
+                print("DIGITADOR")
                 print(session['cargo'])
                 #LLamar la verificacion de ese proveedor
                 cur = mysql.connection.cursor()
@@ -806,6 +815,7 @@ def detalleVerificacion():
             cur = mysql.connection.cursor()
             cur.execute("select u.Id_Usuario,car.NombreCargo,u.NombreUsuario from tb_usuarios as u inner join tb_cargo as car on u.IdCargo = car.Id_Cargo inner join tb_credenciales as cred ON u.IdCredenciales = cred.Id_Credenciales Where cred.Id_Credenciales = %s",[session['userId']])
             usuariolog = cur.fetchone() 
+            print("USUARIO LOG")
             print(usuariolog) 
             # necesito mandar a llamar los dastos del usuario para saber en que punto de venta esta
             cur = mysql.connection.cursor()
