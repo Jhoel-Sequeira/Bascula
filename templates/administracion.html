@@ -6,15 +6,15 @@ Historial
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-   
+
 <link rel="stylesheet" href="../static/css/filter_multi_select.css" />
-    <script src="../static/js/filter-multi-select-bundle.min.js"></script>
+<script src="../static/js/filter-multi-select-bundle.min.js"></script>
 
-    <link rel="stylesheet" href="/path/to/cdn/bootstrap.min.css" />
-    <script src="/path/to/cdn/jquery.slim.min.js"></script>
+<link rel="stylesheet" href="/path/to/cdn/bootstrap.min.css" />
+<script src="/path/to/cdn/jquery.slim.min.js"></script>
 
-    <script
-        src="https://raw.githubusercontent.com/dallaslu/bootstrap-5-multi-level-dropdown/master/bootstrap5-dropdown-ml-hack.js"></script>
+<script
+    src="https://raw.githubusercontent.com/dallaslu/bootstrap-5-multi-level-dropdown/master/bootstrap5-dropdown-ml-hack.js"></script>
 
 {%endblock%}
 {% block
@@ -61,7 +61,7 @@ encabezado %}
 <div class="container mt-3" id="filtro" style="display: none;">
     <div class="row">
         <div class="col-8">
-            <select multiple name="filtro" id="filtroOpc"  class="filter-multi-select">
+            <select multiple name="filtro" id="filtroOpc" class="filter-multi-select">
 
                 <option value="1">Proveedor</option>
                 <option value="2">Fecha</option>
@@ -69,43 +69,7 @@ encabezado %}
                 <option value="4">Digitador</option>
                 <option value="5">Verificador</option>
             </select>
-            <script>
 
-                   
-
-                $('#filtroOpc').filterMultiSelect({
-                    selectAllText: 'Todo',
-                    placeholderText: 'filtrar por..',
-                    filterText: 'buscar',
-                    caseSensitive: true,
-                });
-                $('#filtroOpc').on("optionselected", function (e) {
-                   alert(e.detail.label)
-                    var b = true;
-                    var filtroJson = JSON.stringify(getJson(b), null, "  ");
-                    $('#filtrosInput').text(filtroJson);
-                });
-                $('#filtroOpc').on("optiondeselected", function (e) {
-                   
-                   var b = true;
-                   var filtroJson = JSON.stringify(getJson(b), null, "  ");
-                   $('#jsonresult1').text();
-               });
-                
-                var getJson = function (b) {
-                    var result = $.fn.filterMultiSelect.applied
-                        .map((e) => JSON.parse(e.getSelectedOptionsAsJson(b)))
-                        .reduce((prev, curr) => {
-                            prev = {
-                                ...prev,
-                                ...curr,
-                            };
-                            return prev;
-                        });
-                    return result;
-                }
-               // new MultiSelectTag('filtroOpc')  // id
-            </script>
         </div>
     </div>
 </div>
@@ -192,6 +156,61 @@ encabezado %}
     }
     $("#buscarAdmin").on('keyup', buscar);
 
+</script>
+<script>
+
+
+
+    $('#filtroOpc').filterMultiSelect({
+        selectAllText: 'Todo',
+        placeholderText: 'filtrar por..',
+        filterText: 'buscar',
+        caseSensitive: true,
+    });
+    $('#filtroOpc').on("optionselected", function (e) {
+
+        filtro = e.detail.label
+        //    MANDAMOS A ESCRIBIR LOS FILTROS QUE HA SELECCIONADO EL USUARIO
+        $.ajax({
+            url: "/AñadirFiltro",
+            type: "POST",
+            data: {
+                filtro: filtro
+
+            },
+            success: function (response) {
+                $('#tabla-adm').html(response);
+                $('#tabla-adm').append(response.htmlresponse);
+            },
+            error: function (error) { // console.log(error);
+            }
+        });
+
+
+        var b = true;
+        var filtroJson = JSON.stringify(getJson(b), null, "  ");
+        $('#filtrosInput').text(filtroJson);
+    });
+    $('#filtroOpc').on("optiondeselected", function (e) {
+
+        var b = true;
+        var filtroJson = JSON.stringify(getJson(b), null, "  ");
+        $('#jsonresult1').text();
+    });
+
+    var getJson = function (b) {
+        var result = $.fn.filterMultiSelect.applied
+            .map((e) => JSON.parse(e.getSelectedOptionsAsJson(b)))
+            .reduce((prev, curr) => {
+                prev = {
+                    ...prev,
+                    ...curr,
+                };
+                return prev;
+            });
+        return result;
+    }
+   // new MultiSelectTag('filtroOpc')  // id
 </script>
 </div>
 {% endblock %}
