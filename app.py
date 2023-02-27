@@ -1377,7 +1377,7 @@ def finalizarVerificacion():
                     primeraNuevo = 1
                     segundaNuevo = 1
                 print(Verificacion)
-                IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10],Verificacion[0][11],Verificacion[0][3],rechazoNuevo,jumboNuevo,0,0,primeraNuevo,segundaNuevo)
+                IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10],Verificacion[0][11],Verificacion[0][3],rechazoNuevo,jumboNuevo,0,0,primeraNuevo,segundaNuevo,session['uid'],session['pass'])
                 
                 print("ORDEN AQUI")
                 print(IdOrden)
@@ -1387,7 +1387,7 @@ def finalizarVerificacion():
                     
                         print("sosretroll")
                     else:
-                        conexion.IngresarMaterialOrdenCompra(material[0],material[3],IdOrden)  
+                        conexion.IngresarMaterialOrdenCompra(material[0],material[3],IdOrden,session['uid'],session['pass'])  
 
                 return render_template('otros/factura.html',segunda = segunda,primera = primera,mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:

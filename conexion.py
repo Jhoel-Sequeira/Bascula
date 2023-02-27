@@ -103,11 +103,11 @@ def buscarProveedor(prov,cargo):
         return proveedores
 
 
-def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rechazoPet,primera,segunda):
+def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rechazoPet,primera,segunda,uid1,contra1):
     
     
     print(jumbo)
-    pOrder = models.execute_kw(db, uid, password, 'purchase.order',
+    pOrder = models.execute_kw(db, uid1, contra1, 'purchase.order',
                                'create', [{'picking_type_id': puntoCompra,
                                            'supplier': True,
                                            'partner_id': proveedorId,
@@ -119,31 +119,31 @@ def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rech
                                            'x_studio_material_de_primera': primera,
                                            'x_studio_material_de_segunda': segunda}])
     
-    models.execute_kw(db, uid, password, 'purchase.order', 'write', [pOrder, {'state': 'done'}])
+    models.execute_kw(db, uid1, contra1, 'purchase.order', 'write', [pOrder, {'state': 'done'}])
     return pOrder
 
-def IngresarMaterialOrdenCompra(material,monto,pOrder):
+def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
     print(material)
-    id = models.execute_kw(db, uid, password, 'product.product', 'search_read', [[['name', '=',material],['purchase_ok','=',True]]],{'fields':['pricelist_id']}) 
+    id = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['name', '=',material],['purchase_ok','=',True]]],{'fields':['pricelist_id']}) 
     print("id vacio")
     print(id)
     if id:
         idMaterial = id[0]['id']
     else:
         
-        id = models.execute_kw(db, uid, password, 'product.product', 'search_read', [[['name', '=',material+' '],['purchase_ok','=',True]]],{'fields':['pricelist_id']}) 
+        id = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['name', '=',material+' '],['purchase_ok','=',True]]],{'fields':['pricelist_id']}) 
         print(id)
         idMaterial = id[0]['id']
 
 
-    precio = models.execute_kw(db, uid, password, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+    precio = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
 
     if precio:
         precioUnidad = precio[0]['price']
         Id = precio[0]['id']
         print(precio)
     else:
-        precio = models.execute_kw(db, uid, password, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+' '])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+        precio = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+' '])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
         precioUnidad = precio[0]['price']
         Id = precio[0]['id']
 
@@ -162,6 +162,6 @@ def IngresarMaterialOrdenCompra(material,monto,pOrder):
         'product_id':id[0]['id']
     }
 
-    datos = models.execute_kw(db,uid,password,'purchase.order.line','create',[line_data])
+    datos = models.execute_kw(db,uid1,contra1,'purchase.order.line','create',[line_data])
 
 
