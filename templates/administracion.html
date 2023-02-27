@@ -67,8 +67,8 @@ encabezado %}
     Deslice hacia la derecha para ver mas información
 </div>
 <!-- Modal -->
-<div class="modal fade" id="filtromodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade " id="filtromodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Filtros</h5>
@@ -87,6 +87,24 @@ encabezado %}
                             <option value="5">Verificador</option>
                         </select>
             
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <div class="form-outline">
+                            <label class="form-label" for="proveedor">Nombre proveedor</label>
+                            <input type="text" id="nombresProv" value="" style="text-transform:uppercase;" onkeyup="this.value=this.value.toUpperCase()" style="text-transform:uppercase;" name="nombresProv" placeholder="Ingrese el nombre..." required="required" class="form-control" value=""/>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-outline">
+                            <label class="form-label" for="proveedor">Cédula</label>
+                            <input type="text" id="cedula" value="" name="cedula" placeholder="Ingrese la cédula..." required="required" class="form-control" value=""/>
+                            <label id="mensaje_error_usu" class="control-label col-md-12 text-danger" style="display: block;">La cedula ya existe</label>
+                        </div>
                     </div>
                 </div>
             </div>
