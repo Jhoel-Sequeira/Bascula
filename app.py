@@ -360,7 +360,7 @@ def login():
                     return render_template('login.html', errorlogin=1)       
             
                     
-        return render_template('index.html') 
+        return render_template('login.html', errorlogin=1)  
             
         
 @app.route('/home')
