@@ -37,9 +37,7 @@ encabezado %}
         </div>
         <div class="col " style="color:rgb(121, 121, 121); font-size: 20px; margin-left: 30px; ">
 
-
-            <button class="btn btn-secondary" onclick="verFiltros()" type="button" id="dropdownMenuButton1"
-                data-bs-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filtromodal">
                 <i class="fa-solid fa-filter"></i>
             </button>
 
@@ -58,21 +56,7 @@ encabezado %}
     }
 </script>
 
-<div class="container mt-3" id="filtro" style="display: none;">
-    <div class="row">
-        <div class="col-8">
-            <select multiple name="filtro" id="filtroOpc" class="filter-multi-select">
 
-                <option value="1">Proveedor</option>
-                <option value="2">Fecha</option>
-                <option value="3">Estado</option>
-                <option value="4">Digitador</option>
-                <option value="5">Verificador</option>
-            </select>
-
-        </div>
-    </div>
-</div>
 
 
 
@@ -82,6 +66,38 @@ encabezado %}
 <div class="row">
     Deslice hacia la derecha para ver mas información
 </div>
+<!-- Modal -->
+<div class="modal fade" id="filtromodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Filtros</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="container mt-3" id="filtro">
+                <div class="row">
+                    <div class="col-12">
+                        <select multiple name="filtro" id="filtroOpc" class="filter-multi-select">
+            
+                            <option value="1">Proveedor</option>
+                            <option value="2">Fecha</option>
+                            <option value="3">Estado</option>
+                            <option value="4">Digitador</option>
+                            <option value="5">Verificador</option>
+                        </select>
+            
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <!-- x -->
+          <button type="button" class="btn btn-primary">Buscar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <script>
     $(document).on("change", "#filtroOpc", function (event) {
         var selected = $('#filtroOpc').val();
@@ -170,12 +186,15 @@ encabezado %}
     $('#filtroOpc').on("optionselected", function (e) {
 
         filtro = e.detail.label
+        var b = true;
+        var filtroJson = JSON.stringify(getJson(b), null, "  ");
+        $('#filtrosInput').text(filtroJson);
         //    MANDAMOS A ESCRIBIR LOS FILTROS QUE HA SELECCIONADO EL USUARIO
         $.ajax({
             url: "/AñadirFiltro",
             type: "POST",
             data: {
-                filtro: filtro
+                filtro: $('#filtroInput').text(),
 
             },
             success: function (response) {
@@ -187,9 +206,7 @@ encabezado %}
         });
 
 
-        var b = true;
-        var filtroJson = JSON.stringify(getJson(b), null, "  ");
-        $('#filtrosInput').text(filtroJson);
+        
     });
     $('#filtroOpc').on("optiondeselected", function (e) {
 

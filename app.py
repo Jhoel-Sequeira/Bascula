@@ -2213,13 +2213,14 @@ def elimLIneaTara():
 @app.route('/AñadirFiltro', methods =["POST","GET"])
 def AñadirFiltro():
     if request.method == "POST":
-
+        filtro = request.form['filtro']
         # cur = mysql.connection.cursor()
         # cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.PO like %s and v.IdEstado = 6",[po+'%'])
         # verificaciones = cur.fetchall()
         # mysql.connection.commit()
         # primero es tener la consulta base
         consultaBase = 'select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where'
+        print(filtro) 
         return render_template('tablas/tabla-filtracion.html',opc = "",verificaciones = "")
 
 
