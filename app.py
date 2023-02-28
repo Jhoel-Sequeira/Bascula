@@ -1765,7 +1765,16 @@ def finalizarVerificacionmal():
 def administracion():
     try:
         if session['userrole'] == 1:
-            return render_template('administracion.html')
+            # NECESITAMOS LA LISTA DE VERIFICADORES, DIGITADORES
+            #CONSULTA PARA LOS VERIFICADORES
+            cur = mysql.connection.cursor() 
+            cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+            verificador = cur.fetchall()
+            #CONSULTA PARA LOS DIGITADOR
+            cur = mysql.connection.cursor()
+            cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+            digitador = cur.fetchall() 
+            return render_template('administracion.html',verificadores = verificador,digitadores = digitador)
         else:
             return render_template('otros/error.html')
     except:
@@ -2227,8 +2236,15 @@ def AñadirFiltro():
             headers.append(clave)
         consulta = ''
         contador = 0
+        
         for value in data.values():
-            consulta += ''+headers[contador]+' = '+value+' AND '
+            if headers[contador] == "Fecha":
+                fechas = value
+                fechas = fechas.split('a')
+                print(fechas[0])
+                consulta += ''+headers[contador]+' BETWEEN "'+fechas[0]+'" AND "'+''+fechas[1]+'" AND '
+            else: 
+                consulta += 'v.'+headers[contador]+' = '+value+' AND '
             contador += 1
             #consultaBase += ' AND '+data
         consulta_total = consultaBase+' v.'+consulta[:-4]

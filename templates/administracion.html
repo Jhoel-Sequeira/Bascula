@@ -107,7 +107,7 @@ encabezado %}
                         <div class="col-6" id="fecha_filtro">
                             <div class="form-outline">
                                 <label class="form-label" for="proveedor">Fecha</label>
-                                <input type="text" id="fecha" value="" name="fecha" placeholder="Ingrese la cédula..."
+                                <input type="text" id="Fecha" value="" name="Fecha" placeholder="Ingrese la cédula..."
                                     required="required" class="form-control" value="" />
 
                             </div>
@@ -117,10 +117,13 @@ encabezado %}
                         <div class="col-6" id="estado_filtro">
                             <div class="form-outline">
                                 <label class="form-label" for="proveedor">Estado</label>
-                                <input type="text" id="IdEstado" value="" style="text-transform:uppercase;"
-                                    onkeyup="this.value=this.value.toUpperCase()" style="text-transform:uppercase;"
-                                    name="IdEstado" placeholder="Ingrese el nombre..." required="required"
-                                    class="form-control" value="" />
+                                
+                                    <select class="form-control" name="IdEstado" id="IdEstado">
+                                        <option value="3">Pendiente</option>
+                                        <option value="4">Completado</option>
+                                        <option value="5">Por validar</option>
+                                        <option value="6">Cancelado</option>
+                                    </select>
 
                             </div>
 
@@ -129,15 +132,23 @@ encabezado %}
                         <div class="col-6" id="digitador_filtro">
                             <div class="form-outline">
                                 <label class="form-label" for="proveedor">Digitador</label>
-                                <input type="text" id="IdDigitador" value="" name="IdDigitador" placeholder="Ingrese la cédula..."
-                                    required="required" class="form-control" value="" />
+                                
+                                <select name="IdDigitador" class="form-control" id="IdDigitador">
+                                    {% for digi in digitadores %}
+                                        <option value="{{ digi[0] }}">{{ digi[1] }}</option>
+                                        {% endfor %}
+                                </select>
                             </div>
                         </div>
                         <div class="col-6" id="verificador_filtro">
                             <div class="form-outline">
                                 <label class="form-label" for="proveedor">Verificador</label>
-                                <input type="text" id="IdVerificador" value="" name="IdVerificador" placeholder="Ingrese la cédula..."
-                                    required="required" class="form-control" value="" />
+                                
+                                    <select name="IdVerificador" class="form-control" id="IdVerificador">
+                                        {% for ver in verificadores %}
+                                        <option value="{{ ver[0] }}">{{ ver[1] }}</option>
+                                        {% endfor %}
+                                    </select>
                             </div>
                         </div>
                     </div>
@@ -160,12 +171,12 @@ encabezado %}
         return formatted_date;
     }
     moment.locale('es');
-    $("#fecha").daterangepicker(
+    $("#Fecha").daterangepicker(
         {
             "locale": {
 
-                "format": "MM/DD/YYYY",
-                "separator": " - ",
+                "format": "YYYY-MM-DD",
+                "separator": " a ",
                 "applyLabel": "Aplicar",
                 "cancelLabel": "Cancelar",
                 "fromLabel": "Desde",
