@@ -1,6 +1,7 @@
 
 
 from datetime import datetime,date, timedelta
+import json
 from flask import Flask, jsonify, redirect,render_template, request, session, url_for
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
@@ -2219,9 +2220,24 @@ def AñadirFiltro():
         # verificaciones = cur.fetchall()
         # mysql.connection.commit()
         # primero es tener la consulta base
+        data = json.loads(filtro)
+        headers = []
         consultaBase = 'select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where'
-        print(filtro) 
-        return render_template('tablas/tabla-filtracion.html',opc = "",verificaciones = "")
+        for clave in data.keys():
+            headers.append(clave)
+        consulta = ''
+        contador = 0
+        for value in data.values():
+            consulta += ''+headers[contador]+' = '+value+' AND '
+            contador += 1
+            #consultaBase += ' AND '+data
+        consulta_total = consultaBase+' v.'+consulta[:-4]
+        print(consulta_total)
+        cur = mysql.connection.cursor()
+        cur.execute(" "+consulta_total)
+        verificaciones = cur.fetchall()
+        mysql.connection.commit()
+        return render_template('tablas/tabla-filtracion.html',opc = "",verificaciones = verificaciones)
 
 
 #DESLOGUEO
