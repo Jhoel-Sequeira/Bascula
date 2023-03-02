@@ -2255,6 +2255,39 @@ def AñadirFiltro():
                 fechas = fechas.split('a')
                 print(fechas[0])
                 consulta += 'date(v.'+headers[contador]+') BETWEEN "'+fechas[0]+'" AND "'+''+fechas[1]+'" AND '
+            elif headers[contador] == "IdProveedor":
+                a = 1
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT Id_Proveedor from tb_proveedor where NombreProveedor = %s',[value])
+                idprov = cur.fetchone()
+                cur = mysql.connection.cursor()
+
+                print("aqui se muestra el proveedor:")
+                print(idprov)
+
+                if idprov:
+                    cur = mysql.connection.cursor()
+                    cur.execute('SELECT Id_Proveedor from tb_proveedor where NombreProveedor = %s',[value])
+                    idprov = cur.fetchone()
+                    
+                    consulta += 'v.'+headers[contador]+' = '+str(idprov[0]) + ' AND '
+                else:
+                    #llamar el id de oddo
+                    idOddo = conexion.buscarIdProveedor(value)
+                    #INSERTAMOS EL PROVEEDOR DE ODDO EN LA BASE
+                    cur = mysql.connection.cursor()
+                    cur.execute("INSERT INTO tb_proveedor (NombreProveedor,IdOddo,IdEstado) VALUES (%s,%s,1)",(value,idOddo))
+                    proveedornuevo = cur.fetchone()
+                    #LLAMAMOS AL PROVEEDOR DE NOMBRE TAL
+                    cur = mysql.connection.cursor()
+                    cur.execute('SELECT Id_Proveedor from tb_proveedor where NombreProveedor = %s',[value])
+                    idprov = cur.fetchone()
+                    
+                    consulta += 'v.'+headers[contador]+' = '+str(idprov[0]) + ' AND '
+
+
+
+                #consulta += 'date(v.'+headers[contador]+') BETWEEN "'+fechas[0]+'" AND "'+''+fechas[1]+'" AND '
             else: 
                 consulta += 'v.'+headers[contador]+' = '+value+' AND '
             contador += 1

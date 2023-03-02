@@ -101,6 +101,13 @@ encabezado %}
                                     class="form-control" value="" />
 
                             </div>
+                            <div style="background-color:#fff;position: relative; height: 20%; width: 100%; margin-left: 0px;"
+                                id="totalprov">
+                                <div class="info" id="listaproveedor">
+                                </div>
+                            </div>
+                            <input type="hidden" name="" id="provedor_id">
+
 
                         </div>
 
@@ -117,13 +124,13 @@ encabezado %}
                         <div class="col-6" id="estado_filtro">
                             <div class="form-outline">
                                 <label class="form-label" for="proveedor">Estado</label>
-                                
-                                    <select class="form-control" name="IdEstado" id="IdEstado">
-                                        <option value="3">Pendiente</option>
-                                        <option value="4">Completado</option>
-                                        <option value="5">Por validar</option>
-                                        <option value="6">Cancelado</option>
-                                    </select>
+
+                                <select class="form-control" name="IdEstado" id="IdEstado">
+                                    <option value="3">Pendiente</option>
+                                    <option value="4">Completado</option>
+                                    <option value="5">Por validar</option>
+                                    <option value="6">Cancelado</option>
+                                </select>
 
                             </div>
 
@@ -132,23 +139,23 @@ encabezado %}
                         <div class="col-6" id="digitador_filtro">
                             <div class="form-outline">
                                 <label class="form-label" for="proveedor">Digitador</label>
-                                
+
                                 <select name="IdDigitador" class="form-control" id="IdDigitador">
                                     {% for digi in digitadores %}
-                                        <option value="{{ digi[0] }}">{{ digi[1] }}</option>
-                                        {% endfor %}
+                                    <option value="{{ digi[0] }}">{{ digi[1] }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
                         <div class="col-6" id="verificador_filtro">
                             <div class="form-outline">
                                 <label class="form-label" for="proveedor">Verificador</label>
-                                
-                                    <select name="IdVerificador" class="form-control" id="IdVerificador">
-                                        {% for ver in verificadores %}
-                                        <option value="{{ ver[0] }}">{{ ver[1] }}</option>
-                                        {% endfor %}
-                                    </select>
+
+                                <select name="IdVerificador" class="form-control" id="IdVerificador">
+                                    {% for ver in verificadores %}
+                                    <option value="{{ ver[0] }}">{{ ver[1] }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -309,6 +316,54 @@ encabezado %}
         }
 
     });
+
+    // BUSCAR PROVEEDOR
+
+    var buscarProveedor = function () {
+        if ($("#IdProveedor").val() != "") {
+
+            $.ajax({
+                url: "/buscarProveedorApi",
+                type: "POST",
+                data: {
+                    proveedor: $("#IdProveedor").val(),
+                },
+                success: function (response) {
+                    $("#listaproveedor").html(response);
+                    $("#listaproveedor").append(response.htmlresponse);
+                    $("#listaproveedor").show();
+                    $("#totalprov").show();
+                    $("#busqueda button[name=det]").click(function () {
+                        $('#provedor_id').val($(this).val())
+                        $("#IdProveedor").val($(this).text());
+                        $("#listaproveedor").hide();
+                        $("#totalprov").hide();
+                    });
+                },
+                error: function (error) {
+                    // console.log(error);
+                },
+            });
+        } else {
+            $("#listaproveedor").hide();
+            $("#totalprov").hide();
+        }
+
+
+
+
+    }
+    $("#IdProveedor").on('keyup', buscarProveedor);
+
+    // =========================
+
+
+
+
+
+
+
+
     $('#filtroOpc').on("optiondeselected", function (e) {
 
         var filtros = e.detail.label;
