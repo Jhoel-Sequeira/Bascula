@@ -50,10 +50,10 @@
                                     <input type="hidden" value="{{usuariopunto[0]}}" name="" id="idpunto" />
                                 </div>
                             </div>
-                            <div class="col-1 mt-4 pt-2">
-                                <button type="button" class="btn btn-outline-primary" style="border: none; width: 95px"
+                            <div class="col pt-2">
+                                <button type="button" class="btn btn-primary bajar"
                                     id="bloquear" onclick="bloquear()">
-                                    <a style="text-decoration: none;">Bloquear</a>
+                                    <a style="text-decoration: none;"><i class="fa-solid fa-lock"></i> Bloquear</a>
                                 </button>
                             </div>
                         </div>
@@ -135,8 +135,8 @@
                                             onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="PO"
                                             required="required" class="form-control" value="{{ verifi[2] }}" />
                                         {% else %}
-                                        <input type="text" id="po" style="text-transform: uppercase"
-                                            onkeyup="this.value=this.value.toUpperCase()" name="nombre" placeholder="PO"
+                                        <input type="text" id="po" value="PO{{ verifi[3] }}" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" name="nombre" placeholder="PO" disabled
                                             required="required" class="form-control" />
                                         {% endif %}
                                     </div>
@@ -268,7 +268,7 @@
                             </div>
                         </div>
 
-                        <div class="col mt-3 pt-3">
+                        <div class="col  pt-3">
                             <button type="button" disabled id="agregar" class="btn btn-success mt-3 ml-5"
                                 id="boton-enviar" onclick="añadir()">
                                 <i class="fas fa-calendar-check" style="margin-right: 5px"></i>Añadir

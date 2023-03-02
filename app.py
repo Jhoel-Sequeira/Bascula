@@ -24,7 +24,11 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'verificacion'
 
 #CIERRE CONFIGURACIONES
-hi = datetime.now()
+def capturarHora():
+    hi = datetime.now()
+    return hi
+
+
 #cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor) para iniciar
 # mysql.connection.commit() Para finalizar la conexion a la base de datos
 
@@ -697,6 +701,7 @@ def listaProveedores():
                 cur.execute("select * from tb_proveedor Where NombreProveedor = %s",[proveedor])
                 proveedornuevo = cur.fetchone()
                 #INSERTAMOS LA VERIFICACION
+                hi = capturarHora()
                 fecha = hi.replace(microsecond=0)
                 cur = mysql.connection.cursor()
                 cur.execute("INSERT INTO tb_verificacion (Fecha,NoBoleta,IdPuntoCompra,IdEstado,IdUsuarioCreacion) VALUES (%s,%s,%s,3,%s)",(fecha,proveedor,5,session["userId"]))
@@ -749,7 +754,9 @@ def listaProveedores():
                 cur.execute("select * from tb_proveedor Where NombreProveedor = %s",[proveedor])
                 proveedornuevo = cur.fetchone()
                 #INSERTAMOS LA VERIFICACION
-                fecha = hi.replace(microsecond=0)
+                hora = capturarHora()
+                fecha = hora.replace(microsecond=0)
+                print(fecha)
                 cur = mysql.connection.cursor()
                 cur.execute("INSERT INTO tb_verificacion (Fecha,NoBoleta,IdPuntoCompra,IdEstado,IdUsuarioCreacion) VALUES (%s,%s,%s,%s,%s)",(fecha,proveedor,5,3,session["userId"]))
                 proveedornuevo = cur.fetchone()
@@ -1285,7 +1292,8 @@ def finalizarVerificacion():
                 cur.execute("SELECT Fecha FROM tb_verificacion WHERE Id_Verificacion = %s",[id])
                 fecha = cur.fetchone()
                 mysql.connection.commit()
-                fechacreacion = datetime.date(hi)
+                fecha = capturarHora()
+                fechacreacion = datetime.date(fecha)
                 #Usuario que lo creó
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT u.NombreUsuario FROM `tb_verificacion` as v inner join tb_usuarios as u ON v.IdUsuarioCreacion = u.Id_Usuario WHERE Id_Verificacion = %s",[id])
@@ -1436,7 +1444,8 @@ def finalizarVerificacion():
                 cur.execute("SELECT Fecha FROM tb_verificacion WHERE Id_Verificacion = %s",[id])
                 fecha = cur.fetchone()
                 mysql.connection.commit()
-                fechacreacion = datetime.date(hi)
+                fecha1 = capturarHora()
+                fechacreacion = datetime.date(fecha1)
                 #Usuario que lo creó
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT u.NombreUsuario FROM `tb_verificacion` as v inner join tb_usuarios as u ON v.IdUsuarioCreacion = u.Id_Usuario WHERE Id_Verificacion = %s",[id])
@@ -1580,7 +1589,8 @@ def finalizarVerificacion():
                 cur.execute("SELECT Fecha FROM tb_verificacion WHERE Id_Verificacion = %s",[id])
                 fecha = cur.fetchone()
                 mysql.connection.commit()
-                fechacreacion = datetime.date(hi)
+                fecha1 = capturarHora()
+                fechacreacion = datetime.date(fecha1)
                 #Usuario que lo creó
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT u.NombreUsuario FROM `tb_verificacion` as v inner join tb_usuarios as u ON v.IdUsuarioCreacion = u.Id_Usuario WHERE Id_Verificacion = %s",[id])
@@ -1659,7 +1669,8 @@ def finalizarVerificacionmal():
                 cur.execute("SELECT Fecha FROM tb_verificacion WHERE Id_Verificacion = %s",[id])
                 fecha = cur.fetchone()
                 mysql.connection.commit()
-                fechacreacion = datetime.date(hi)
+                fecha1 = capturarHora()
+                fechacreacion = datetime.date(fecha1)
                 #Usuario que lo creó
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT u.NombreUsuario FROM `tb_verificacion` as v inner join tb_usuarios as u ON v.IdUsuarioCreacion = u.Id_Usuario WHERE Id_Verificacion = %s",[id])
@@ -1727,7 +1738,8 @@ def finalizarVerificacionmal():
                 cur.execute("SELECT Fecha FROM tb_verificacion WHERE Id_Verificacion = %s",[id])
                 fecha = cur.fetchone()
                 mysql.connection.commit()
-                fechacreacion = datetime.date(hi)
+                fecha1 = capturarHora()
+                fechacreacion = datetime.date(fecha1)
                 #Usuario que lo creó
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT u.NombreUsuario FROM `tb_verificacion` as v inner join tb_usuarios as u ON v.IdUsuarioCreacion = u.Id_Usuario WHERE Id_Verificacion = %s",[id])
