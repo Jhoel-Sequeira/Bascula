@@ -2254,12 +2254,12 @@ def AñadirFiltro():
                 fechas = value
                 fechas = fechas.split('a')
                 print(fechas[0])
-                consulta += ''+headers[contador]+' BETWEEN "'+fechas[0]+'" AND "'+''+fechas[1]+'" AND '
+                consulta += 'date(v.'+headers[contador]+') BETWEEN "'+fechas[0]+'" AND "'+''+fechas[1]+'" AND '
             else: 
                 consulta += 'v.'+headers[contador]+' = '+value+' AND '
             contador += 1
             #consultaBase += ' AND '+data
-        consulta_total = consultaBase+' v.'+consulta[:-4]
+        consulta_total = consultaBase+' '+consulta[:-4]
         print(consulta_total)
         cur = mysql.connection.cursor()
         cur.execute(" "+consulta_total)
