@@ -1397,8 +1397,12 @@ def finalizarVerificacion():
                         print("sosretroll")
                     else:
                         conexion.IngresarMaterialOrdenCompra(material[0],material[3],IdOrden,session['uid'],session['pass'])  
+                po = conexion.traerPo(IdOrden)
+                cur = mysql.connection.cursor()
+                cur.execute('Update tb_verificacion set PO = %s Where Id_Verificacion = %s',(po[0]['name'],id))
+                mysql.connection.commit()
 
-                return render_template('otros/factura.html',segunda = segunda,primera = primera,mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
+                return render_template('otros/factura.html',po = po[0]['name'],segunda = segunda,primera = primera,mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:
                 print("vacio")
                 return "vacio"

@@ -164,4 +164,6 @@ def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
 
     datos = models.execute_kw(db,uid1,contra1,'purchase.order.line','create',[line_data])
 
-
+def traerPo(idOrden):
+    po = models.execute_kw(db, uid, password, 'purchase.order', 'search_read', [[['id', '=',''+str(idOrden)]]],{'fields':['name']})
+    return po

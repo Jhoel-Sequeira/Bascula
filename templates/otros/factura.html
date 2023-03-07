@@ -5,6 +5,7 @@
 
 </head>
 <div class="div-verpdf" style="font-family: Arial, Helvetica, sans-serif; width: 100%;">
+    <input type="hidden" value="{{po}}"> 
     {%for ver in verificacion%}
     <div class="container" >
         <div class="row justify-content-md-center">
@@ -24,7 +25,7 @@
               <p style="font-size: 12px;">Recepción: {{ver[4]}}<br>No. De Verificación: {{id[0]}}<br> Proveedor:<strong style="margin-left: 30px;">{{ ver[6] }}</strong><br>
                 Fecha: {{fechaEmision[0]}}<br>
                 No. boleta: {{ver[3]}} <br>
-                No. PO: {{ver[2]}} 
+                No. PO: {{po}} 
               </p>
             </div>
         </div>
