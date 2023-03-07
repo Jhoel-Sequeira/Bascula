@@ -24,7 +24,7 @@
 
                             </div>
 
-                            <div class="col-5">
+                            <div class="col-6">
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel" for="form3Example3">Punto de Compra</label>
                                     {% if (verifi[4]) and (verifi[4] != 'Sin Punto') %}
@@ -45,12 +45,12 @@
 
                                 </div>
                             </div>
-                            <div class="col-1 mt-4 ml-6 pt-2">
+                            <!-- <div class="col-1 mt-4 ml-6 pt-2">
                                 <button type="button" class="btn btn-outline-primary" style="border: none;"
                                     id="bloquear" onclick="bloquear()">
                                     <i class="fa-solid fa-lock"></i>
                                 </button>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row mt-2">
                             <div class="col-6">
@@ -174,26 +174,29 @@
 
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-3">
 
 
-                            <div class="col mt-4 pt-2">
+                    <div class="row mt-2 align-items-end justify-content-end">
+                        <div class="col text-end">
+                            <button type="button" style="color:white; font-size: 18px; background-color:#df562c !important;" class="btn ml-auto">
+                                <i class="fa-solid fa-file-pdf"></i><a class="borrarletra"
+                                    style="text-decoration: none; color: white;"> Pdf</a>
+                            </button>
+                            <button type="button" style="color:fff; font-size: 18px;" onclick="Excel()" class="btn btn-success ml-auto">
+                                <i class="fa-solid fa-file-csv"></i><a class="borrarletra"
+                                    style="text-decoration: none; color: white;"> Excel</a>
+                            </button>
 
-                                <button type="button" class="btn btn-link border-light" onclick="mostrarDetalle()">
-                                    <i class="fa-sharp fa-solid fa-circle-info"></i>
-                                </button>
-                            </div>
                         </div>
-                        <div class="row">
-                            <div class="col mt-3 bg-light overflow-scroll" id="tabla-peso"></div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col mt-3 bg-light overflow-scroll" id="tabla-general"></div>
-                        </div>
-
                     </div>
+                        <div class="row ">
+                            <div class="col mt-3 ml-2 bg-light overflow-scroll" id="tabla-peso"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col mt-3 ml-2 bg-light overflow-scroll" id="tabla-general"></div>
+                        </div>
+
 
                     <!-- INICIO DE LA FUNCIONALIDAD DE LOS BOTONES CON JQUERY  DE LA PRIMERA PANTALLA-->
                     <script>
@@ -347,17 +350,7 @@
                         }
                         function cargarPesos() {
                             $.ajax({
-                                url: "/listaPesos",
-                                type: "POST",
-                                data: {
-                                    id: $('#id').val()
-
-                                },
-                                success: function (response) {
-                                    $('#tabla-peso').html(response);
-                                    $('#tabla-peso').append(response.htmlresponse);
-                                    $.ajax({
-                                        url: "/listaPesos",
+                                        url: "/listaPesosAdmin",
                                         type: "POST",
                                         data: {
                                             id: $('#id').val()
@@ -389,10 +382,6 @@
                                         error: function (error) { // console.log(error);
                                         }
                                     });
-                                },
-                                error: function (error) { // console.log(error);
-                                }
-                            });
                         }
                         // Funcion para poner lista de resultados
                         var buscarMaterial = function () {
@@ -476,6 +465,25 @@
     </div>
 
     <script>
+        function Excel(){
+            $.ajax({
+                url: "/GenerarExcel",
+                type: "POST",
+                data: {
+                    id: $('#id').val()
+
+                },
+                success: function (response) {
+                    
+                    Swal.fire({ icon: 'warning', title: 'Datos faltantes', confirmButtonText: 'Ok', text: 'Esta verificación no posee pesajes' }).then((result) => { /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) { }
+                    })
+                    
+                    
+                }
+            });
+
+        }
         function finalizar() {
             $.ajax({
                 url: "/finalizarVerificacion",

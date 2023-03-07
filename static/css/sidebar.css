@@ -298,6 +298,10 @@
 .bajar{
   margin-top: 25px;
 }
+.color-pdf{
+  background: #fd7e14;
+}
+
 
 @media (max-width: 900px) {
   .bajar{

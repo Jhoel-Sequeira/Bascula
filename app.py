@@ -2,7 +2,7 @@
 
 from datetime import datetime,date, timedelta
 import json
-from flask import Flask, jsonify, redirect,render_template, request, session, url_for
+from flask import Flask, jsonify, redirect,render_template, request, send_file, session, url_for
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -1153,6 +1153,203 @@ def listaPesos():
 
     else:
         return "No"
+    
+
+
+#CARGAR LOS PESOS DE LAS VERIFICACIONES
+@app.route('/listaPesosAdmin', methods =["POST","GET"])
+def listaPesosAdmin():
+    if request.method == "POST":
+        id = request.form['id']
+        print(id)
+        if session['cargo'] != 5:
+            if id != "":
+                #LLamar la verificacion de ese proveedor
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_material as m ON dt.IdMaterial = m.Id_Material Where dt.IdVerificacion = %s",[id])
+                pesos = cur.fetchall()
+                print(pesos)
+                #HACEMOS LOA SUMA DE CADA COLUMNA
+                #  SUMA DE LA COLUMNA PESOS BRUTOS
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT SUM(PesoBruto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+                sumaBruto1 = cur.fetchone()
+                if sumaBruto1[0]:
+                    sumaBruto = round(sumaBruto1[0],2)
+                else:
+                    sumaBruto = 0.00
+
+                print(sumaBruto)
+                #  SUMA DE LA COLUMNA PESOS TARA
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT SUM(PesoTara) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+                sumaTara1 = cur.fetchone()
+                if sumaTara1[0]:
+                    sumaTara = round(sumaTara1[0],2)
+                else:
+                    sumaTara = 0.00
+                
+                #  SUMA DE LA COLUMNA PESOS DESTARE
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT SUM(Destare) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+                sumaDestare1 = cur.fetchone()
+                mysql.connection.commit()
+                if sumaDestare1[0]:
+                    sumaDestare = round(sumaDestare1[0],2)
+                else:
+                    sumaDestare = 0.00
+                
+                #  SUMA DE LA COLUMNA PESOS NETO
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT SUM(PesoNeto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+                sumaNeto1 = cur.fetchone()
+                mysql.connection.commit()
+                if sumaNeto1[0]:
+                    sumaNeto = round(sumaNeto1[0],2)
+                else:
+                    sumaNeto = 0.00
+                print(pesos)
+                return render_template('tablas/tabla-pesos-admin.html',pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
+            else:
+                pesos =""
+                return render_template('tablas/tabla-pesos-admin.html',pesos = pesos)
+        else:
+            if id != "":
+
+                #total de materiales del verificador
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 5 Group BY ver.IdMaterial',(id,2))
+                matverificador = cur.fetchall()
+                mysql.connection.commit()
+                print(matverificador)
+                print("MAT DEL VERIFICADOR")
+
+                #total de materiales del digitador
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 5 Group BY ver.IdMaterial',(id,1))
+                matdigitador = cur.fetchall()
+                mysql.connection.commit()
+                print(matdigitador)
+                print("MAT DEL digitador")
+                
+                #LLamar los pesos del verificador
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 5",(id,2))
+                pesosverificador = cur.fetchall()
+
+                #LLamar los pesos del digitador
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 5",(id,1))
+                pesosdigitador = cur.fetchall()
+                #LISTA DE IDS CON LA MISMA PO
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT dt.IdVerificacion FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material Where v.PO = %s and v.IdEstado = 5 ORDER BY v.Id_Verificacion ASC",[id])
+                ids = cur.fetchall()
+                #SELECCIONAR LAS VERIFICACIONES QUE TRAEN EL MISMO PO
+                # cur = mysql.connection.cursor()
+                # cur.execute("SELECT PO FROM tb_verificacion Where Id_Verificacion = %s",[pesos[1]])
+                # POs = cur.fetchall()
+                # print(POs)
+
+                #HACEMOS LOA SUMA DE CADA COLUMNA PARA LOS VERIFICADORES
+                #  SUMA DE LA COLUMNA PESOS BRUTOS
+                idver = pesosverificador[0][1]
+                print("idveeeeeeeeeeeeeer")
+                print(idver)
+
+                iddig = pesosdigitador[0][1]
+                print("iddigiii")
+                print(iddig)
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT SUM(PesoBruto) FROM tb_detalleverificacion WHERE IdVerificacion = %s ",[idver])
+                sumaBruto1 = cur.fetchone()
+                if sumaBruto1[0]:
+                    sumaBrutover = round(sumaBruto1[0],2)
+                else:
+                    sumaBrutover = 0.00
+
+                print(sumaBrutover)
+                #  SUMA DE LA COLUMNA PESOS TARA
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT SUM(PesoTara) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[idver])
+                sumaTara1 = cur.fetchone()
+                if sumaTara1[0]:
+                    sumaTaraver = round(sumaTara1[0],2)
+                else:
+                    sumaTaraver = 0.00
+                
+                #  SUMA DE LA COLUMNA PESOS DESTARE
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT SUM(Destare) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+                sumaDestare1 = cur.fetchone()
+                mysql.connection.commit()
+                if sumaDestare1[0]:
+                    sumaDestarever = round(sumaDestare1[0],2)
+                else:
+                    sumaDestarever = 0.00
+                
+                #  SUMA DE LA COLUMNA PESOS NETO
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT SUM(PesoNeto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[idver])
+                sumaNeto1 = cur.fetchone()
+                mysql.connection.commit()
+                if sumaNeto1[0]:
+                    sumaNetover = round(sumaNeto1[0],2)
+                else:
+                    sumaNetover = 0.00
+
+                #HACEMOS LOA SUMA DE CADA COLUMNA PARA LOS DIGITADORES
+                #  SUMA DE LA COLUMNA PESOS BRUTOS
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT SUM(PesoBruto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[iddig])
+                sumaBruto2 = cur.fetchone()
+                if sumaBruto2[0]:
+                    sumaBrutodig = round(sumaBruto2[0],2)
+                else:
+                    sumaBrutodig = 0.00
+
+                #  SUMA DE LA COLUMNA PESOS TARA
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT SUM(PesoTara) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[iddig])
+                sumaTara2 = cur.fetchone()
+                if sumaTara2[0]:
+                    sumaTaradigi = round(sumaTara2[0],2)
+                else:
+                    sumaTaradigi = 0.00
+                
+                #  SUMA DE LA COLUMNA PESOS DESTARE
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT SUM(Destare) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[id])
+                sumaDestare2 = cur.fetchone()
+                mysql.connection.commit()
+                if sumaDestare2[0]:
+                    sumaDestaredigi = round(sumaDestare2[0],2)
+                else:
+                    sumaDestaredigi = 0.00
+                
+                #  SUMA DE LA COLUMNA PESOS NETO
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT SUM(PesoNeto) FROM tb_detalleverificacion WHERE IdVerificacion = %s",[iddig])
+                sumaNeto2 = cur.fetchone()
+                mysql.connection.commit()
+                if sumaNeto2[0]:
+                    sumaNetodigi = round(sumaNeto2[0],2)
+                else:
+                    sumaNetodigi = 0.00
+                print(pesosverificador)
+                print(pesosdigitador)
+                return render_template('tablas/tabla-pesos-admin.html',id = ids[0],pesosdigitador = matdigitador,ids = ids,pesosverificador = matverificador,sumaBrutover = sumaBrutover, sumaTaraver = sumaTaraver,sumaDestarever = sumaDestarever,sumaNetover = sumaNetover,sumaBrutodig = sumaBrutodig, sumaTaradigi = sumaTaradigi,sumaDestaredigi = sumaDestaredigi,sumaNetodigi = sumaNetodigi)
+            else:
+                pesos =""
+                return render_template('tablas/tabla-pesos-admin.html',pesos = pesosdigitador)
+
+    else:
+        return "No"
+
+
+
+
+
 
 #CARGAR LOS PESOS GENERALES DE LAS VERIFICACIONES
 @app.route('/generalPesos', methods =["POST","GET"])
@@ -1171,7 +1368,7 @@ def generalPesos():
             return render_template('tablas/tabla-mat-general.html',mat = mat)
     else:
         return "No"
-
+    
 #BUSCAMOS MATERIALES
 @app.route('/buscarMaterial', methods =["POST","GET"])
 def buscarMaterial():
@@ -2305,8 +2502,8 @@ def AñadirFiltro():
         return render_template('tablas/tabla-filtracion.html',opc = "",verificaciones = verificaciones)
 
 #GENERAR EL REPORTE DE VERIFICACIONES
-# @app.route('/reporteVerifi')
-# def reporteVerifi():
+@app.route('/reporteVerifi')
+def reporteVerifi():
     # usuarios = db1.execute('select u.Id_Usuario,u.Nombres,u.Apellidos,u.TelefonoFijo,u.Celular,u.Direccion,cred.Usuario,rol.NombreRol from Usuarios as u inner join Credenciales as cred ON u.IdCredenciales = cred.Id_Credenciales inner join Roles as rol ON cred.Rol = rol.Id_Rol inner join estado as est ON u.IdEstado = est.Id_Estado Where u.IdEstado = 1')
             
     # df_1 = pd.DataFrame((tuple(t) for t in usuarios), 
@@ -2358,7 +2555,8 @@ def AñadirFiltro():
     #     #go back to the beginning of the stream
     #     output.seek(0)
 
-    #     return send_file(output, download_name="Usuarios.xlsx", as_attachment=True)
+        # return send_file(output, download_name="Usuarios.xlsx", as_attachment=True)
+        return "a"
 
 
 
