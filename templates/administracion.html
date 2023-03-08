@@ -69,11 +69,12 @@ encabezado %}
             }
         });
         alert(ids)
+        let array_ids = JSON.stringify(ids);
         $.ajax({
             url: "/reporteVerifiGeneral",
             type: "POST",
             data: {
-                valor:'h',
+                valor:array_ids,
 
             },
             success: function (response) {
