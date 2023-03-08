@@ -1,4 +1,4 @@
-<table class="table rounded" id="tabla-prov" style=" width:100vw">
+<table class="table rounded" id="tabla-filtracion" style=" width:100vw">
     <thead>
         <!-- <tr>
             <th colspan="6" class="" style="text-align: center; font-size: 35px;">
@@ -17,9 +17,9 @@
     <tbody>
         {%for i in verificaciones%}
             <tr class="fuente-tabla">
-                <td>{{i[6]}}</td>
+                <td >{{i[6]}}</td>
                 <td align="center" style="width: 500px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
-                <td align="center" style="width: 200px">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
+                <td align="center" style="width: 200px" id="{{i[2]}}">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
                 <td align="center" style="width: 200px">{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
                 <td align="center" style="width: 200px">{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
                 <td align="center" style="width: 200px">{%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>

@@ -2502,60 +2502,65 @@ def AñadirFiltro():
         return render_template('tablas/tabla-filtracion.html',opc = "",verificaciones = verificaciones)
 
 #GENERAR EL REPORTE DE VERIFICACIONES
-@app.route('/reporteVerifi')
-def reporteVerifi():
-    # usuarios = db1.execute('select u.Id_Usuario,u.Nombres,u.Apellidos,u.TelefonoFijo,u.Celular,u.Direccion,cred.Usuario,rol.NombreRol from Usuarios as u inner join Credenciales as cred ON u.IdCredenciales = cred.Id_Credenciales inner join Roles as rol ON cred.Rol = rol.Id_Rol inner join estado as est ON u.IdEstado = est.Id_Estado Where u.IdEstado = 1')
-            
-    # df_1 = pd.DataFrame((tuple(t) for t in usuarios), 
-    # columns=('Date ', 'name', 'username', 'description', '','','',''))
-    
-    # output = BytesIO()
-    # writer = pd.ExcelWriter(output, engine='xlsxwriter')
-
-    # #taken from the original question
-    # df_1.to_excel(writer, startrow = -1,startcol=-1, merge_cells = False, sheet_name = "Backup")
-    # workbook = writer.book
-    # worksheet = writer.sheets["Backup"]
-    # caption = 'Table with user defined column headers.'
-    # formato = workbook.add_format()
-    # formato.set_align('center')
-    # # Set the columns widths.
-    # worksheet.set_column('A:H', 20)
+@app.route('/reporteVerifiGeneral',  methods =["POST","GET"])
+def reporteVerifiGeneral():
+    if request.method == "POST":
+        ids = request.form['valor']
+        # AQUI SE NECEWSITA SABER SI LAS POS SON VAIDAS
+        print(ids)
+        #conexion.GenerarExcel_1(session['pass'],ids,session['uid'])
+        # usuarios = db1.execute('select u.Id_Usuario,u.Nombres,u.Apellidos,u.TelefonoFijo,u.Celular,u.Direccion,cred.Usuario,rol.NombreRol from Usuarios as u inner join Credenciales as cred ON u.IdCredenciales = cred.Id_Credenciales inner join Roles as rol ON cred.Rol = rol.Id_Rol inner join estado as est ON u.IdEstado = est.Id_Estado Where u.IdEstado = 1')
+                
+        # df_1 = pd.DataFrame((tuple(t) for t in usuarios), 
+        # columns=('Date ', 'name', 'username', 'description', '','','',''))
         
-    # #haciendo la lista
-    # row = 2
-    # for i in usuarios:
-    #     worksheet.write('A'+ str(row), i['Id_Usuario'],formato)
-    #     worksheet.write('B'+ str(row), i['Nombres'],formato)
-    #     worksheet.write('C'+ str(row), i['Apellidos'],formato)
-    #     worksheet.write('D'+ str(row), i['TelefonoFijo'],formato)
-    #     worksheet.write('E'+ str(row), i['Celular'],formato)
-    #     worksheet.write('F'+ str(row), i['Direccion'],formato)
-    #     worksheet.write('G'+ str(row), i['Usuario'],formato)
-    #     worksheet.write('H'+ str(row), i['NombreRol'],formato)
-    #     worksheet.write('I'+ str(row), None)
-    #     row += 1
+        # output = BytesIO()
+        # writer = pd.ExcelWriter(output, engine='xlsxwriter')
 
-    #     tam = len(usuarios)
-    #     tam = "A1:H" + str(tam)
-    #     worksheet.add_table(tam, {
-    #                             'columns': [{'header': 'Id Usuario'},
-    #                                         {'header': 'Nombres'},
-    #                                         {'header': 'Apellidos'},
-    #                                         {'header': 'Telefono Fijo'},
-    #                                         {'header': 'Celular'},
-    #                                         {'header': 'Dirección'},
-    #                                         {'header': 'Usuario'},
-    #                                         {'header': 'Rol'}
-    #     ]})
+        # #taken from the original question
+        # df_1.to_excel(writer, startrow = -1,startcol=-1, merge_cells = False, sheet_name = "Backup")
+        # workbook = writer.book
+        # worksheet = writer.sheets["Backup"]
+        # caption = 'Table with user defined column headers.'
+        # formato = workbook.add_format()
+        # formato.set_align('center')
+        # # Set the columns widths.
+        # worksheet.set_column('A:H', 20)
+            
+        # #haciendo la lista
+        # row = 2
+        # for i in usuarios:
+        #     worksheet.write('A'+ str(row), i['Id_Usuario'],formato)
+        #     worksheet.write('B'+ str(row), i['Nombres'],formato)
+        #     worksheet.write('C'+ str(row), i['Apellidos'],formato)
+        #     worksheet.write('D'+ str(row), i['TelefonoFijo'],formato)
+        #     worksheet.write('E'+ str(row), i['Celular'],formato)
+        #     worksheet.write('F'+ str(row), i['Direccion'],formato)
+        #     worksheet.write('G'+ str(row), i['Usuario'],formato)
+        #     worksheet.write('H'+ str(row), i['NombreRol'],formato)
+        #     worksheet.write('I'+ str(row), None)
+        #     row += 1
 
-    #     #the writer has done its job
-    #     writer.close()
+        #     tam = len(usuarios)
+        #     tam = "A1:H" + str(tam)
+        #     worksheet.add_table(tam, {
+        #                             'columns': [{'header': 'Id Usuario'},
+        #                                         {'header': 'Nombres'},
+        #                                         {'header': 'Apellidos'},
+        #                                         {'header': 'Telefono Fijo'},
+        #                                         {'header': 'Celular'},
+        #                                         {'header': 'Dirección'},
+        #                                         {'header': 'Usuario'},
+        #                                         {'header': 'Rol'}
+        #     ]})
 
-    #     #go back to the beginning of the stream
-    #     output.seek(0)
+        #     #the writer has done its job
+        #     writer.close()
 
-        # return send_file(output, download_name="Usuarios.xlsx", as_attachment=True)
+        #     #go back to the beginning of the stream
+        #     output.seek(0)
+
+            # return send_file(output, download_name="Usuarios.xlsx", as_attachment=True)
         return "a"
 
 

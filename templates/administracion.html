@@ -40,15 +40,50 @@ encabezado %}
             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filtromodal">
                 <i class="fa-solid fa-filter"></i>
             </button>
-
+            <button type="button" style="color:fff; font-size: 18px;" onclick="ExcelTabla()"
+                class="btn btn-success ml-auto">
+                <i class="fa-solid fa-file-csv"></i><a class="borrarletra" style="text-decoration: none; color: white;">
+                    Excel</a>
+            </button>
         </div>
-       
+
     </div>
 
 
 </div>
 <script>
+    function ExcelTabla() {
+        // Seleccionar todos los elementos de la tabla con el selector de jQuery
+        var elementosTabla = $('table td');
 
+        // Crear un array para almacenar los valores de los atributos "id"
+        var ids = [];
+
+        // Iterar a través de cada elemento de la tabla y obtener el valor del atributo "id"
+        elementosTabla.each(function () {
+            var id = $(this).attr('id');
+
+            // Agregar el valor del atributo "id" al array si existe
+            if (id) {
+                ids.push(id);
+            }
+        });
+        alert(ids)
+        $.ajax({
+            url: "/reporteVerifiGeneral",
+            type: "POST",
+            data: {
+                valor:'h',
+
+            },
+            success: function (response) {
+                // Generar la exportacion del archivo para descargarlo
+            },
+            error: function (error) { // console.log(error);
+            }
+        });
+        // console.log(ids);
+    }
     function verFiltros() {
         if ($('#filtro').is(':visible')) {
             $('#filtro').hide();
