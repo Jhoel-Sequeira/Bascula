@@ -68,16 +68,22 @@ encabezado %}
                 ids.push(id);
             }
         });
-        alert(ids)
         let array_ids = JSON.stringify(ids);
         $.ajax({
             url: "/reporteVerifiGeneral",
             type: "POST",
+            beforeSend: function () {
+                Swal.fire({
+                    html:'<div class="col-lg-12" style="z-index:99999; display:absolute; width"><img src="../static/img/loader.gif" alt="loading" /><br/>Generando el reporte...</div>'
+                })
+
+            },
             data: {
                 valor: array_ids,
 
             },
             success: function (response) {
+                swal.close();
                 // Generar la exportacion del archivo para descargarlo
                 var link = document.createElement('a');
                 link.href = response.url;
