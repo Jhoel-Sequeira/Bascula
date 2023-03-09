@@ -74,11 +74,18 @@ encabezado %}
             url: "/reporteVerifiGeneral",
             type: "POST",
             data: {
-                valor:array_ids,
+                valor: array_ids,
 
             },
             success: function (response) {
                 // Generar la exportacion del archivo para descargarlo
+                var link = document.createElement('a');
+                link.href = response.url;
+                link.download = 'ejemplo.xlsx';
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             },
             error: function (error) { // console.log(error);
             }

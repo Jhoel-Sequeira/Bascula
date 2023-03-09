@@ -1596,19 +1596,24 @@ def finalizarVerificacion():
                         conexion.IngresarMaterialOrdenCompra(material[0],material[3],IdOrden,session['uid'],session['pass'])  
                 po = conexion.traerPo(IdOrden)
                 #TRAER LA VERIFICACION QUE REALIZO EL VERIFICADOR PARA CAMBIARLE LA PO
-                # cur = mysql.connection.cursor()
-                # cur.execute("SELECT NoBoleta from tb_verificacion Where Id_Verificacion = %s",[id])
-                # nboletaver = cur.fetchall()
-                # mysql.connection.commit() 
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT NoBoleta from tb_verificacion Where Id_Verificacion = %s",[id])
+                nboletaver = cur.fetchone()
+                mysql.connection.commit() 
 
                 # cur = mysql.connection.cursor()
                 # cur.execute("SELECT Id_Verificacion from tb_verificacion Where Id_Verificacion = %s",[id])
                 # nboletaver = cur.fetchall()
                 # mysql.connection.commit()
+                print("NOBOLETA: ",nboletaver[0])
 
                 cur = mysql.connection.cursor()
-                cur.execute('Update tb_verificacion set PO = %s Where Id_Verificacion = %s',(po[0]['name'],id))
+                cur.execute('Update tb_verificacion set PO = %s Where NoBoleta = %s',(po[0]['name'],nboletaver[0]))
                 mysql.connection.commit()
+
+                # cur = mysql.connection.cursor()
+                # cur.execute('Update tb_verificacion set PO = %s Where Id_Verificacion = %s',(po[0]['name'],id))
+                # mysql.connection.commit()
 
                 return render_template('otros/factura.html',po = po[0]['name'],segunda = segunda,primera = primera,mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:
@@ -2516,10 +2521,12 @@ def AñadirFiltro():
 @app.route('/reporteVerifiGeneral',  methods =["POST","GET"])
 def reporteVerifiGeneral():
     if request.method == "POST":
-        ids = request.form['valor']
+        mi_array = request.form['valor']
         # AQUI SE NECEWSITA SABER SI LAS POS SON VAIDAS
-        print(ids)
-        #conexion.GenerarExcel_1(session['pass'],ids,session['uid'])
+        ids = json.loads(mi_array)
+        retorno = conexion.GenerarExcel_1(session['pass'],ids,session['uid'])
+        
+        return jsonify({'url': ''+retorno})
         # usuarios = db1.execute('select u.Id_Usuario,u.Nombres,u.Apellidos,u.TelefonoFijo,u.Celular,u.Direccion,cred.Usuario,rol.NombreRol from Usuarios as u inner join Credenciales as cred ON u.IdCredenciales = cred.Id_Credenciales inner join Roles as rol ON cred.Rol = rol.Id_Rol inner join estado as est ON u.IdEstado = est.Id_Estado Where u.IdEstado = 1')
                 
         # df_1 = pd.DataFrame((tuple(t) for t in usuarios), 
@@ -2572,7 +2579,7 @@ def reporteVerifiGeneral():
         #     output.seek(0)
 
             # return send_file(output, download_name="Usuarios.xlsx", as_attachment=True)
-        return "a"
+        
 
 
 

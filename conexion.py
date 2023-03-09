@@ -1,4 +1,6 @@
+from io import BytesIO
 import xmlrpc.client
+from flask import send_file
 
 #IMPORTS PARA GENERAR EL EXCEL
 from openpyxl import Workbook
@@ -208,7 +210,7 @@ def GenerarExcel_1(contra,ids,uid1):
 
 
     # Inserta la imagen en la celda combinada B2:D4
-    img = Image('logo.png')
+    img = Image('static/img/logo.png')
     img.width = 50
     img.height = 50
     ws.add_image(img, 'A1')
@@ -265,7 +267,7 @@ def GenerarExcel_1(contra,ids,uid1):
     filaCont = 3
     # Añade los datos a la hoja de trabajo
     for id in ids:
-        potemp = models.execute_kw(db, uid1, contra, 'purchase.order', 'search_read', [[['name', '=',''+str(id)]]]) 
+        potemp = models.execute_kw(db, uid1, contra, 'purchase.order', 'search_read', [[['name', '=',''+str(id)]]])
         # Recuperar las líneas de pedido de compra asociadas a la orden de compra
         print(potemp[0]['id'])
         order_lines = models.execute_kw(db, uid1, contra, 'purchase.order.line', 'search_read', [[('order_id', '=', potemp[0]['id'])]], {'fields': ['product_qty']})
@@ -297,10 +299,16 @@ def GenerarExcel_1(contra,ids,uid1):
 
 
     # Guarda el archivo de Excel
-
-
     # Obtener la fecha actual
     fecha_hora_actual = datetime.datetime.now()
     fecha_hora_actual_formateada = fecha_hora_actual.strftime("%d-%m-%y_%H%M%S")
+    
 
-    return wb.save("Reporte_"+str(fecha_hora_actual_formateada)+".xlsx")
+    
+    # output = BytesIO()
+    # wb.save(output)
+    # output.seek(0)
+    nombre = "static/Reportes/Reporte_"+str(fecha_hora_actual_formateada)+".xlsx"
+    wb.save(nombre)
+    return nombre
+    #return output
