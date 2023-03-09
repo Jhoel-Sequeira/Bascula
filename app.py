@@ -1595,6 +1595,17 @@ def finalizarVerificacion():
                     else:
                         conexion.IngresarMaterialOrdenCompra(material[0],material[3],IdOrden,session['uid'],session['pass'])  
                 po = conexion.traerPo(IdOrden)
+                #TRAER LA VERIFICACION QUE REALIZO EL VERIFICADOR PARA CAMBIARLE LA PO
+                # cur = mysql.connection.cursor()
+                # cur.execute("SELECT NoBoleta from tb_verificacion Where Id_Verificacion = %s",[id])
+                # nboletaver = cur.fetchall()
+                # mysql.connection.commit() 
+
+                # cur = mysql.connection.cursor()
+                # cur.execute("SELECT Id_Verificacion from tb_verificacion Where Id_Verificacion = %s",[id])
+                # nboletaver = cur.fetchall()
+                # mysql.connection.commit()
+
                 cur = mysql.connection.cursor()
                 cur.execute('Update tb_verificacion set PO = %s Where Id_Verificacion = %s',(po[0]['name'],id))
                 mysql.connection.commit()
