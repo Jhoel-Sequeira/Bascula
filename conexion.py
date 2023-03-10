@@ -70,7 +70,7 @@ def obtenerUid(user,contra):
 
 def Autenticar(user, contra,uid):
     cargo = models.execute_kw(db, uid, contra, 'res.users', 'search_read', 
-                              [[['login', '=', ''+user]]], {'fields': ['x_studio_field_xql4c']})
+                              [[['login', '=', ''+user]]], {'fields': ['x_studio_field_xql4c','almacen']})
     # mandamos a llamar el cargo del usuario logueado
     print(cargo)
     return cargo

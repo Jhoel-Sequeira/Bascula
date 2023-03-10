@@ -67,11 +67,14 @@ def login():
                 print("verrr")
                 print(uid)
                 cargo = uid[0]['x_studio_field_xql4c']
+                session["punto"] = uid[0]['almacen'][0]
+                print("PUNTO DE COMPRA: ",session["punto"])
                 if cargo[1] == "JEFE DE TECNOLOGÍA" or cargo[1] == "SOPORTE DE INFORMATICA" or cargo[1] == "GERENTE ADMINISTRACIÓN":
                     
                     session["user"] = usuario
                     session["pass"] = Contraseña
                     session["userrole"] = 1
+                    
                     #ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
                     # cur = mysql.connection.cursor()
                     # cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
