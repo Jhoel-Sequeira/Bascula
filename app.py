@@ -58,7 +58,7 @@ def login():
             #MANDAMOS A VERIFICAR LOS DATOS EN ODDO
             # conexion.username = usuario
             # conexion.password = Contraseña
-            try:
+            #try:
                 
                 uidUser = conexion.obtenerUid(usuario,Contraseña)
                 print("uidUser:",uidUser)
@@ -67,13 +67,18 @@ def login():
                 print("verrr")
                 print(uid)
                 cargo = uid[0]['x_studio_field_xql4c']
-                session["punto"] = uid[0]['almacen'][0]
-                print("PUNTO DE COMPRA: ",session["punto"])
+                print(cargo[1])
+                # session["puntoid"] = uid[0]['almacen'][0]
+                # session["punto"] = uid[0]['almacen'][1]
+                
                 if cargo[1] == "JEFE DE TECNOLOGÍA" or cargo[1] == "SOPORTE DE INFORMATICA" or cargo[1] == "GERENTE ADMINISTRACIÓN":
                     
                     session["user"] = usuario
                     session["pass"] = Contraseña
                     session["userrole"] = 1
+                    # session["puntoid"] = uid[0]['almacen'][0]
+                    # session["punto"] = uid[0]['almacen'][1]
+                
                     
                     #ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
                     # cur = mysql.connection.cursor()
@@ -118,7 +123,6 @@ def login():
                     elif usuarioExistente:
                         print(usuarioExistente[0][0])
                         id = usuarioExistente[0][0]
-                        print("ssssssssssss")
                         cur = mysql.connection.cursor()
                         cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
                         ultimoUSuarios = cur.fetchone()
@@ -152,7 +156,9 @@ def login():
                     return render_template('ajustes.html',Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
                 elif cargo[1] == "DIGITADOR":
                     #ESTE ES DIGITADOR 
-                    
+                    session["puntoid"] = uid[0]['almacen'][0]
+                    session["punto"] = uid[0]['almacen'][1]
+                    print('punto: ',session['punto'])
                     session["pass"] = Contraseña
                     session["user"] = usuario
                     session["userrole"] = 2
@@ -205,7 +211,7 @@ def login():
                         session["userId"] = ultimoUSuarios[0]
                     
                     
-                    #session["userId"] = ultimoUsuario
+                    
 
                     cur = mysql.connection.cursor()
                     cur.execute("select * from tb_proveedor Where IdEstado = 1")
@@ -270,6 +276,9 @@ def login():
                         mysql.connection.commit()
                         print(ultimoUSuarios[0])
                         session["userId"] = ultimoUSuarios[0]
+
+                       
+                        
                     elif usuarioExistente:
                         print(usuarioExistente[0][0])
                         id = usuarioExistente[0][0]
@@ -278,8 +287,9 @@ def login():
                         cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
                         ultimoUSuarios = cur.fetchone()
                         mysql.connection.commit()
-                        print(ultimoUSuarios[0])
-                        session["userId"] = ultimoUSuarios[0]
+
+
+                        
                     
                     
                     #session["userId"] = ultimoUsuario
@@ -309,7 +319,7 @@ def login():
                     # else:
                     #     #VIENE VACIO
                     #     return render_template('login.html', errorlogin=1) 
-            except:
+            #except:
                 try:
 
                     #ESTE ES VERIFICADOR 
@@ -352,6 +362,13 @@ def login():
                         cur = mysql.connection.cursor()
                         cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
                         digitador = cur.fetchall()
+
+                        cur = mysql.connection.cursor()
+                        cur.execute("SELECT pu.Id_PuntoCompra,pu.NombrePuntoCompra FROM `tb_usuarios` as u inner join tb_puntocompra as pu on u.IdPuesto = pu.Id_PuntoCompra where u.Id_Usuario = %s",[session["userId"]])
+                        control = cur.fetchone()
+                        mysql.connection.commit()
+                        # session["puntoid"] = control[0]
+                        # session["punto"] = control[1]
                         
                         #CHEQUEAMOS LAS CONTRASEÑAS PARA VER SI SON IGUALES
                         if not check_password_hash(results[2], Contraseña):
@@ -365,7 +382,8 @@ def login():
                     #     return render_template('login.html', errorlogin=1) 
                 except:
 
-                    return render_template('login.html', errorlogin=1)       
+                    return render_template('login.html', errorlogin=1)   
+                    
             
                     
         return render_template('login.html', errorlogin=1)  
@@ -399,7 +417,7 @@ def home():
             digitador = cur.fetchall()
             print(digitador)
         
-            return render_template('home.html',cargo = session['cargo'],Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
+            return render_template('home.html',punto = session['punto'],cargo = session['cargo'],Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
         else:
             return render_template('otros/error.html')
         
@@ -706,6 +724,15 @@ def listaProveedores():
                 #INSERTAMOS LA VERIFICACION
                 hi = capturarHora()
                 fecha = hi.replace(microsecond=0)
+                print(proveedor)
+                if proveedor == "00001":
+                    print("entro en la condicion del codigo")
+                    proveedor = 'CUADRILLA CHATARRA'
+                elif proveedor == "00002":
+                    proveedor = 'CASETA'
+                elif proveedor == '00003':
+                    proveedor = 'MOVIL'
+                print(proveedor)
                 cur = mysql.connection.cursor()
                 cur.execute("INSERT INTO tb_verificacion (Fecha,NoBoleta,IdPuntoCompra,IdEstado,IdUsuarioCreacion) VALUES (%s,%s,%s,3,%s)",(fecha,proveedor,5,session["userId"]))
                 proveedornuevo = cur.fetchone()

@@ -20,22 +20,30 @@ encabezado %}
 <div class="">
     <input type="hidden" id="cargo" value="{{cargo}}">
     <div class="d-flex flex-wrap mt-2 justify-content-md-center">
-
+        
+        {%if punto == 'MOVIL: Recepciones'%}
+        <div class="col-10 mb-3 mb-lg-0" role="search">
+            <input type="search" class="form-control" id="buscar" onkeyup="this.value=this.value.toUpperCase()"
+                style="text-transform:uppercase;"  value="MOVIL" disabled aria-label="Buscar">
+        </div>
+        {%else%}
         <div class="col-10 mb-3 mb-lg-0" role="search">
             <input type="search" class="form-control" id="buscar" onkeyup="this.value=this.value.toUpperCase()"
                 style="text-transform:uppercase;" placeholder="Número boleta" aria-label="Buscar">
         </div>
+        {%endif%}
 
         <br>
         {%if cargo != 5%}
-        <div class=""><button type="button" class="btn btn-success boton " disabled="disabled" id="verificar"
+            {% if punto != 'MOVIL: Recepciones' %}
+            <div class=""><button type="button" class="btn btn-success boton " disabled="disabled" id="verificar"
+                    onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>
+                    Crear</button></div>
+            {%else%}
+            <div class=""><button type="button" class="btn btn-success boton " id="verificar"
                 onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>
                 Crear</button></div>
-        {%if cargo == 3%}
-            <!-- <div class="col " style="color:rgb(121, 121, 121); font-size: 20px; margin-left: 30px; margin-top: 5px;">
-                <i class="fa-solid fa-filter" onclick="verFiltros()"></i>
-            </div> -->
-        {%endif%}
+            {%endif%}
 
         {%endif%}
 
@@ -89,7 +97,7 @@ encabezado %}
     }
     function crearVerificacion() {
         var proveedor = $('#buscar').val();
-        if (proveedor != "" && proveedor > 0) {
+        if (proveedor != "" && proveedor.length >= 3) {
             $.ajax({
                 url: "/listaProveedores",
                 type: "POST",
@@ -100,7 +108,7 @@ encabezado %}
                 success: function (response) {
                     $('#tabla-prov').html(response);
                     $('#tabla-prov').append(response.htmlresponse);
-                    $('#buscar').val("");
+                    $('#buscar').val("MOVIL");
                 },
                 error: function (error) {
                     //console.log(error);
