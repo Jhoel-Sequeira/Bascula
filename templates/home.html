@@ -108,7 +108,12 @@ encabezado %}
                 success: function (response) {
                     $('#tabla-prov').html(response);
                     $('#tabla-prov').append(response.htmlresponse);
-                    $('#buscar').val("MOVIL");
+                    if (proveedor == "MOVIL"){
+                        $('#buscar').val("MOVIL");
+                    }else{
+                        $('#buscar').val("");
+                    }
+                    
                 },
                 error: function (error) {
                     //console.log(error);
