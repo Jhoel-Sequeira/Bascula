@@ -58,7 +58,7 @@ def login():
             #MANDAMOS A VERIFICAR LOS DATOS EN ODDO
             # conexion.username = usuario
             # conexion.password = Contraseña
-            #try:
+            try:
                 
                 uidUser = conexion.obtenerUid(usuario,Contraseña)
                 print("uidUser:",uidUser)
@@ -90,13 +90,14 @@ def login():
 
                     cur = mysql.connection.cursor()
                     cur.execute("SELECT * FROM tb_credenciales Where Usuarios = %s",[session["user"]])
-                    usuarioExistente = cur.fetchall()
+                    usuarioExistente = cur.fetchone()
                     mysql.connection.commit()
 
                     
 
                     user_info = conexion.TraerUsuario(str(uid[0]['id']),session['uid'],session['pass'])
                     print("user info:",user_info)
+                    print("usuario Existe: ",usuarioExistente)
                     if not usuarioExistente:
                         cur = mysql.connection.cursor()
                         cur.execute("INSERT INTO tb_credenciales (Usuarios,Contraseñas,IdRol) VALUES (%s,%s,%s)",(session["user"],generate_password_hash(Contraseña),session["userrole"]))
@@ -111,7 +112,7 @@ def login():
                         mysql.connection.commit()
                         ultimoUsuario = cur.lastrowid
 
-                        id = usuarioExistente[0][0]
+                        id = usuarioExistente[0]
                         cur = mysql.connection.cursor()
                         cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
                         ultimoUSuarios = cur.fetchone()
@@ -121,8 +122,8 @@ def login():
 
 
                     elif usuarioExistente:
-                        print(usuarioExistente[0][0])
-                        id = usuarioExistente[0][0]
+                        print(usuarioExistente[0])
+                        id = usuarioExistente[0]
                         cur = mysql.connection.cursor()
                         cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
                         ultimoUSuarios = cur.fetchone()
@@ -158,6 +159,20 @@ def login():
                     #ESTE ES DIGITADOR 
                     session["puntoid"] = uid[0]['almacen'][0]
                     session["punto"] = uid[0]['almacen'][1]
+
+                    #SELECCIONAMOS LOS PUNTOS QUE TENEMOS EN LA BASE DE DATOS PARA 
+                    cur = mysql.connection.cursor()
+                    cur.execute("SELECT * FROM tb_puntocompra Where NombrePuntoCompra = %s",[session["punto"]])
+                    puntoexiste = cur.fetchall()
+                    mysql.connection.commit()
+
+                    if not puntoexiste:
+                        cur = mysql.connection.cursor()
+                        cur.execute("INSERT INTO tb_puntocompra (Id_PuntoCompra,NombrePuntoCompra,IdEstado) VALUES (%s,%s,%s)",(session["puntoid"],session["punto"],'1'))
+                        mysql.connection.commit()
+
+
+
                     print('punto: ',session['punto'])
                     session["pass"] = Contraseña
                     session["user"] = usuario
@@ -192,7 +207,7 @@ def login():
                         mysql.connection.commit()
                         ultimoUsuario = cur.lastrowid
 
-                        id = usuarioExistente[0][0]
+                        id = idcredenciales
                         cur = mysql.connection.cursor()
                         cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
                         ultimoUSuarios = cur.fetchone()
@@ -200,6 +215,7 @@ def login():
                         print(ultimoUSuarios[0])
                         session["userId"] = ultimoUSuarios[0]
                     elif usuarioExistente:
+                        print("aqui")
                         print(usuarioExistente[0][0])
                         id = usuarioExistente[0][0]
                         print("ssssssssssss")
@@ -207,7 +223,6 @@ def login():
                         cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
                         ultimoUSuarios = cur.fetchone()
                         mysql.connection.commit()
-                        print(ultimoUSuarios[0])
                         session["userId"] = ultimoUSuarios[0]
                     
                     
@@ -250,7 +265,7 @@ def login():
                     #vaidamos si el usuario ya esta logueado antes
                     cur = mysql.connection.cursor()
                     cur.execute("SELECT * FROM tb_credenciales Where Usuarios = %s",[session["user"]])
-                    usuarioExistente = cur.fetchall()
+                    usuarioExistente = cur.fetchone()
                     mysql.connection.commit()
 
                     user_info = conexion.TraerUsuario(str(uid[0]['id']),session['uid'],session['pass'])
@@ -269,7 +284,7 @@ def login():
                         mysql.connection.commit()
                         ultimoUsuario = cur.lastrowid
 
-                        id = usuarioExistente[0][0]
+                        id = idcredenciales
                         cur = mysql.connection.cursor()
                         cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
                         ultimoUSuarios = cur.fetchone()
@@ -280,8 +295,8 @@ def login():
                        
                         
                     elif usuarioExistente:
-                        print(usuarioExistente[0][0])
-                        id = usuarioExistente[0][0]
+                        print(usuarioExistente[0])
+                        id = usuarioExistente[0]
                         print("ssssssssssss")
                         cur = mysql.connection.cursor()
                         cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
@@ -319,7 +334,7 @@ def login():
                     # else:
                     #     #VIENE VACIO
                     #     return render_template('login.html', errorlogin=1) 
-            #except:
+            except:
                 try:
 
                     #ESTE ES VERIFICADOR 
@@ -860,7 +875,7 @@ def detalleVerificacion():
             cur.execute("select pc.Id_PuntoCompra,pc.NombrePuntoCompra from tb_usuarios as u inner join tb_puntocompra as pc on u.IdPuesto = pc.Id_PuntoCompra inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_Credenciales where cred.Id_Credenciales = %s",[session['userId']])
             usuariopunto = cur.fetchone()  
             print(usuariopunto)
-            return render_template('modal/verificaciones-modal.html',usuariopunto = usuariopunto,usuariolog = usuariolog,verificacion = verificacion,Punto = punto,Material = material,Verificador = verificador,Digitador = digitador)
+            return render_template('modal/verificaciones-modal.html',idpunto = session['puntoid'], punto = session['punto'], usuariopunto = usuariopunto,usuariolog = usuariolog,verificacion = verificacion,Punto = punto,Material = material,Verificador = verificador,Digitador = digitador)
         else:
             print(id)
             print("pesoss")

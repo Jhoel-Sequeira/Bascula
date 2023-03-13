@@ -45,14 +45,13 @@
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel" for="form3Example3"><strong>Punto de
                                             compra</strong></label>
-                                    <input type="text" value="{{usuariopunto[1]}}" name="" id="" disabled="disabled"
+                                    <input type="text" value="{{punto}}" name="" id="" disabled="disabled"
                                         required="required" class="form-control" />
-                                    <input type="hidden" value="{{usuariopunto[0]}}" name="" id="idpunto" />
+                                    <input type="hidden" value="{{idpunto}}" name="" id="idpunto" />
                                 </div>
                             </div>
                             <div class="col pt-2">
-                                <button type="button" class="btn btn-primary bajar"
-                                    id="bloquear" onclick="bloquear()">
+                                <button type="button" class="btn btn-primary bajar" id="bloquear" onclick="bloquear()">
                                     <a style="text-decoration: none;"><i class="fa-solid fa-lock"></i> Bloquear</a>
                                 </button>
                             </div>
@@ -136,8 +135,8 @@
                                             required="required" class="form-control" value="{{ verifi[2] }}" />
                                         {% else %}
                                         <input type="text" id="po" value="--" style="text-transform: uppercase"
-                                            onkeyup="this.value=this.value.toUpperCase()" name="nombre" placeholder="PO" disabled
-                                            required="required" class="form-control" />
+                                            onkeyup="this.value=this.value.toUpperCase()" name="nombre" placeholder="PO"
+                                            disabled required="required" class="form-control" />
                                         {% endif %}
                                     </div>
                                 </div>
@@ -984,7 +983,7 @@
                     type: "POST",
                     beforeSend: function () {
                         Swal.fire({
-                            html:'<div class="col-lg-12" style="z-index:99999; display:absolute; width"><img src="../../static/img/loader.gif" alt="loading" /><br/>Generando orden de compra...</div>'
+                            html: '<div class="col-lg-12" style="z-index:99999; display:absolute; width"><img src="../../static/img/loader.gif" alt="loading" /><br/>Generando orden de compra...</div>'
                         }).then((result) => {
                             /* Read more about isConfirmed, isDenied below */
                             if (result.isConfirmed) {
@@ -1015,7 +1014,7 @@
                             elementoParaConvertir.style.display = "block";
                             html2pdf()
                                 .set({
-                                    filename: "Factura123"+String($("#id").val())+".pdf",
+                                    filename: "Factura123" + String($("#id").val()) + ".pdf",
                                     image: {
                                         type: "jpeg",
                                         quality: 0.98,
