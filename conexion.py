@@ -130,7 +130,7 @@ def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rech
                                            'x_studio_material_de_primera': primera,
                                            'x_studio_material_de_segunda': segunda}])
     
-    models.execute_kw(db, uid1, contra1, 'purchase.order', 'write', [pOrder, {'state': 'done'}])
+    
     return pOrder
 
 def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
@@ -172,10 +172,14 @@ def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
         'state':'done',
         'product_id':id[0]['id']
     }
-
+    
+    
     datos = models.execute_kw(db,uid1,contra1,'purchase.order.line','create',[line_data])
+    print("bloqueamos aqui")
+    models.execute_kw(db, uid1, contra1, 'purchase.order', 'button_confirm', [[pOrder]])
 
 def traerPo(idOrden):
+   
     po = models.execute_kw(db, uid, password, 'purchase.order', 'search_read', [[['id', '=',''+str(idOrden)]]],{'fields':['name']})
     return po
 

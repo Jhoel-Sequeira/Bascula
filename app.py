@@ -254,6 +254,8 @@ def login():
                     session["pass"] = Contraseña
                     session["user"] = usuario
                     session["userrole"] = 2
+                    session["puntoid"] = 1
+                    session["punto"] = "GRANEL/PLANTA: Receipts"
                     #ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
                     # cur = mysql.connection.cursor()
                     # cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
@@ -302,7 +304,7 @@ def login():
                         cur.execute("SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s",[id])
                         ultimoUSuarios = cur.fetchone()
                         mysql.connection.commit()
-
+                        session["userId"] = ultimoUSuarios[0]
 
                         
                     
@@ -344,6 +346,8 @@ def login():
                     results = cur.fetchone()
                     print("aaaa")
                     print(results)
+                    session["puntoid"] = 1
+                    session["punto"] = "GRANEL/PLANTA: Receipts"
                     if results:
                         #si trae algo
                         print("SI TRAE")
@@ -432,7 +436,7 @@ def home():
             digitador = cur.fetchall()
             print(digitador)
         
-            return render_template('home.html',punto = session['punto'],cargo = session['cargo'],Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
+            return render_template('home.html',punto = session["punto"],cargo = session['cargo'],Proveedores = Proveedores, Punto = punto,Material = material,Verificador = verificador,Digitador = digitador )
         else:
             return render_template('otros/error.html')
         
