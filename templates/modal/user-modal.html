@@ -177,15 +177,19 @@
 
 
                     <div class="row mt-2 align-items-end justify-content-end">
-                        
-                    </div>
-                        <div class="row ">
-                            <div class="col mt-3 ml-2 bg-light overflow-scroll" id="tabla-peso"></div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col mt-3 ml-2 bg-light overflow-scroll" id="tabla-general"></div>
-                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col mt-3 ml-2 bg-light overflow-scroll" id="tabla-peso"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col mt-3 ml-2 bg-light overflow-scroll" id="tabla-general"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col mt-3 ml-2 bg-light overflow-scroll" id="tabla-clasificacion"></div>
+                    </div>
 
 
                     <!-- INICIO DE LA FUNCIONALIDAD DE LOS BOTONES CON JQUERY  DE LA PRIMERA PANTALLA-->
@@ -267,99 +271,40 @@
                             valor = $("#proveedor option:selected").val();
 
                         });
-
-                        function bloquear() {
-                            if ($("#proveedor option:selected").val() != "Seleccionar Proveedor" && $("#puntoCompra option:selected").val() != "Seleccionar Punto" && $("#verificador option:selected").val() != "Seleccionar Verificador" && $("#digitador option:selected").val() != "Seleccionar Digitador" && $("#po").val() != "" && $("#fecha").val() != "" && $("#nboleta").val() != "" && $("#bahia option:selected").val() != "Seleccionar Bahia" && flagbloquear == 0 && $("#id").val() != "") {
-
-                                $('#proveedor').attr('disabled', 'true');
-                                $("#puntoCompra").attr('disabled', 'true');
-                                $("#verificador").attr('disabled', 'true');
-                                $("#digitador").attr('disabled', 'true');
-                                $("#po").attr('disabled', 'true');
-                                $("#fecha").attr('disabled', 'true');
-                                $("#nboleta").attr('disabled', 'true');
-                                $("#bahia").attr('disabled', 'true');
-                                $("#buscarmat").removeAttr("disabled");
-                                $("#destare").removeAttr("disabled");
-                                $("#bruto").removeAttr("disabled");
-                                $("#tara").removeAttr("disabled");
-                                $("#agregar").removeAttr("disabled");
-                                $("#finalizar").removeAttr("disabled");
-                                flagbloquear = 1;
-                                $.ajax({
-                                    url: "/datosGeneralesVerificacion",
-                                    type: "POST",
-                                    data: {
-                                        id: $("#id").val(),
-                                        puntoCompra: $("#puntoCompra").val(),
-                                        verificador: $("#verificador").val(),
-                                        digitador: $("#digitador").val(),
-                                        po: $("#po").val(),
-                                        nboleta: $("#nboleta").val(),
-                                        bahia: $("#bahia").val()
-
-                                    },
-                                    success: function (response) {
-                                        Swal.fire({ icon: 'success', title: 'Éxito', confirmButtonText: 'Ok', text: 'Verificación registrada exitosamente' }).then((result) => { /* Read more about isConfirmed, isDenied below */
-                                            if (result.isConfirmed) { }
-                                        })
-                                    },
-                                    error: function (error) { // console.log(error);
-                                    }
-                                });
-                            } else if ($('#id').val() != "" && $("#po").val() != "" && flagbloquear == 1) {
-                                $('#proveedor').attr('disabled', 'true');
-                                $("#puntoCompra").attr('disabled', 'true');
-                                $("#verificador").attr('disabled', 'true');
-                                $("#digitador").attr('disabled', 'true');
-                                $("#po").attr('disabled', 'true');
-                                $("#fecha").attr('disabled', 'true');
-                                $("#nboleta").attr('disabled', 'true');
-                                $("#bahia").attr('disabled', 'true');
-                                $("#buscarmat").removeAttr("disabled");
-                                $("#destare").removeAttr("disabled");
-                                $("#bruto").removeAttr("disabled");
-                                $("#tara").removeAttr("disabled");
-                                $("#agregar").removeAttr("disabled");
-                                $("#finalizar").removeAttr("disabled");
-
-                            } else if (!($("#proveedor option:selected").val() != "Seleccionar Proveedor" && $("#puntoCompra option:selected").val() != "Seleccionar Punto" && $("#verificador option:selected").val() != "Seleccionar Verificador" && $("#digitador option:selected").val() != "Seleccionar Digitador" && $("#po").val() != "" && $("#fecha").val() != "" && $("#nboleta").val() != "" && $("#bahia option:selected").val() != "Seleccionar Bahia" && flagbloquear != 0)) {
-                                Swal.fire({ icon: 'error', title: 'Datos faltantes', confirmButtonText: 'Ok', text: 'Debe Añadir los datos faltantes' }).then((result) => { /* Read more about isConfirmed, isDenied below */
-                                    if (result.isConfirmed) { }
-                                })
-                            }
-                        }
-                        function mostrarDetalle() {
-                            if ($('#detalles').is(':hidden'))
-                                $("#detalles").show();
-                            else
-                                $("#detalles").hide();
-
-
-
-                        }
                         function cargarPesos() {
                             $.ajax({
-                                        url: "/listaPesosAdmin",
+                                url: "/listaPesosAdmin",
+                                type: "POST",
+                                data: {
+                                    id: $('#id').val()
+
+                                },
+                                success: function (response) {
+                                    $('#tabla-peso').html(response);
+                                    $('#tabla-peso').append(response.htmlresponse);
+
+                                    $.ajax({
+                                        url: "/generalPesos",
                                         type: "POST",
                                         data: {
                                             id: $('#id').val()
 
                                         },
                                         success: function (response) {
-                                            $('#tabla-peso').html(response);
-                                            $('#tabla-peso').append(response.htmlresponse);
+                                            $('#tabla-general').html(response);
+                                            $('#tabla-general').append(response.htmlresponse);
 
+                                            // CARGAMOS LOS MATERIALES DE PRIMERA Y SEGUNDA
                                             $.ajax({
-                                                url: "/generalPesos",
+                                                url: "/clasificacionPesos",
                                                 type: "POST",
                                                 data: {
                                                     id: $('#id').val()
 
                                                 },
                                                 success: function (response) {
-                                                    $('#tabla-general').html(response);
-                                                    $('#tabla-general').append(response.htmlresponse);
+                                                    $('#tabla-clasificacion').html(response);
+                                                    $('#tabla-clasificacion').append(response.htmlresponse);
 
                                                 },
                                                 error: function (error) { // console.log(error);
@@ -367,11 +312,17 @@
                                             });
 
 
-
                                         },
                                         error: function (error) { // console.log(error);
                                         }
                                     });
+
+
+
+                                },
+                                error: function (error) { // console.log(error);
+                                }
+                            });
                         }
                         // Funcion para poner lista de resultados
                         var buscarMaterial = function () {
@@ -411,40 +362,7 @@
 
                         }
                         $("#buscarmat").on('keyup', buscarMaterial);
-                        function añadir() {
-                            if ($("#buscarmat").val() == "" || $("#bruto").val() == "" || $("#tara").val() == "" || $("#destare").val() == "") {
-                                Swal.fire({ icon: 'error', title: 'Datos faltantes', confirmButtonText: 'Ok', text: 'Debe Añadir los datos faltantes' }).then((result) => { /* Read more about isConfirmed, isDenied below */
-                                    if (result.isConfirmed) { }
-                                })
 
-                            } else {
-                                $.ajax({
-                                    url: "/insertarPesos",
-                                    type: "POST",
-                                    data: {
-                                        id: $('#id').val(),
-                                        material: $("#buscarmat").val(),
-                                        destare: $("#destare").val(),
-                                        pBruto: $("#bruto").val(),
-                                        pTara: $("#tara").val()
-
-                                    },
-                                    success: function (response) {
-                                        $('#tabla-peso').html(response);
-                                        $('#tabla-peso').append(response.htmlresponse);
-                                        $('#buscarmat').val("");
-                                        $('#bruto').val("");
-                                        $('#tara').val("");
-                                        $("#agregar").removeAttr("disabled");
-
-                                    },
-                                    error: function (error) { // console.log(error);
-                                    }
-                                });
-
-                            }
-
-                        }
                     </script>
                 </div>
                 <!-- <div class="modal-footer">
@@ -454,75 +372,6 @@
         </div>
     </div>
 
-    <script>
-        function Excel(){
-            $.ajax({
-                url: "/GenerarExcel",
-                type: "POST",
-                data: {
-                    id: $('#id').val()
 
-                },
-                success: function (response) {
-                    
-                    Swal.fire({ icon: 'warning', title: 'Datos faltantes', confirmButtonText: 'Ok', text: 'Esta verificación no posee pesajes' }).then((result) => { /* Read more about isConfirmed, isDenied below */
-                            if (result.isConfirmed) { }
-                    })
-                    
-                    
-                }
-            });
-
-        }
-        function finalizar() {
-            $.ajax({
-                url: "/finalizarVerificacion",
-                type: "POST",
-                data: {
-                    id: $('#id').val()
-
-                },
-                success: function (response) {
-                    if (response == 'vacio') {
-                        Swal.fire({ icon: 'warning', title: 'Datos faltantes', confirmButtonText: 'Ok', text: 'Esta verificación no posee pesajes' }).then((result) => { /* Read more about isConfirmed, isDenied below */
-                            if (result.isConfirmed) { }
-                        })
-                    } else {
-                        $('#factura').html(response);
-                        $('#factura').append(response.htmlresponse);
-                        // Escuchamos el click del botón
-                        elementoParaConvertir = document.querySelector(".div-verpdf"); // <-- Aquí puedes elegir cualquier elemento del DOM
-                        elementoParaConvertir.style.display = 'block'
-                        html2pdf().set({
-                            filename: 'Factura.pdf',
-                            image: {
-                                type: 'jpeg',
-                                quality: 0.98
-                            },
-                            html2canvas: {
-                                scale: 5, // A mayor escala, mejores gráficos, pero más peso
-                                letterRendering: false
-                            },
-                            jsPDF: {
-                                unit: "in",
-                                format: "a4",
-                                orientation: 'portrait' // landscape o portrait
-                            }
-                        }).from(elementoParaConvertir).save()
-                        setTimeout(() => {
-                            elementoParaConvertir.style.display = 'none'
-                            Swal.fire('Factura Impresa!', '', 'success')
-                            window.location = '/home'
-                        }, 1000)
-                    }
-
-
-                },
-                error: function (error) { // console.log(error);
-                }
-            });
-
-        }
-    </script>
 
     {% endfor %}

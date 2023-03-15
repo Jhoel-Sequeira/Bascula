@@ -1,0 +1,53 @@
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+<table class="table-borderless" style="border-spacing: 3px; font-size: 12px;">
+    <thead>
+        {%if primera%}
+        <br>
+        <tr>
+            <th colspan="5" style="text-align: center;" class="fuente-tabla">Calsificación</th>
+        </tr>
+        <tr>
+            <th style="width: 350px" class="fuente-tabla">Tipo</th>
+            <th style="padding-left: 50px;" class="fuente-tabla">P.Bruto</th>
+            <th style="padding-left: 50px;" class="fuente-tabla">P.Tara</th>
+            <th style="padding-left: 50px;" class="fuente-tabla">P.Destare</th>
+            <th style="padding-left: 50px;" class="fuente-tabla">P.Neto</th>
+        </tr>
+        {%for primera in primera%}
+        <tr class="fuente-tabla">
+            <th>Primera</th>
+            <td align="center" style="padding-right: 10px">{{primera[1]}} Lb</td>
+            <td align="center" style="padding-right: 10px">{{primera[2]}} Lb</td>
+            <td align="center" style="padding-right: 10px">{{primera[4]}} Lb</td>
+            <td align="center" style="padding-right: 10px">{{primera[3]}} Lb</td>
+        </tr>
+        {%endfor%}
+        {%endif%}
+
+        {%if segunda%}
+        <br>
+        <tr>
+            <th>Material</th>
+            <th style="padding-left: 10px;">P.Bruto</th>
+            <th style="padding-left: 10px;">P.Tara</th>
+            <th style="padding-left: 10px;">P.Destare</th>
+            <th style="padding-left: 10px;">P.Neto</th>
+        </tr>
+            {%for segunda in segunda%}
+        <tr>
+            <th>segunda</th>
+            <td align="center">{{segunda[1]}} Lb</td>
+            <td align="center">{{segunda[2]}} Lb</td>
+            <td align="center">{{segunda[4]}} Lb</td>
+            <td align="center">{{segunda[3]}} Lb</td>
+        </tr>
+        {%endfor%}
+        
+        {%endif%}
+
+    </thead>
+</table>

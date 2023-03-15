@@ -1464,6 +1464,73 @@ def generalPesos():
     else:
         return "No"
     
+#CARGAR LOS PESOS GENERALES DE LAS VERIFICACIONES
+@app.route('/clasificacionPesos', methods =["POST","GET"])
+def clasificacionPesos():
+    if request.method == "POST":
+        id = request.form['id']
+        #TOTAL DE MATERIALES DE PRIMERA
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto, round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.TipoMaterial = "Primera" Group BY m.TipoMaterial',[id])
+        primera = cur.fetchall()
+        mysql.connection.commit()
+
+        #TOTAL DE MATERIALES DE SEGUNDA
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.TipoMaterial = "Segunda" Group BY m.TipoMaterial',[id])
+        segunda = cur.fetchall()
+        mysql.connection.commit()
+                
+
+        #TOTAL DE RECHAZOS
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s AND m.NombreMaterial like %s Group BY m.TipoMaterial",(id,'rechazo%'))
+        rechazo = cur.fetchall()
+        mysql.connection.commit()
+
+        #TOTAL DE JUMBOS
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.NombreMaterial like %s Group BY m.TipoMaterial',(id,'jumbo%'))
+        jumbo = cur.fetchall()
+        mysql.connection.commit()
+
+        if jumbo:
+            print("jumbo tiene")
+            jumboNuevo = jumbo[0][3]
+        else:
+            jumboNuevo = 0.0
+                
+        print(rechazo)
+        if rechazo:
+            rechazoNuevo = rechazo[0][3]
+        else:
+            rechazoNuevo = 0.0
+                
+                
+        # if liquido:
+                #     liquidoNuevo = liquido[0][3]
+                # else:
+                #     liquidoNuevo = 0.0
+                
+        print(primera)
+        if primera and segunda:
+            primeraNuevo = primera[0][3]
+            segundaNuevo = segunda[0][3]
+        elif primera and not segunda:
+            primeraNuevo = primera[0][3]
+            segundaNuevo = 0
+        elif not primera and segunda:
+            primeraNuevo = 0
+            segundaNuevo = segunda[0][3]
+        else:
+            primeraNuevo = 1
+            segundaNuevo = 1
+
+        
+        return render_template('tablas/tabla-clasificacion.html',segunda = segunda,primera = primera)
+    else:
+        return "No"
+    
 #BUSCAMOS MATERIALES
 @app.route('/buscarMaterial', methods =["POST","GET"])
 def buscarMaterial():
@@ -1703,16 +1770,16 @@ def finalizarVerificacion():
                 print("NOBOLETA: ",nboletaver[0])
 
                 
-                cantBol = 0
-                while cantBol != 2:
-                    # SELECCIONAMOS CUANTAS VERIFICACIONES TIENEN ESE NUMERO DE BOLETA
-                    cur = mysql.connection.cursor()
-                    cur.execute("SELECT count(NoBoleta) from tb_verificacion Where NoBoleta = %s",[nboletaver[0]])
-                    cantidadBoleta = cur.fetchone()
-                    mysql.connection.commit()
-                    print("cantidad de verificaciones: ",cantidadBoleta[0])
-                    cantBol = cantidadBoleta[0]
-                    time.sleep(1) 
+                # cantBol = 0
+                # while cantBol != 2:
+                #     # SELECCIONAMOS CUANTAS VERIFICACIONES TIENEN ESE NUMERO DE BOLETA
+                #     cur = mysql.connection.cursor()
+                #     cur.execute("SELECT count(NoBoleta) from tb_verificacion Where NoBoleta = %s",[nboletaver[0]])
+                #     cantidadBoleta = cur.fetchone()
+                #     mysql.connection.commit()
+                #     print("cantidad de verificaciones: ",cantidadBoleta[0])
+                #     cantBol = cantidadBoleta[0]
+                #     time.sleep(1) 
 
 
 
