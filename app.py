@@ -9,6 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import config
 import conexion
 import MySQLdb.cursors
+import time
 
 app = Flask(__name__)
 
@@ -1655,6 +1656,20 @@ def finalizarVerificacion():
                 # nboletaver = cur.fetchall()
                 # mysql.connection.commit()
                 print("NOBOLETA: ",nboletaver[0])
+
+                
+                cantBol = 0
+                while cantBol != 2:
+                    # SELECCIONAMOS CUANTAS VERIFICACIONES TIENEN ESE NUMERO DE BOLETA
+                    cur = mysql.connection.cursor()
+                    cur.execute("SELECT count(NoBoleta) from tb_verificacion Where NoBoleta = %s",[nboletaver[0]])
+                    cantidadBoleta = cur.fetchone()
+                    mysql.connection.commit()
+                    print("cantidad de verificaciones: ",cantidadBoleta[0])
+                    cantBol = cantidadBoleta[0]
+                    time.sleep(1) 
+
+
 
                 cur = mysql.connection.cursor()
                 cur.execute('Update tb_verificacion set PO = %s Where NoBoleta = %s',(po[0]['name'],nboletaver[0]))

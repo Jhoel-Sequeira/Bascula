@@ -983,7 +983,10 @@
                     type: "POST",
                     beforeSend: function () {
                         Swal.fire({
-                            html: '<div class="col-lg-12" style="z-index:99999; display:absolute; width"><img src="../../static/img/loader.gif" alt="loading" /><br/>Generando orden de compra...</div>'
+                            html: '<div class="col-lg-12" style="z-index:99999; display:absolute; width"><img src="../../static/img/loader.gif" alt="loading" /><br/>Generando orden de compra...</div>',
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            
                         }).then((result) => {
                             /* Read more about isConfirmed, isDenied below */
                             if (result.isConfirmed) {
