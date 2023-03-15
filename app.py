@@ -77,6 +77,9 @@ def login():
                     session["user"] = usuario
                     session["pass"] = Contraseña
                     session["userrole"] = 1
+                    session["puntoid"] = 5
+                    session["punto"] = "Sin Punto"
+
                     # session["puntoid"] = uid[0]['almacen'][0]
                     # session["punto"] = uid[0]['almacen'][1]
                 
@@ -411,7 +414,7 @@ def login():
         
 @app.route('/home')
 def home():
-    try:
+    #try:
         if session['userId']:
             #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
             #CONSULTA PARA LOS PROVEEDORES
@@ -441,7 +444,7 @@ def home():
         else:
             return render_template('otros/error.html')
         
-    except:
+    #except:
         return render_template('otros/error.html')
              
 @app.route('/buscarProveedor', methods =["POST","GET"])
@@ -1658,16 +1661,16 @@ def finalizarVerificacion():
                 print("NOBOLETA: ",nboletaver[0])
 
                 
-                cantBol = 0
-                while cantBol != 2:
-                    # SELECCIONAMOS CUANTAS VERIFICACIONES TIENEN ESE NUMERO DE BOLETA
-                    cur = mysql.connection.cursor()
-                    cur.execute("SELECT count(NoBoleta) from tb_verificacion Where NoBoleta = %s",[nboletaver[0]])
-                    cantidadBoleta = cur.fetchone()
-                    mysql.connection.commit()
-                    print("cantidad de verificaciones: ",cantidadBoleta[0])
-                    cantBol = cantidadBoleta[0]
-                    time.sleep(1) 
+                # cantBol = 0
+                # while cantBol != 2:
+                #     # SELECCIONAMOS CUANTAS VERIFICACIONES TIENEN ESE NUMERO DE BOLETA
+                #     cur = mysql.connection.cursor()
+                #     cur.execute("SELECT count(NoBoleta) from tb_verificacion Where NoBoleta = %s",[nboletaver[0]])
+                #     cantidadBoleta = cur.fetchone()
+                #     mysql.connection.commit()
+                #     print("cantidad de verificaciones: ",cantidadBoleta[0])
+                #     cantBol = cantidadBoleta[0]
+                #     time.sleep(1) 
 
 
 
@@ -2180,6 +2183,74 @@ def valorTablaAdmin():
             print(verificaciones)
             return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
         return render_template('tablas/tabla-filtracion.html',opc = opc)
+    
+#VALOR DE LA TABLA DE ADMINISTRACION 
+@app.route('/valorTablaUser', methods =["POST","GET"])
+def valorTablaUser():
+    if request.method == "POST":
+        opc = request.form['valor']
+        print(opc)
+        #OPCIONES DE FILTRO
+        if opc == '1':
+            po = request.form['po']
+            if po != "":
+                
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.NoBoleta like %s and v.IdEstado = 6 and v.IdUsuarioCreacion = %s GROUP BY v.PO",(po+'%',session['userId']))
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print(verificaciones)
+                return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
+            else:
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.IdEstado = 6 and v.IdUsuarioCreacion = %s GROUP BY v.PO",[session['userId']])
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print(verificaciones)
+                return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
+        elif opc == '2':
+            po = request.form['po']
+            if po != "":
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.NoBoleta like %s and v.IdEstado = 4 and v.IdUsuarioCreacion = %s GROUP BY v.PO",(po+'%',session['userId']))
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print(verificaciones)
+                return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
+            else:
+                print("validaddas")
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.IdEstado = 4 and v.IdUsuarioCreacion = %s GROUP BY v.PO",[session['userId']])
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print(verificaciones)
+                return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
+        elif opc == '3':
+            po = request.form['po']
+            if po != "":
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.NoBoleta like %s and v.IdEstado = 3 and v.IdUsuarioCreacion = %s GROUP BY v.PO",(po+'%',session['userId']))
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print(verificaciones)
+                return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
+            else:
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.IdEstado = 3 and v.IdUsuarioCreacion = %s GROUP BY v.PO",[session['userId']])
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print(verificaciones)
+                return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
+        elif opc == "po":
+            po = request.form['po']
+            cur = mysql.connection.cursor()
+            cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.NoBoleta like %s and v.IdUsuarioCreacion = %s GROUP BY v.PO",(po+'%',session['userId']))
+            verificaciones = cur.fetchall()
+            mysql.connection.commit()
+            print(verificaciones)
+            return render_template('tablas/tabla-filtracion.html',opc = opc,verificaciones = verificaciones)
+        return render_template('tablas/tabla-filtracion.html',opc = opc)
+    
 
 # APARTADO DE AJUSTES 
 
@@ -2647,7 +2718,20 @@ def reporteVerifiGeneral():
 
 
 
-
+# MIS VERIFICACIONES
+@app.route('/misVerificaciones')
+def misVerificaciones():
+    print("mis ver")
+    # NECESITAMOS LA LISTA DE VERIFICADORES, DIGITADORES
+    #CONSULTA PARA LOS VERIFICADORES
+    cur = mysql.connection.cursor() 
+    cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+    verificador = cur.fetchall()
+    #CONSULTA PARA LOS DIGITADOR
+    cur = mysql.connection.cursor()
+    cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+    digitador = cur.fetchall() 
+    return render_template('misverificaciones.html',verificadores = verificador,digitadores = digitador)
 
 #DESLOGUEO
 @app.route('/deslog')

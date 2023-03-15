@@ -63,6 +63,30 @@ encabezado %}
                 }
             </script>
             <br>
+            <div class="col-lg-3 col-6" style="padding: 10px;">
+                <!-- small box -->
+                <div class="card cartas" onclick="misVer()" style="padding: 5px; background-color: #b4583f">
+                    <div class="inner">
+                        <h3>
+                            <sup style="font-size: 20px"></sup>
+                        </h3>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="icon mr-1">
+                        <i class="fa-solid fa-list delgado"></i>
+                    </div>
+                    <a href="/misVerificaciones" id="home" class="card-footer">
+                        Mis verificaciones
+                    </a>
+                </div>
+            </div>
+            <script>
+                function misVer() {
+                    window.location = '/misVerificaciones'
+                }
+            </script>
+            <br>
             {% if session.user %} {% if session.userrole == 1%}
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
