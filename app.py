@@ -23,6 +23,8 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'verificacion'
+# CONFIGURAR TIEMPO DE LA SESION
+#app.config['PERMANENT_SESSION_LIFETIME'] = 3600
 
 #CIERRE CONFIGURACIONES
 def capturarHora():
