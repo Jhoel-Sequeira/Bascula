@@ -784,17 +784,18 @@ def listaProveedores():
 
                 for ver in verificacionesRep:
                     if ver[2] == 2:
-                        consulta_extra += " v.NoBoleta = "+ str(ver[0])+" AND v.PO = '"+ str(ver[1])+"' OR "
+                        consulta_extra += " v.NoBoleta = '"+str(ver[0])+"' AND v.PO = '"+ str(ver[1])+"' OR "
                         print(ver)
                         print("cambiar bandera")
                         banderaConsultas = 1
-                print(consulta_extra)
-                print(banderaConsultas)
+                #print(consulta_extra)
+                print("Bandera consulta: ",banderaConsultas)
                 if banderaConsultas == 1:
-
+                    total = consulta_extra[:-4]
+                    print(total)
                     #LLamar las verificaciones validas
                     cur = mysql.connection.cursor()
-                    cur.execute("" + consulta_extra[:-4])
+                    cur.execute("" + total)
                     verificaciones = cur.fetchall()
                     print("verifi")
                     return render_template('tablas/tabla-comparacion.html',verificaciones = verificaciones)
