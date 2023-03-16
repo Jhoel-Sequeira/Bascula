@@ -1269,6 +1269,7 @@ def listaPesosAdmin():
         print(id)
         if session['cargo'] != 5:
             if id != "":
+                tarasId = []
                 #LLamar la verificacion de ese proveedor
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_material as m ON dt.IdMaterial = m.Id_Material Where dt.IdVerificacion = %s",[id])
@@ -1314,7 +1315,18 @@ def listaPesosAdmin():
                 else:
                     sumaNeto = 0.00
                 print(pesos)
-                return render_template('tablas/tabla-pesos-admin.html',pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
+                for peso in pesos:
+                    #  SUMA DE LA COLUMNA PESOS DESTARE
+                    cur = mysql.connection.cursor()
+                    cur.execute("SELECT * FROM tb_detalletara WHERE IdDetalleVerificacion = %s",[peso[0]])
+                    tara = cur.fetchone()
+                    mysql.connection.commit()
+                    if tara:
+                        tarasId.append(peso[0])
+                    print("pesos: ",tarasId)
+
+
+                return render_template('tablas/tabla-pesos-admin.html',tarasId = tarasId,pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:
                 pesos =""
                 return render_template('tablas/tabla-pesos-admin.html',pesos = pesos)

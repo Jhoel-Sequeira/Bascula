@@ -17,16 +17,49 @@
     </thead>
     <tbody>
         {%for i in pesos%}
+        
         <tr class="fuente-tabla">
             <td>{{loop.index}}</td>
             <td>{{i[2]}}</td>
+            
             <td align="center" style="padding-right: 10px">{{i[3]}}</td>
-            <td align="center" style="padding-right: 10px">{{i[4]}} </td>
+            <!-- PESO TARA -->
+            <!-- MANDAR CONSULTA PARA VER SI ESE PESAJE TIENE PESOS TARA -->
+            <!-- <script>
+                $.ajax({
+                    url: "/vertara",
+                    type: "POST",
+                    data: {
+                        id: $('#idsubpeso').val(),
+
+                    },
+                    success: function (response) {
+                        
+                    },
+                    error: function (error) {
+                        // console.log(error);
+                    },
+                });
+            </script> -->
+            {%if tarasId%}
+            {% for id in tarasId%}
+            {%if id == i[0]%}
+            <td align="center" id="filaTara" style="padding-left: 50px">{{i[4]}} <i class="fa-solid fa-circle-info" style="color: blue;"></i> </td>
+            {% set stop_loop = true %}
+            {%endif%}
+            
+            {%endfor%}
+            {%else%}
+            <td align="center" id="filaTara" style="padding-left: 50px">{{i[4]}} </td>
+            
+            {%endif%}
+            <!-- Aqui termina el peso tara -->
             <td align="center" style="padding-right: 10px">{{i[5]}}</td>
             <td align="center" style="padding-right: 10px">{{i[6]}}</td>
             
 
         </tr>
+        
         {%endfor%}
 
         <tr>
