@@ -830,6 +830,31 @@
                                     $("#tabla-peso").html(response);
                                     $("#tabla-peso").append(response.htmlresponse);
                                     // $("#buscarmat").val("");
+                                    // MANDAMOS A TRAER EL DETALL
+                                    // $.ajax({
+                                    //     url: "/insertarPesos",
+                                    //     type: "POST",
+                                    //     data: {
+                                    //         id: $("#id").val(),
+                                    //         material: $("#buscarmat").val(),
+                                    //         destare: $("#destare").val(),
+                                    //         pBruto: $("#bruto").val(),
+                                    //         pTara: $("#tara").val(),
+                                    //     },
+                                    //     success: function (response) {
+                                    //         $("#tabla-peso").html(response);
+                                    //         $("#tabla-peso").append(response.htmlresponse);
+                                    //         // $("#buscarmat").val("");
+
+                                    //         $("#bruto").val(0);
+                                    //         $("#tara").val(0);
+                                    //         $("#destare").val(0);
+                                    //         $("#agregar").removeAttr("disabled");
+                                    //     },
+                                    //     error: function (error) {
+                                    //         // console.log(error);
+                                    //     },
+                                    // });
                                     $("#bruto").val(0);
                                     $("#tara").val(0);
                                     $("#destare").val(0);
@@ -987,7 +1012,7 @@
                             showCancelButton: false,
                             showConfirmButton: false,
                             backdrop: 'static'
-                            
+
                         }).then((result) => {
                             /* Read more about isConfirmed, isDenied below */
                             if (result.isConfirmed) {

@@ -6,11 +6,12 @@
 <table class="table rounded" id="tabla-prov">
     <thead>
         <tr>
-            <th colspan="6" class="" style="text-align: center; font-size: 35px;">
+            <th colspan="8" class="" style="text-align: center; font-size: 35px;">
                 Verificaciones
                 Activas</th>
         </tr>
         <tr class="fuente-tabla">
+            <th>Id</th>
             <th style="width: 350px">Proveedor</th>
             <th style="width: 200px; padding-left: 80px;">Fecha</th>
             <th style="width: 200px; padding-left: 50px;">Po</th>
@@ -24,6 +25,7 @@
     <tbody>
         {%for i in verificaciones%}
         <tr class="fuente-tabla">
+            <td>{{i[0]}}</td>
             <td>{%if i[6] == None%}--{%else%}{{i[6]}}{%endif%}</td>
             <td align="center" style="width: 350px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
             <td align="center" style="width:200px">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>

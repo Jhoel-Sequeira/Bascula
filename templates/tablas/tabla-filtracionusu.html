@@ -1,22 +1,24 @@
-<table class="table rounded" id="tabla-filtracionusu" style=" width:100vw">
+<table class="table rounded" id="tabla-filtracionusu" style=" width:97vw">
     <thead>
         <!-- <tr>
             <th colspan="6" class="" style="text-align: center; font-size: 35px;">
                 Tabla</th>
         </tr> -->
         <tr class="fuente-tabla">
-            <th style="width: 350px">Proveedor</th>
-            <th style="width: 200px; padding-left: 80px;">Fecha</th>
-            <th style="width: 200px; padding-left: 60px;">Po</th>
-            <th style="width: 200px; padding-left: 20px;">NoBoleta</th>
-            <th style="width: 200px; padding-left: 10px;">P. Compra</th>
-            <th style="padding-left:50px ;">Estado</th>
-            <th></th>
+            <th colspan="1">Id</th>
+            <th colspan="1" style="width: 350px">Proveedor</th>
+            <th colspan="1" style="width: 200px; padding-left: 80px;">Fecha</th>
+            <th colspan="1" style="width: 200px; padding-left: 60px;">Po</th>
+            <th colspan="1" style="width: 200px; padding-left: 20px;">NoBoleta</th>
+            <th colspan="1" style="width: 200px; padding-left: 10px;">P. Compra</th>
+            <th colspan="1" style="padding-left:50px ;">Estado</th>
+            <th colspan="5"></th>
         </tr>
     </thead>
     <tbody>
         {%for i in verificaciones%}
             <tr class="fuente-tabla">
+                <td>{{i[0]}}</td>
                 <td >{{i[6]}}</td>
                 <td align="center" style="width: 500px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
                 <td align="center" style="width: 200px" id="{{i[2]}}">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
@@ -34,9 +36,9 @@
 
     </tbody>
 </table>
-<input id="launch2" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacion">
+<input id="launch3" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacion">
 
-<div id="modal-act2">
+<div id="modal-act3">
 
 </div>
 <script>
@@ -51,9 +53,9 @@
                 id: id
             },
             success: function (response) {
-                $('#modal-act2').html(response);
-                $('#modal-act2').append(response.htmlresponse);
-                $('#launch2').click();
+                $('#modal-act3').html(response);
+                $('#modal-act3').append(response.htmlresponse);
+                $('#launch3').click();
             },
             error: function (error) {
                 //console.log(error);

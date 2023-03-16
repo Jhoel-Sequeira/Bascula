@@ -301,7 +301,22 @@
 .color-pdf{
   background: #fd7e14;
 }
-
+.usericon{
+  display: flex;
+  width: 35px;
+  height: 35px;
+  background-color: #6AFF6F;
+  justify-content: center ;
+  align-items: center ;
+  border-radius: 50px;
+  margin-right: 5px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+}
+.userinfo{
+  margin-top: 17px;
+}
 
 @media (max-width: 900px) {
   .bajar{

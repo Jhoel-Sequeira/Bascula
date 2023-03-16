@@ -254,7 +254,7 @@ encabezado %}
     $(document).on("change", "#filtroOpc", function (event) {
         var selected = $('#filtroOpc').val();
         $.ajax({
-            url: "/valorTablaAdmin",
+            url: "/valorTablaUser",
             type: "POST",
             data: {
                 valor: selected,

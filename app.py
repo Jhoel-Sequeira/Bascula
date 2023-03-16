@@ -987,9 +987,10 @@ def detalleVerificacionUser():
         mysql.connection.commit()
         if nueva:
             cur = mysql.connection.cursor()
-            cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.Id_Verificacion = %s and v.IdUsuarioCreacion =%s",(id,session['userId']))
+            cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.Id_Verificacion = %s",[id])
             verificacion = cur.fetchall()
             mysql.connection.commit()
+            print(verificacion)
         else:
             cur = mysql.connection.cursor()
             cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.Id_Verificacion = %s and v.IdUsuarioCreacion = %s",(id,session['userId']))
@@ -1114,7 +1115,13 @@ def listaPesos():
                 else:
                     sumaNeto = 0.00
                 print(pesos)
-                return render_template('tablas/tabla-pesos.html',pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
+                #total de materiales
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto,round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
+                mat = cur.fetchall()
+                mysql.connection.commit()
+                print("material:",mat)
+                return render_template('tablas/tabla-pesos.html',mat = mat,pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:
                 pesos =""
                 return render_template('tablas/tabla-pesos.html',pesos = pesos)
@@ -1599,7 +1606,13 @@ def insertarPesos():
         mysql.connection.commit()
         sumaNeto = round(sumaNeto1[0],2)
         print(sumaNeto)
-        return render_template('tablas/tabla-pesos.html',pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
+        #total de materiales
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto,round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s Group BY ver.IdMaterial',[id])
+        mat = cur.fetchall()
+        mysql.connection.commit()
+        print("material:",mat)
+        return render_template('tablas/tabla-pesos.html',mat = mat,pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
    else:
         return "No"
 
@@ -1772,16 +1785,16 @@ def finalizarVerificacion():
                 print("NOBOLETA: ",nboletaver[0])
 
                 
-                # cantBol = 0
-                # while cantBol != 2:
-                #     # SELECCIONAMOS CUANTAS VERIFICACIONES TIENEN ESE NUMERO DE BOLETA
-                #     cur = mysql.connection.cursor()
-                #     cur.execute("SELECT count(NoBoleta) from tb_verificacion Where NoBoleta = %s",[nboletaver[0]])
-                #     cantidadBoleta = cur.fetchone()
-                #     mysql.connection.commit()
-                #     print("cantidad de verificaciones: ",cantidadBoleta[0])
-                #     cantBol = cantidadBoleta[0]
-                #     time.sleep(1) 
+                cantBol = 0
+                while cantBol != 2:
+                    # SELECCIONAMOS CUANTAS VERIFICACIONES TIENEN ESE NUMERO DE BOLETA
+                    cur = mysql.connection.cursor()
+                    cur.execute("SELECT count(NoBoleta) from tb_verificacion Where NoBoleta = %s",[nboletaver[0]])
+                    cantidadBoleta = cur.fetchone()
+                    mysql.connection.commit()
+                    print("cantidad de verificaciones: ",cantidadBoleta[0])
+                    cantBol = cantidadBoleta[0]
+                    time.sleep(1) 
 
 
 
