@@ -12,14 +12,14 @@
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Tara</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">Destare</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Neto</th>
-            
+
         </tr>
     </thead>
     <tbody>
-       
-        
+
+
         {%for i in pesos%}
-        
+
         <tr class="fuente-tabla">
             <td>{{loop.index}}</td>
             <td>{{i[2]}}</td>
@@ -55,28 +55,32 @@
             </script> -->
             {% set exists = [] %}
             {%for idt in tarasId%}
-                {%if i[0] == idt%}
-                    <td align="center" id="filaTara" style="padding-left: 50px">{{i[4]}} <i class="fa-solid fa-circle-info" style="color: blue; font-size: 16px;"></i> </td>
-                    {% set _ = exists.append(1) %}
-                    
-                {%endif%}
-                
-            {%endfor%} 
-            <a href="">{{exists}}</a>
-            {% if not exists %} <!-- exists is true --> 
-            <td align="center" id="filaTara" style="padding-left: 50px">{{i[4]}} </td> 
+            {%if i[0] == idt%}
+            <td align="center" id="filaTara" style="padding-left: 60px; display: flex; align-items: center;">{{i[4]}}
+                <button class="" type="button" value="{{i[0]}}" name="traertara" style="background-color: transparent; margin-left: 5px; border: none !important;" >
+                    <i class="fa-solid fa-circle-info" 
+                       style="color: blue; font-size: 16px; margin-left: 5px;"></i>
+                  </button>
+                </td>
+            {% set _ = exists.append(1) %}
+
+            {%endif%}
+
+            {%endfor%}
+            {% if not exists %} <!-- exists is true -->
+            <td align="center" id="filaTara" style="padding-left: 50px">{{i[4]}} </td>
             {% endif %}
-            
-            
+
+
             <!-- Aqui termina el peso tara -->
             <td align="center" style="padding-right: 10px">{{i[5]}}</td>
             <td align="center" style="padding-right: 10px">{{i[6]}}</td>
-            
+
 
         </tr>
-        
+
         {%endfor%}
-        
+
         <tr>
             <td colspan="2" align="center" class="fuente-tabla" style="margin-right: 100px">
                 <strong>Total</strong>
@@ -97,152 +101,25 @@
     </tbody>
 </table>
 <script>
-    $("#tabla-peso button[name=subtara]").click(function () {
-
+    $("#tabla-peso button[name=traertara]").click(function () {
         idDet = $(this).val();
-        Swal.fire({
-            title: "Tara nuevo!",
-            text: "Ingrese los datos de la tara",
-            html: '<select class="swal2-input" id="tipo"><option selected="selected" hidden>Seleccione una opcion</option><option value="Canasta">Canasta</option><option value="Cajilla">Cajilla</option><option value="Pana">Pana</option> <option value="Polin">Polin</option><option value="Jumbo">Jumbo</option></select>' +
-                '<input type="number" id="valor" class="swal2-input" placeholder="valor tara">',
-            preConfirm: (value) => {
-                if (($('#tipo option:selected').val() == "Seleccione una opcion") || $('#brutoswal').val() == "" || $('#valor').val() < 0) {
-                    Swal.showValidationMessage(
-                        'Debe ingresar datos válidos.'
-                    )
-                }
+        alert(idDet);
+        $.ajax({
+            url: "/clasificacionPesos",
+            type: "POST",
+            data: {
+                id: $('#id').val()
+
             },
+            success: function (response) {
+                $('#tabla-clasificacion').html(response);
+                $('#tabla-clasificacion').append(response.htmlresponse);
 
-            showCancelButton: true,
-        }).then((result) => {
-            tipo = $("#tipo option:selected").val()
-            valor = $('#valor').val()
-            if (valor > 0) {
-                $.ajax({
-                    url: "/añadirTarasExtras",
-                    type: "POST",
-                    data: {
-                        id: idDet,
-                        valor: valor,
-                        tipo: tipo
-
-                    },
-                    success: function (response) {
-                        $("#tabla-taras").html(response);
-                        $("#tabla-taras").append(response.htmlresponse);
-                        $("#verTaras").click();
-                        cargarPesos();
-                    },
-                    error: function (error) {
-                        // console.log(error);
-                    },
-                });
+            },
+            error: function (error) { // console.log(error);
             }
-
-
         });
     });
-    $("#tabla-peso button[name=vertara]").click(function () {
-        idDet = $(this).val();
-        $.ajax({
-            url: "/verTaras",
-            type: "POST",
-            data: {
-                id: idDet
+        
 
-            },
-            success: function (response) {
-                $("#tabla-taras").html(response);
-                $("#tabla-taras").append(response.htmlresponse);
-                $("#verTaras").click();
-            },
-            error: function (error) {
-                // console.log(error);
-            },
-        });
-
-    });
-    $("#tabla-peso button[name=editarbruto]").click(function () {
-        idDet = $(this).val();
-        $.ajax({
-            url: "/traerPesosNetos",
-            type: "POST",
-            data: {
-                id: idDet
-
-            },
-            success: function (response) {
-                var bruto = response;
-                $.ajax({
-                    url: "/traerDestare",
-                    type: "POST",
-                    data: {
-                        id: idDet
-
-                    },
-                    success: function (response1) {
-                        var destare = response1;
-                        Swal.fire({
-                            title: "Modificar los Pesos!",
-                            text: "Ingrese los valores:",
-                            html: '<label class="form-label fuentelabel" for="proveedor"><strong>Peso Bruto</strong></label><br>' + '<input type="number" id="brutoswal" class="swal2-input" value='+bruto+' placeholder="valor P.bruto">' +
-                                '<label class="form-label fuentelabel" for="proveedor"><strong>Destare</strong></label><br>' + '<input type="number" id="destareval" class="swal2-input" value='+destare+' placeholder="valor Destare">',
-                            preConfirm: (value) => {
-
-                            },
-                            showCancelButton: true,
-
-                        }).then((result) => {
-
-                            $.ajax({
-                                url: "/modificarPesoBruto",
-                                type: "POST",
-                                data: {
-                                    id: idDet,
-                                    valor: $('#brutoswal').val(),
-                                    destare: $('#destareval').val(),
-
-                                },
-                                success: function (response) {
-                                    if (response == "done") {
-                                        cargarPesos();
-                                    }
-
-                                },
-                                error: function (error) {
-                                    // console.log(error);
-                                },
-                            });
-
-                        });
-                    },
-                    error: function (error) {
-                        // console.log(error);
-                    },
-                });
-            },
-            error: function (error) {
-                // console.log(error);
-            },
-        });
-
-    });
-    $("#tabla-peso button[name=elimlinea]").click(function () {
-        idDet = $(this).val();
-        $.ajax({
-            url: "/elimLinea",
-            type: "POST",
-            data: {
-                id: idDet
-
-            },
-            success: function (response) {
-                cargarPesos();
-            },
-            error: function (error) {
-                // console.log(error);
-            },
-        });
-
-    });
 </script>
