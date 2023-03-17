@@ -8,6 +8,8 @@ import MySQLdb.cursors
 from werkzeug.security import check_password_hash, generate_password_hash
 import config
 import conexion
+import jinja2
+from jinja2 import Environment
 import MySQLdb.cursors
 import time
 
@@ -1324,6 +1326,7 @@ def listaPesosAdmin():
                     if tara:
                         tarasId.append(peso[0])
                     print("pesos: ",tarasId)
+                    
 
 
                 return render_template('tablas/tabla-pesos-admin.html',tarasId = tarasId,pesos = pesos,sumaBruto = sumaBruto, sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
@@ -1463,8 +1466,25 @@ def listaPesosAdmin():
     else:
         return "No"
 
+#CARGAR LOS PESOS GENERALES DE LAS VERIFICACIONES
+@app.route('/vertara', methods =["POST","GET"])
+def vertara():
+    if request.method == "POST":
+        id = request.form['id']
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_material as m ON dt.IdMaterial = m.Id_Material Where dt.IdVerificacion = %s",[id])
+        pesos = cur.fetchall()
 
-
+        for peso in pesos:
+            #  SUMA DE LA COLUMNA PESOS DESTARE
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM tb_detalletara WHERE IdDetalleVerificacion = %s",[peso[0]])
+            tara = cur.fetchone()
+            mysql.connection.commit()
+            if tara:
+                return pesos[4]
+            else:
+                return ""
 
 
 
