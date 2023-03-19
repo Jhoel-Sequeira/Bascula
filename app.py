@@ -2555,6 +2555,19 @@ def insertarUsuarioNuevo():
         punto = cur.fetchall()
         return render_template('modal/usuarionuevo-modal.html',punto=punto,flagUSuario = flagUSuario, info = cedula,cargos = cargos, roles = roles)
 
+#TRAER TARAS
+@app.route('/traerTara', methods =["POST","GET"])
+def traerTara():
+    if request.method == "POST":
+        id = request.form['id']
+        #TRAEMOS LOS valores de la tara a la tabla
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * From tb_detalletara where IdDetalleVerificacion = %s",[id])
+        taras = cur.fetchall()
+        print("Taras traer aqui: ",taras)
+        return render_template('tablas/tabla-verTara.html',taras = taras)
+       
+
 #DETALLE DE TARAS PARA AÑADIR LOS OTROS VALORES DE LA TARA
 @app.route('/añadirTarasExtras', methods =["POST","GET"])
 def añadirTarasExtras():
