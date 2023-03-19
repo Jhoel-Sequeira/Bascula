@@ -1,7 +1,7 @@
 {% for verifi in verificacion %}
 
-<div class="modal fade" id="detalleVerificacionmodal" data-bs-focus="false" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="detalleVerificacionmodal" data-bs-focus="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
         <div class="modal-content" style="background-color: #e4e9f7">
             <div class="modal-header">
@@ -12,10 +12,13 @@
                     onclick="cargarLista()"></button>
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <div class="col">col 1</div>
+                </div>
                 <input type="hidden" id="id" value="{{ verifi[2] }}" />
                 <div class="tab-pane fade show active mt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    
-                   
+
+
                     <div class="row">
                         <div class="col mt-3 bg-light overflow-scroll" id="tabla-peso"></div>
                     </div>
@@ -26,7 +29,7 @@
                     flagbloquear = 0;
                     inicio = 1;
                     //FUNCION PARA EL BOTON DE PESOS DE TARAS
-                    
+
                     $(document).ready(function () {
                         $("#totalmat").hide();
                         // MANDAR A LLAMAR LA TABLA
@@ -39,14 +42,14 @@
                         valor = $("#proveedor option:selected").val();
                     });
                     //funcion para agregar las taras extras
-                   
+
                     function añadirTara() {
                         idDet = $(this).val();
                         alert(idDet)
-                        
+
 
                     }
-                   
+
                     function cargarPesos() {
                         $.ajax({
                             url: "/listaPesos",
@@ -63,20 +66,20 @@
                             },
                         });
                     }
-                    
+
                 </script>
             </div>
             <div class="p-2">
                 <div class="row">
                     <div class="col-6">
                         <button type="button" class="btn btn-success col-12" style="height: 50px" id="finalizar"
-                             onclick="finalizar()">
+                            onclick="finalizar()">
                             Correcta
                         </button>
                     </div>
                     <div class="col-6">
                         <button type="button" class="btn btn-danger col-12" style="height: 50px" id="finalizar"
-                             onclick="finalizarmal()">
+                            onclick="finalizarmal()">
                             Incorrecta
                         </button>
                     </div>
@@ -281,19 +284,19 @@
                     },
                     success: function (response) {
                         setTimeout(() => {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Verificación cancelada",
-                                    confirmButtonText: "Ok",
-                                    text: "Se canceló la verificación.",
-                                }).then((result) => {
-                                    /* Read more about isConfirmed, isDenied below */
-                                    if (result.isConfirmed) {
-                                        
-                                        window.location = "/home";
-                                    }
-                                });
-                            }, 1000);
+                            Swal.fire({
+                                icon: "success",
+                                title: "Verificación cancelada",
+                                confirmButtonText: "Ok",
+                                text: "Se canceló la verificación.",
+                            }).then((result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+
+                                    window.location = "/home";
+                                }
+                            });
+                        }, 1000);
                     },
                     error: function (error) {
                         // console.log(error);
