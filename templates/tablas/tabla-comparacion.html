@@ -14,8 +14,8 @@
             <th style="width: 350px">Proveedor</th>
             <th style="width: 200px; padding-left: 80px;">Fecha</th>
             <th style="width: 200px; padding-left: 50px;">Po</th>
-            <th style="width: 200px; padding-left: 20px;">NoBoleta</th>
-            <th style="width: 200px">P.Compra</th>
+            <th style="width: 200px; padding-left: 50px;">NoBoleta</th>
+            <th style="width: 300px; padding-left: 70px;">P.Compra</th>
 
             <th></th>
         </tr>
@@ -27,9 +27,9 @@
             <td align="center" style="width: 350px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
             <td align="center" style="width:200px">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
             <td align="center" style="width:200px">{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
-            <td align="center" style="width:200px">{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
+            <td align="center" style="width:300px">{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
 
-            <td>
+            <td align="end">
                 <button type="button" class="btn btn-primary" value="{{i[2]}}" id="detallever" name="detallever">
                     <i class="fa-sharp fa-solid fa-eye"></i>
                 </button>

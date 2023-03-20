@@ -12,13 +12,64 @@
                     onclick="cargarLista()"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col">col 1</div>
+                <div class="container">
+                    <div class="row">
+                        <div style=" width: 70%; padding-bottom: 5px;">
+                            <div class="col">
+                                <label class="form-label fuentelabel" for="form3Example2"><strong>Tipo de
+                                        Material</strong></label>
+                                <select class="form-select" id="bahia" aria-label="Default select example">
+                                    <option selected="selected" hidden>
+                                        Seleccionar el material
+                                    </option>
+                                    <option value="1">No ferroso</option>
+                                    <option value="2">PET</option>
+                                    <option value="3">Chatarra</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label class="form-label fuentelabel" for="form3Example2"><strong>Peso
+                                        Báscula</strong></label>
+
+                                <input type="text" id="nboleta" name="nboleta" style="text-transform: uppercase"
+                                    onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="Peso báscula"
+                                    required="required" class="form-control" value="" />
+                            </div>
+                            <div class="col">
+                                <label class="form-label fuentelabel" for="form3Example2"><strong>Peso
+                                        Neto</strong></label>
+
+                                <input type="text" id="nboleta" name="nboleta" style="text-transform: uppercase"
+                                    onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="Peso neto"
+                                    required="required" class="form-control" value="" />
+                            </div>
+                            <div class="col"></div>
+
+                        </div>
+                        <div style="background-color: white; width: 25%;  border-style: solid;
+                        border-color: black; border-radius: 5px; border-width: 1px;" class="al">
+                            <div style="display: flex; justify-content: center; margin-top: 10px;"><label
+                                    class="form-label" style="font-size: 20px;"
+                                    for="form3Example2"><strong>VARIACIÓN</strong></label></div>
+                            <div style="display: flex; justify-content: center;"><label class="form-label"
+                                    style="font-size: 100px;" for="form3Example2"><strong>± 00</strong></label></div>
+
+
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mt-3">
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-primary" onclick="ocultarPesos()"><i class="fa-solid fa-weight-hanging"></i> Ver Pesajes</button>
+                        </div>
+
+                    </div>
+
+
+
                 </div>
+
                 <input type="hidden" id="id" value="{{ verifi[2] }}" />
-                <div class="tab-pane fade show active mt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
-
-
+                <div class="tab-pane fade show active mt-3 " id="home" role="tabpanel" aria-labelledby="home-tab">
                     <div class="row">
                         <div class="col mt-3 bg-light overflow-scroll" id="tabla-peso"></div>
                     </div>
@@ -98,6 +149,14 @@
         $("#tara").val(0);
         $("#destare").val(0);
     });
+
+    function ocultarPesos(){
+        if($('#home').is(':visible')){
+            $('#home').hide();
+        }else{
+            $('#home').show();
+        }
+    }
 
     //VALIDACION TARA
     //   $("#bruto").on("keyup", function () {
