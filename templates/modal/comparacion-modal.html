@@ -46,7 +46,7 @@
                             <div class="col"></div>
 
                         </div>
-                        <div style="width: 25%;" class="cuadro-comparacion">
+                        <div style="width: 25%;" id="cuadro" class="cuadro-comparacion">
                             <div style="display: flex; justify-content: center; margin-top: 10px;"><label
                                     class="form-label" style="font-size: 20px;"
                                     for="form3Example2"><strong>VARIACIÓN</strong></label></div>
@@ -157,21 +157,24 @@
                 $('#resultado').text(''+resultado)
                 $('#resultado').css('font-weight', 'bold');
                 $('#resultado').css('color', 'red');
-                $('#resultado').css('border', 'red');
+                $('#cuadro').css('border', '1px solid red');
             }else if (resultado > 0){
                 $('#resultado').text('+'+resultado)
                 $('#resultado').css('font-weight', 'bold');
                 $('#resultado').css('color', 'green');
+                $('#cuadro').css('border', '1px solid green');
             }else{
                 $('#resultado').text('00')
                 $('#resultado').css('font-weight', 'bold');
                 $('#resultado').css('color', 'black');
+                $('#cuadro').css('border', '1px solid black');
             }
             
         } else {
             $('#resultado').text('00')
             $('#resultado').css('font-weight', 'bold');
             $('#resultado').css('color', 'black');
+            $('#cuadro').css('border', '1px solid black');
         }
     }
     $("#pesobascula").on('keyup', calcularVariacion);
