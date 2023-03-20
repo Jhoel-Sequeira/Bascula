@@ -418,7 +418,7 @@ def login():
         
 @app.route('/home')
 def home():
-    #try:
+    try:
         if session['userId']:
             #ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
             #CONSULTA PARA LOS PROVEEDORES
@@ -448,7 +448,7 @@ def home():
         else:
             return render_template('otros/error.html')
         
-    #except:
+    except:
         return render_template('otros/error.html')
              
 @app.route('/buscarProveedor', methods =["POST","GET"])

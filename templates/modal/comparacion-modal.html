@@ -31,27 +31,26 @@
                                 <label class="form-label fuentelabel" for="form3Example2"><strong>Peso
                                         Báscula</strong></label>
 
-                                <input type="text" id="nboleta" name="nboleta" style="text-transform: uppercase"
-                                    onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="Peso báscula"
-                                    required="required" class="form-control" value="" />
+                                <input type="text" id="pesobascula" name="pesobascula" style="text-transform: uppercase"
+                                    onkeyup="this.value=this.value.toUpperCase()" placeholder="Peso báscula"
+                                    required="required" class="form-control" />
                             </div>
                             <div class="col">
                                 <label class="form-label fuentelabel" for="form3Example2"><strong>Peso
                                         Neto</strong></label>
 
-                                <input type="text" id="nboleta" name="nboleta" style="text-transform: uppercase"
+                                <input type="text" id="neto" name="nboleta" style="text-transform: uppercase"
                                     onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="Peso neto"
                                     required="required" class="form-control" value="" />
                             </div>
                             <div class="col"></div>
 
                         </div>
-                        <div style="background-color: white; width: 25%;  border-style: solid;
-                        border-color: black; border-radius: 5px; border-width: 1px;" class="al">
+                        <div style="width: 25%;" class="cuadro-comparacion">
                             <div style="display: flex; justify-content: center; margin-top: 10px;"><label
                                     class="form-label" style="font-size: 20px;"
                                     for="form3Example2"><strong>VARIACIÓN</strong></label></div>
-                            <div style="display: flex; justify-content: center;"><label class="form-label"
+                            <div style="display: flex; justify-content: center;"><label class="form-label" id="resultado"
                                     style="font-size: 100px;" for="form3Example2"><strong>± 00</strong></label></div>
 
 
@@ -59,7 +58,8 @@
                     </div>
                     <div class="row justify-content-center mt-3">
                         <div class="d-flex justify-content-center">
-                            <button type="button" class="btn btn-primary" onclick="ocultarPesos()"><i class="fa-solid fa-weight-hanging"></i> Ver Pesajes</button>
+                            <button type="button" class="btn btn-primary" id="mostrarpesos" onclick="ocultarPesos()"><i
+                                    class="fa-solid fa-weight-hanging"></i> Ocultar Pesajes</button>
                         </div>
 
                     </div>
@@ -149,12 +149,34 @@
         $("#tara").val(0);
         $("#destare").val(0);
     });
+    var calcularVariacion = function () {
+        
+        if ($("#pesobascula").val() != "") {
+            var resultado = parseFloat($('#pesobascula').val()) -  parseFloat($('#neto').val())
+            if(resultado < 0){
+                $('#resultado').text(''+resultado)
+            }else{
+                $('#resultado').text('+'+resultado)
+            }
+            
+        } else {
 
-    function ocultarPesos(){
-        if($('#home').is(':visible')){
+        }
+    }
+    $("#pesobascula").on('keyup', calcularVariacion);
+
+
+    function ocultarPesos() {
+        if ($('#home').is(':visible')) {
             $('#home').hide();
-        }else{
+            $('#mostrarpesos').text('')
+            $('#mostrarpesos').append('<i class="fa-solid fa-weight-hanging"></i>');
+            $('#mostrarpesos').append(' Ver Pesajes');
+        } else {
             $('#home').show();
+            $('#mostrarpesos').text('')
+            $('#mostrarpesos').append('<i class="fa-solid fa-weight-hanging"></i>');
+            $('#mostrarpesos').append(' Ocultar Pesajes');
         }
     }
 

@@ -317,6 +317,13 @@
 .userinfo{
   margin-top: 17px;
 }
+.cuadro-comparacion{
+  background-color: white; 
+  border-style: solid;
+  border-color: black; 
+  border-radius: 5px; 
+  border-width: 1px;
+}
 
 @media (max-width: 900px) {
   .bajar{
