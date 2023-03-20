@@ -51,7 +51,7 @@
                                     class="form-label" style="font-size: 20px;"
                                     for="form3Example2"><strong>VARIACIÓN</strong></label></div>
                             <div style="display: flex; justify-content: center;"><label class="form-label" id="resultado"
-                                    style="font-size: 100px;" for="form3Example2"><strong>± 00</strong></label></div>
+                                    style="font-size: 100px;" for="form3Example2"><strong>00</strong></label></div>
 
 
                         </div>
@@ -155,12 +155,23 @@
             var resultado = parseFloat($('#pesobascula').val()) -  parseFloat($('#neto').val())
             if(resultado < 0){
                 $('#resultado').text(''+resultado)
-            }else{
+                $('#resultado').css('font-weight', 'bold');
+                $('#resultado').css('color', 'red');
+                $('#resultado').css('border', 'red');
+            }else if (resultado > 0){
                 $('#resultado').text('+'+resultado)
+                $('#resultado').css('font-weight', 'bold');
+                $('#resultado').css('color', 'green');
+            }else{
+                $('#resultado').text('00')
+                $('#resultado').css('font-weight', 'bold');
+                $('#resultado').css('color', 'black');
             }
             
         } else {
-
+            $('#resultado').text('00')
+            $('#resultado').css('font-weight', 'bold');
+            $('#resultado').css('color', 'black');
         }
     }
     $("#pesobascula").on('keyup', calcularVariacion);
