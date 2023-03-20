@@ -286,8 +286,23 @@
 .fuente-tabla{
   font-size: 25px;
 }
+
+/* PARTE DEL TITULO DE LOS HTMLS PRINCIPALES */
+/* ============================================= */
+.fuente-grande-titulo-principal{
+  font-size: 25px; 
+  font-weight: bold;
+  color: #11101d;
+  text-transform: uppercase;
+}
+.fuente-grande-titulo-principal:hover{
+  opacity: 1;
+  color: #26243f;
+}
+
 .fuente-grande-titulo{
-  font-size: 50px;
+  font-size: 25px; 
+  font-weight: bold;
 }
 .fuente-grande-subtitulo{
   font-size: 30px;
@@ -323,6 +338,22 @@
   border-color: black; 
   border-radius: 5px; 
   border-width: 1px;
+}
+ /* APARTADO DE LOS MODALES */
+.encabezado_modales{
+  background-color: #1d1b31;
+  text-transform: uppercase;
+  color: rgb(243, 243, 243);
+}
+.fuentemodal{
+  font-size: 25px; 
+  font-weight: bold;
+}
+.colorBlanco{
+  color: white;
+}
+.fondo-modal{
+  background-color: #D8DCFF;
 }
 
 @media (max-width: 900px) {
