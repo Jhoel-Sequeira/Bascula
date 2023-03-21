@@ -6,7 +6,7 @@
         <div class="modal-content" style="background-color: #e4e9f7">
             <div class="modal-header encabezado_modales">
                 <h5 class="modal-title fuente-grande-titulo" id="exampleModalLabel">
-                    Comparación de verificación
+                    Comparación de verificación <a id="whatsapp">aqui</a>
                 </h5>
                 <button type="button" class="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close"
                     onclick="cargarLista()"></button>
@@ -401,6 +401,18 @@
                         id: $("#idboleta").val(),
                     },
                     success: function (response) {
+                        $('#whatsapp').click();
+                        $('#whatsapp').click(function(event) {
+                            //previene el comportamiento predeterminado del clic en el elemento 'a'
+                            event.preventDefault();
+                            //obtiene la URL del atributo 'href' del elemento 'a'
+                            $('#whatsapp').attr('href', 'https://wa.me/50589940240?text=Cancelar%20esta%20verificación%20id:'+String($("#idboleta").val())+'.');
+                        
+                            var url = $(this).attr('href');
+                            //abre la URL en una nueva ventana
+                            alert("anters")
+                            window.open(url, '_blank', 'height=600,width=800');
+                        });
                         setTimeout(() => {
                             Swal.fire({
                                 icon: "success",
@@ -408,7 +420,9 @@
                                 confirmButtonText: "Ok",
                                 text: "Se canceló la verificación.",
                             }).then((result) => {
-                                /* Read more about isConfirmed, isDenied below */
+                                //establece el valor del href utilizando el método attr()
+                               // $('#whatsapp').click();
+                                // /* Read more about isConfirmed, isDenied below */
                                 if (result.isConfirmed) {
 
                                     window.location = "/home";
