@@ -358,6 +358,14 @@
 .sombra{
   box-shadow: 5px 5px 5px rgb(150, 150, 150);
 }
+.input-valor{
+  width: 80% !important; 
+  padding-bottom: 5px;
+}
+.cuadro-comparacion{
+  width: 25%;
+}
+
 
 
 @media (max-width: 900px) {
@@ -371,6 +379,16 @@
 
 @media (max-width: 12000px) {
   
+  .input-valor{
+    width: 60% !important; 
+    padding-bottom: 5px;
+  }
+  
+  
+  .cuadro-comparacion{
+    width: 38% !important;
+  }
+
   .modal-backdrop {
     display: none;
   }

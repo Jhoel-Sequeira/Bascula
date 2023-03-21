@@ -14,11 +14,17 @@
             <div class="modal-body fondo-modal">
                 <div class="container">
                     <div class="row">
-                        <div style=" width: 70%; padding-bottom: 5px;">
+                        <div class="input-valor">
                             <div class="col">
+                                <label class="form-label fuentelabel" for="form3Example2"><strong>PO</strong></label>
+
+                            <input type="text" id="" name="id" style="text-transform: uppercase"
+                                onkeyup="this.value=this.value.toUpperCase()" value="{{ verifi[2] }}" placeholder="Peso báscula"
+                                disabled class="form-control" />
+
                                 <label class="form-label fuentelabel" for="form3Example2"><strong>Tipo de
                                         Material</strong></label>
-                                <select class="form-select" id="bahia" aria-label="Default select example">
+                                <select class="form-select" id="tmaterial" aria-label="Default select example">
                                     <option selected="selected" hidden>
                                         Seleccionar el material
                                     </option>
@@ -46,7 +52,7 @@
                             <div class="col"></div>
 
                         </div>
-                        <div style="width: 25%;" id="cuadro" class="cuadro-comparacion">
+                        <div id="cuadro" class="cuadro-comparacion">
                             <div style="display: flex; justify-content: center; margin-top: 10px;"><label
                                     class="form-label" style="font-size: 20px;"
                                     for="form3Example2"><strong>VARIACIÓN</strong></label></div>
@@ -297,6 +303,8 @@
                     type: "POST",
                     data: {
                         id: $("#idboleta").val(),
+                        tipo: $('#tmaterial option:selected').text(),
+                        peso: $('#pesobascula').val(),
                     },
                     success: function (response) {
                         if (response == "vacio") {
