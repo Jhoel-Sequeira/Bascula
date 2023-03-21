@@ -21,15 +21,15 @@ Historial
 encabezado %}
 <div class="row">
     <div class="col">
-        <h1><a href="/ajustes" style="text-decoration: none; color: black;">Mi Historial</a></h1>
+        <h1><a href="/ajustes" style="text-decoration: none;" class="fuente-grande-titulo-principal">Mi Historial</a></h1>
     </div>
 </div>
 {% endblock %}
 {% block content %}
 <div class="">
-    <div class="d-flex flex-wrap mt-2">
+    <div class="d-flex flex-wrap mt-2 ms-5">
 
-        <div class="col-10 mb-3 mb-lg-0" id="filtros" role="search">
+        <div class="col-10 mb-3 mt-3 mb-lg-0" id="filtros" role="search">
             <input type="text" id="buscarAdmin" name="buscarAdmin" onkeyup="this.value=this.value.toUpperCase()"
                 style="text-transform:uppercase;" placeholder="Ingrese el No de boleta" required="required"
                 class="form-control" />
@@ -37,7 +37,7 @@ encabezado %}
         </div>
         <div class="col " style="color:rgb(121, 121, 121); font-size: 20px; margin-left: 30px; ">
 
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filtromodal">
+            <button type="button" class="btn btn-secondary mt-3" data-bs-toggle="modal" data-bs-target="#filtromodal">
                 <i class="fa-solid fa-filter"></i>
             </button>
             <!-- <button type="button" style="color:fff; font-size: 18px;" onclick="ExcelTabla()"

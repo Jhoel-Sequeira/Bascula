@@ -12,7 +12,7 @@ Verificacion
 encabezado %}
 <div class="row">
     <div class="col">
-        <h1><a href="/ajustes" style="text-decoration: none; color: black;">Verificación </a> </h1>
+        <h1><a href="/ajustes" style="text-decoration: none;" class="fuente-grande-titulo-principal">Verificación </a> </h1>
     </div>
 </div>
 {% endblock %}
@@ -22,12 +22,12 @@ encabezado %}
     <div class="d-flex flex-wrap mt-2 justify-content-md-center">
         
         {%if punto == 'MOVIL: Recepciones'%}
-        <div class="col-10 mb-3 mb-lg-0" role="search">
+        <div class="col-10 mb-3 mt-3 mb-lg-0" role="search">
             <input type="search" class="form-control" id="buscar" onkeyup="this.value=this.value.toUpperCase()"
                 style="text-transform:uppercase;"  value="MOVIL" disabled aria-label="Buscar">
         </div>
         {%else%}
-        <div class="col-10 mb-3 mb-lg-0" role="search">
+        <div class="col-10 mb-3 mt-3 mb-lg-0" role="search">
             <input type="search" class="form-control" id="buscar" onkeyup="this.value=this.value.toUpperCase()"
                 style="text-transform:uppercase;" placeholder="Número boleta" aria-label="Buscar">
         </div>
@@ -36,11 +36,11 @@ encabezado %}
         <br>
         {%if cargo != 5%}
             {% if punto != 'MOVIL: Recepciones' %}
-            <div class=""><button type="button" class="btn btn-success boton " disabled="disabled" id="verificar"
+            <div class=""><button type="button" class="btn btn-success boton  mt-3" disabled="disabled" id="verificar"
                     onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>
                     Crear</button></div>
             {%else%}
-            <div class=""><button type="button" class="btn btn-success boton " id="verificar"
+            <div class=""><button type="button" class="btn btn-success boton  mt-3" id="verificar"
                 onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>
                 Crear</button></div>
             {%endif%}

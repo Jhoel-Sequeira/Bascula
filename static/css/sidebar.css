@@ -355,6 +355,10 @@
 .fondo-modal{
   background-color: #D8DCFF;
 }
+.sombra{
+  box-shadow: 5px 5px 5px rgb(150, 150, 150);
+}
+
 
 @media (max-width: 900px) {
   .bajar{

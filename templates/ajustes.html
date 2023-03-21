@@ -9,13 +9,13 @@ Home
 {% block
 encabezado %}
 <div class="row">
-    <div class="col">
+    <div class="col" >
         <h1><a href="/ajustes" style="text-decoration: none;" class="fuente-grande-titulo-principal">Home</a></h1>
     </div>
 </div>
 {% endblock %}
 {% block content %}
-<div class="p-1">
+<div class="p-1 mt-2">
     <div class="centrar">
         <div class="row mt-5">
             {% if session.user %} {% if session.userrole == 1%}
