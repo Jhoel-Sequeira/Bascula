@@ -854,7 +854,7 @@ def detalleVerificacion():
                 #MANDAMOS A LLAMAR LOS DATOS QUE TENEMOS EN UNA VERIFICACION INCOMPLETA
                 print("no tiene algo")
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador, veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 3 AND v.Id_Verificacion = %s",[id])
                 verificacion = cur.fetchall()
                 mysql.connection.commit()
                 print(verificacion)
