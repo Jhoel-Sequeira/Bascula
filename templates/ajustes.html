@@ -63,6 +63,7 @@ encabezado %}
                 }
             </script>
             <br>
+            {% if session.user %} {% if session.userrole == 1%}
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
                 <div class="card cartas" onclick="misVer()" style="padding: 5px; background-color: #b4583f">
@@ -86,6 +87,7 @@ encabezado %}
                     window.location = '/misVerificaciones'
                 }
             </script>
+            {% endif %}{% endif %}
             <br>
             {% if session.user %} {% if session.userrole == 1%}
             <div class="col-lg-3 col-6" style="padding: 10px;">
@@ -132,6 +134,10 @@ encabezado %}
                 </div>
             </div>
             {% endif %}{% endif %}
+
+
+
+            
 
 
 
