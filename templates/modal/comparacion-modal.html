@@ -6,7 +6,7 @@
         <div class="modal-content" style="background-color: #e4e9f7">
             <div class="modal-header encabezado_modales">
                 <h5 class="modal-title fuente-grande-titulo" id="exampleModalLabel">
-                    Comparación de verificación <a id="whatsapp">aqui</a>
+                    Comparación de verificación
                 </h5>
                 <button type="button" class="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close"
                     onclick="cargarLista()"></button>
@@ -34,21 +34,38 @@
                                 </select>
                             </div>
                             <div class="col">
-                                <label class="form-label fuentelabel" for="form3Example2"><strong>Peso
-                                        Báscula</strong></label>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="form-label fuentelabel" for="form3Example2"><strong>Peso
+                                                Báscula</strong></label>
 
-                                <input type="text" id="pesobascula" name="pesobascula" style="text-transform: uppercase"
-                                    onkeyup="this.value=this.value.toUpperCase()" placeholder="Peso báscula"
-                                    required="required" class="form-control" />
-                            </div>
-                            <div class="col">
+                                        <input type="text" id="pesobascula" name="pesobascula"
+                                            style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" placeholder="Peso báscula"
+                                            required="required" class="form-control" />
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label fuentelabel" for="form3Example2"><strong>Variación
+                                                Báscula</strong></label>
+
+                                        <input type="text" id="var" name="pesobascula" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()"
+                                            placeholder="Variación báscula" required="required" class="form-control" />
+                                    </div>
+
+                                </div>
                                 <label class="form-label fuentelabel" for="form3Example2"><strong>Peso
                                         Neto</strong></label>
 
                                 <input type="text" id="neto" name="nboleta" style="text-transform: uppercase"
                                     onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="Peso neto"
                                     required="required" class="form-control" value="" />
+
+
+
                             </div>
+
+
                             <div class="col"></div>
 
                         </div>
@@ -127,6 +144,7 @@
 
                 </script>
             </div>
+            <a id="whatsapp">aqui</a>
             <div class="p-2">
                 <div class="row">
                     <div class="col-6">
@@ -185,6 +203,36 @@
         }
     }
     $("#pesobascula").on('keyup', calcularVariacion);
+
+    var calcularVariacion1 = function () {
+
+        if ($("#pesobascula").val() != "") {
+            var resultado = parseFloat($('#pesobascula').val()) - parseFloat($('#neto').val() -$('#var').val())
+            if (resultado < 0) {
+                $('#resultado').text('' + resultado)
+                $('#resultado').css('font-weight', 'bold');
+                $('#resultado').css('color', 'red');
+                $('#cuadro').css('border', '1px solid red');
+            } else if (resultado > 0) {
+                $('#resultado').text('+' + resultado)
+                $('#resultado').css('font-weight', 'bold');
+                $('#resultado').css('color', 'green');
+                $('#cuadro').css('border', '1px solid green');
+            } else {
+                $('#resultado').text('00')
+                $('#resultado').css('font-weight', 'bold');
+                $('#resultado').css('color', 'black');
+                $('#cuadro').css('border', '1px solid black');
+            }
+
+        } else {
+            $('#resultado').text('00')
+            $('#resultado').css('font-weight', 'bold');
+            $('#resultado').css('color', 'black');
+            $('#cuadro').css('border', '1px solid black');
+        }
+    }
+    $("#var").on('keyup', calcularVariacion1);
 
 
     function ocultarPesos() {
@@ -289,6 +337,7 @@
     //     }
     //   });
     //###########################
+
     function finalizar() {
         if ($('#pesobascula').val() != 0 && $("#tmaterial option:selected").val() != "Seleccionar el material") {
             Swal.fire({
@@ -401,10 +450,10 @@
                         id: $("#idboleta").val(),
                     },
                     success: function (response) {
-                        $('#whatsapp').attr('href', 'https://wa.me/50589940240?text=Cancelar%20esta%20verificación%20id:'+String($("#idboleta").val())+'.');
-                        
-                        $('#whatsapp').click();
-                        
+                        $('#whatsapp').attr('href', 'https://wa.me/50589940240?text=Cancelar%20esta%20verificación%20id:' + String($("#idboleta").val()) + '.');
+
+
+
                         setTimeout(() => {
                             Swal.fire({
                                 icon: "success",
@@ -413,11 +462,11 @@
                                 text: "Se canceló la verificación.",
                             }).then((result) => {
                                 //establece el valor del href utilizando el método attr()
-                               // $('#whatsapp').click();
+                                // $('#whatsapp').click();
                                 // /* Read more about isConfirmed, isDenied below */
                                 if (result.isConfirmed) {
-
-                                    window.location = "/home";
+                                    $('#whatsapp').click();
+                                    //window.location = "/home";
                                 }
                             });
                         }, 1000);
