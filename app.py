@@ -1700,7 +1700,7 @@ def finalizarVerificacion():
                 fecha2 = cur.fetchone()
                 mysql.connection.commit()
                 fecha = capturarHora()
-                fechacreacion = datetime.date(fecha2)
+                fechacreacion = datetime.date(fecha)
                 #Usuario que lo creó
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT u.NombreUsuario FROM `tb_verificacion` as v inner join tb_usuarios as u ON v.IdUsuarioCreacion = u.Id_Usuario WHERE Id_Verificacion = %s",[id])
@@ -1792,19 +1792,48 @@ def finalizarVerificacion():
                 else:
                     primeraNuevo = 1
                     segundaNuevo = 1
-                print(Verificacion)
-                IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10],Verificacion[0][11],Verificacion[0][3],rechazoNuevo,jumboNuevo,0,0,primeraNuevo,segundaNuevo,session['uid'],session['pass'])
                 
-                print("ORDEN AQUI")
-                print(IdOrden)
-                for material in mat:
-                    print(material)
-                    if material[0] == "Rechazo (cobre)" or material[0] == "RECHAZO" or material[0] == "JUMBO" or material[0] == "Rechazo (Aluminio)" or material[0] == "Rechazo (Acero)" or material[0] == "Rechazo (Bronce)" or material[0] == "Rechazo (Cable)" or material[0] == "Rechazo (lata)" :
+                print(Verificacion)
+                print(Verificacion[0][2])
+                print(Verificacion[0][3])
+                # MANDAR A TRAER LOS MATERIALES DEL VERIFICADOR PARA VER SI SON IGUALES Y GENERAR LA ORDEN DE COMPRA
+                
+                #total de materiales del verificador
+                cur = mysql.connection.cursor()
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto,round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and NoBoleta = %s and u.IdCargo = %s and v.IdEstado = 5 Group BY ver.IdMaterial',(Verificacion[0][2],Verificacion[0][3],2))
+                matverificador = cur.fetchall()
+                mysql.connection.commit()
+                print(matverificador)
+                print("MAT DEL VERIFICADOR")
+                print(mat)
+                print("MAT DEL DIGITADOR")
+
+                # TENGO LOA MATES DEL DIGITADOR EN LA LISTA mat y los del verificador en matverificador
+                # VERIFICAMOS SI LAS DOS LISTAS DE MATERIALES SON IGUALES
+                
+                # #total de materiales del digitador
+                # cur = mysql.connection.cursor()
+                # cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 5 Group BY ver.IdMaterial',(id,1))
+                # matdigitador = cur.fetchall()
+                # mysql.connection.commit()
+                # print(matdigitador)
+                # print("MAT DEL digitador") 
+
+
+                #======================================================================================================
+                #======================================================================================================
+                #IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10],Verificacion[0][11],Verificacion[0][3],rechazoNuevo,jumboNuevo,0,0,primeraNuevo,segundaNuevo,session['uid'],session['pass'])
+                
+                # print("ORDEN AQUI")
+                # print(IdOrden)
+                # for material in mat:
+                #     print(material)
+                #     if material[0] == "Rechazo (cobre)" or material[0] == "RECHAZO" or material[0] == "JUMBO" or material[0] == "Rechazo (Aluminio)" or material[0] == "Rechazo (Acero)" or material[0] == "Rechazo (Bronce)" or material[0] == "Rechazo (Cable)" or material[0] == "Rechazo (lata)" :
                     
-                        print("sosretroll")
-                    else:
-                        conexion.IngresarMaterialOrdenCompra(material[0],material[3],IdOrden,session['uid'],session['pass'])  
-                po = conexion.traerPo(IdOrden)
+                #         print("sosretroll")
+                #     else:
+                #         conexion.IngresarMaterialOrdenCompra(material[0],material[3],IdOrden,session['uid'],session['pass'])  
+                # po = conexion.traerPo(IdOrden)
                 #TRAER LA VERIFICACION QUE REALIZO EL VERIFICADOR PARA CAMBIARLE LA PO
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT NoBoleta from tb_verificacion Where Id_Verificacion = %s",[id])
@@ -1829,17 +1858,38 @@ def finalizarVerificacion():
                     cantBol = cantidadBoleta[0]
                     time.sleep(1) 
 
+                iguales = 0
+                if mat == matverificador:
+                    iguales = 1
+                    IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10],Verificacion[0][11],Verificacion[0][3],rechazoNuevo,jumboNuevo,0,0,primeraNuevo,segundaNuevo,session['uid'],session['pass'])
+                
+                    print("ORDEN AQUI")
+                    print(IdOrden)
+                    for material in mat:
+                      
+                      print(material)
+                      if material[0] == "Rechazo (cobre)" or material[0] == "RECHAZO" or material[0] == "JUMBO" or material[0] == "Rechazo (Aluminio)" or material[0] == "Rechazo (Acero)" or material[0] == "Rechazo (Bronce)" or material[0] == "Rechazo (Cable)" or material[0] == "Rechazo (lata)" :
+                    
+                        print("sosretroll")
+                      else:
+                        conexion.IngresarMaterialOrdenCompra(material[0],material[3],IdOrden,session['uid'],session['pass'])  
+                    po = conexion.traerPo(IdOrden)
+                    cur = mysql.connection.cursor()
+                    cur.execute('Update tb_verificacion set PO = %s Where NoBoleta = %s',(po[0]['name'],nboletaver[0]))
+                    mysql.connection.commit()
+                    print("SON IGUALES VALOR: ",iguales)
+                    return "Iguales"
+                else:
+                    return "Diferentes"
 
 
-                cur = mysql.connection.cursor()
-                cur.execute('Update tb_verificacion set PO = %s Where NoBoleta = %s',(po[0]['name'],nboletaver[0]))
-                mysql.connection.commit()
+                
 
                 # cur = mysql.connection.cursor()
                 # cur.execute('Update tb_verificacion set PO = %s Where Id_Verificacion = %s',(po[0]['name'],id))
                 # mysql.connection.commit()
-
-                return render_template('otros/factura.html',po = po[0]['name'],segunda = segunda,primera = primera,mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
+                #return "DOne"
+                #return render_template('otros/factura.html',po = po[0]['name'],segunda = segunda,primera = primera,mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:
                 print("vacio")
                 return "vacio"
@@ -2168,7 +2218,7 @@ def finalizarVerificacion():
                 
                 # print("ORDEN AQUI")
                 # print(IdOrden)
-
+                return "Hecho"
                 return render_template('otros/factura.html',segunda = "",primera = "",mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:
                 print("vacio")
@@ -2250,7 +2300,8 @@ def finalizarVerificacion():
                 print(pesos)
                 print("factura aquiii")
                 print(len(pesos))
-                return render_template('otros/factura.html',mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
+                return "Hecho"
+                #return render_template('otros/factura.html',mat = mat,id = id,usuario = usuario,verificacion = Verificacion, fechaEmision = fecha,fechaCreacion = fechacreacion,pesos = pesos,sumaBruto = sumaBruto,sumaTara = sumaTara,sumaDestare = sumaDestare,sumaNeto = sumaNeto)
             else:
                 print("vacio")
                 return "vacio"

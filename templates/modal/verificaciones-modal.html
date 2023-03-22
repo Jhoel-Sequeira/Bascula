@@ -1036,44 +1036,33 @@
                                 }
                             });
                         } else {
-                            $("#factura").html(response);
-                            $("#factura").append(response.htmlresponse);
-                            // Escuchamos el click del botón
-                            elementoParaConvertir = document.querySelector(".div-verpdf"); // <-- Aquí puedes elegir cualquier elemento del DOM
-                            elementoParaConvertir.style.display = "block";
-                            html2pdf()
-                                .set({
-                                    filename: "Factura123" + String($("#id").val()) + ".pdf",
-                                    image: {
-                                        type: "jpeg",
-                                        quality: 0.98,
-                                    },
-                                    html2canvas: {
-                                        scale: 5, // A mayor escala, mejores gráficos, pero más peso
-                                        letterRendering: false,
-                                    },
-                                    jsPDF: {
-                                        unit: "in",
-                                        format: "a4",
-                                        orientation: "portrait", // landscape o portrait
-                                    },
-                                })
-                                .from(elementoParaConvertir)
-                                .save();
-                            setTimeout(() => {
+                            if (response == "Iguales"){
                                 Swal.fire({
                                     icon: "success",
-                                    title: "Verificación impresa",
+                                    title: "Las verificaciones son correctas",
                                     confirmButtonText: "Ok",
-                                    text: "Se generó el pdf con la verificación.",
+                                    text: "Se generó una orden de compra en Odoo.",
                                 }).then((result) => {
                                     /* Read more about isConfirmed, isDenied below */
                                     if (result.isConfirmed) {
-                                        elementoParaConvertir.style.display = "none";
                                         window.location = "/home";
                                     }
                                 });
-                            }, 1000);
+                            }else if(response == "Diferentes"){
+
+                            }else{
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Las verificaciones se creo con exitosamente.",
+                                    confirmButtonText: "Ok",
+                                    text: "Se generó la verificación.",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        window.location = "/home";
+                                    }
+                                });
+                            }
                         }
                     },
                     error: function (error) {
