@@ -401,18 +401,10 @@
                         id: $("#idboleta").val(),
                     },
                     success: function (response) {
-                        $('#whatsapp').click();
-                        $('#whatsapp').click(function(event) {
-                            //previene el comportamiento predeterminado del clic en el elemento 'a'
-                            event.preventDefault();
-                            //obtiene la URL del atributo 'href' del elemento 'a'
-                            $('#whatsapp').attr('href', 'https://wa.me/50589940240?text=Cancelar%20esta%20verificación%20id:'+String($("#idboleta").val())+'.');
+                        $('#whatsapp').attr('href', 'https://wa.me/50589940240?text=Cancelar%20esta%20verificación%20id:'+String($("#idboleta").val())+'.');
                         
-                            var url = $(this).attr('href');
-                            //abre la URL en una nueva ventana
-                            alert("anters")
-                            window.open(url, '_blank', 'height=600,width=800');
-                        });
+                        $('#whatsapp').click();
+                        
                         setTimeout(() => {
                             Swal.fire({
                                 icon: "success",

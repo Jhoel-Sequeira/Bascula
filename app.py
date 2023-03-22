@@ -1697,10 +1697,10 @@ def finalizarVerificacion():
                 #  FECHA VERIFICACION
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT Fecha FROM tb_verificacion WHERE Id_Verificacion = %s",[id])
-                fecha = cur.fetchone()
+                fecha2 = cur.fetchone()
                 mysql.connection.commit()
                 fecha = capturarHora()
-                fechacreacion = datetime.date(fecha)
+                fechacreacion = datetime.date(fecha2)
                 #Usuario que lo creó
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT u.NombreUsuario FROM `tb_verificacion` as v inner join tb_usuarios as u ON v.IdUsuarioCreacion = u.Id_Usuario WHERE Id_Verificacion = %s",[id])
