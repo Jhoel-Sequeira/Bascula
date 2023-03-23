@@ -32,9 +32,15 @@
             <td align="center" style="width:300px">{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
 
             <td align="end">
+                {%if session.cargo != 6%}
                 <button type="button" class="btn btn-primary" value="{{i[2]}}" id="detallever" name="detallever">
                     <i class="fa-sharp fa-solid fa-eye"></i>
                 </button>
+                {%else%}
+                <button type="button" class="btn btn-primary" value="{{i[0]}}" id="detallever" name="detallever">
+                    <i class="fa-sharp fa-solid fa-eye"></i>
+                </button>
+                {%endif%}
             </td>
         </tr>
         {%endfor%}

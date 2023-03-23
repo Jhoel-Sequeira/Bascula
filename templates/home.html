@@ -34,7 +34,7 @@ encabezado %}
         {%endif%}
 
         <br>
-        {%if cargo != 5%}
+        {%if cargo != 5 and cargo != 6%}
             {% if punto != 'MOVIL: Recepciones' %}
             <div class=""><button type="button" class="btn btn-success boton  mt-3" disabled="disabled" id="verificar"
                     onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>

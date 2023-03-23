@@ -271,7 +271,7 @@ def login():
                     digitador = cur.fetchall()
                     return render_template('ajustes.html', Proveedores=Proveedores, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
 
-                elif cargo[1] == "VALIDADORA DE DATOS" or cargo[1] == "RESPONSABLE DE VERIFICACION":
+                elif cargo[1] == "VALIDADORA DE DATOS":
                     # ESTE ES VALIDADOR
                     session["pass"] = Contraseña
                     session["user"] = usuario
@@ -363,6 +363,96 @@ def login():
                     # else:
                     #     #VIENE VACIO
                     #     return render_template('login.html', errorlogin=1)
+                elif cargo[1] == "SUPERVISOR PET" or cargo[1] == "RESPONSABLE DE VERIFICACION" or cargo[1] == "JEFE DE RECEPCION":
+                    # CARGO DE LOS NUEVOS USUARIOS
+                     # ESTE ES FISCALES Y JEFES DE PLANTA
+                    session["pass"] = Contraseña
+                    session["user"] = usuario
+                    session["userrole"] = 2
+                    session["puntoid"] = 1
+                    session["punto"] = "GRANEL/PLANTA: Receipts"
+                    # ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
+                    # cur = mysql.connection.cursor()
+                    # cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
+                    # cargo = cur.fetchone()
+                    # print(cargo[0])
+                    # ESCRIBIMOS EL CARGO DE JEFE
+                    session['cargo'] = 6
+
+                    # vaidamos si el usuario ya esta logueado antes
+                    cur = mysql.connection.cursor()
+                    cur.execute(
+                        "SELECT * FROM tb_credenciales Where Usuarios = %s", [session["user"]])
+                    usuarioExistente = cur.fetchone()
+                    mysql.connection.commit()
+
+                    user_info = conexion.TraerUsuario(
+                        str(uid[0]['id']), session['uid'], session['pass'])
+                    print("user info:", user_info)
+                    if not usuarioExistente:
+                        cur = mysql.connection.cursor()
+                        cur.execute("INSERT INTO tb_credenciales (Usuarios,Contraseñas,IdRol) VALUES (%s,%s,%s)", (
+                            session["user"], generate_password_hash(Contraseña), session["userrole"]))
+
+                        mysql.connection.commit()
+                        idcredenciales = cur.lastrowid
+                        # YA TENEMOS LAS CREDENCIALES DE LOS USUARIOS DE ODDO
+                        print(idcredenciales)
+                        # INSERTAMOS EN LA TABLA EL USUARIO COMO TAL
+                        cur = mysql.connection.cursor()
+                        cur.execute("INSERT INTO tb_usuarios (NombreUsuario,IdCargo,IdOddo,IdCredenciales,IdEstado,IdPuesto) VALUES (%s,%s,%s,%s,%s,'1')", (
+                            user_info[0]['name'], session['cargo'], user_info[0]['id'], idcredenciales, 1))
+                        mysql.connection.commit()
+                        ultimoUsuario = cur.lastrowid
+
+                        id = idcredenciales
+                        cur = mysql.connection.cursor()
+                        cur.execute(
+                            "SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s", [id])
+                        ultimoUSuarios = cur.fetchone()
+                        mysql.connection.commit()
+                        print(ultimoUSuarios[0])
+                        session["userId"] = ultimoUSuarios[0]
+
+                    elif usuarioExistente:
+                        print(usuarioExistente[0])
+                        id = usuarioExistente[0]
+                        print("ssssssssssss")
+                        cur = mysql.connection.cursor()
+                        cur.execute(
+                            "SELECT u.Id_Usuario FROM tb_usuarios as u inner join tb_credenciales as cred on u.IdCredenciales = cred.Id_credenciales Where cred.Id_credenciales = %s", [id])
+                        ultimoUSuarios = cur.fetchone()
+                        mysql.connection.commit()
+                        session["userId"] = ultimoUSuarios[0]
+
+                    # session["userId"] = ultimoUsuario
+
+                    cur = mysql.connection.cursor()
+                    cur.execute(
+                        "select * from tb_proveedor Where IdEstado = 1")
+                    Proveedores = cur.fetchall()
+                    # CONSULTA PARA LOS PUNTOS DE COMPRA
+                    cur = mysql.connection.cursor()
+                    cur.execute(
+                        "select * from tb_puntocompra Where IdEstado = 1")
+                    punto = cur.fetchall()
+                    # CONSULTA PARA LOS MATERIALES
+                    cur = mysql.connection.cursor()
+                    cur.execute(
+                        "select * from tb_material Where Id_Estado = 1")
+                    material = cur.fetchall()
+                    # CONSULTA PARA LOS VERIFICADORES
+                    cur = mysql.connection.cursor()
+                    cur.execute(
+                        "select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+                    verificador = cur.fetchall()
+                    # CONSULTA PARA LOS DIGITADOR
+                    cur = mysql.connection.cursor()
+                    cur.execute(
+                        "select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+                    digitador = cur.fetchall()
+                    return render_template('ajustes.html', Proveedores=Proveedores, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
+
             except:
                 try:
 
@@ -806,7 +896,7 @@ def detalleUsuarios():
 def listaProveedores():
     if request.method == "POST":
         proveedor = request.form['proveedor']
-        if session['cargo'] != 5:
+        if session['cargo'] != 5 and session['cargo'] != 6:
             if proveedor == "":
                 print("DIGITADOR")
                 print(session['cargo'])
@@ -847,15 +937,15 @@ def listaProveedores():
                 print("VERIFICADICA")
                 print(verificaciones)
                 return render_template('tablas/tabla-proveedores.html', verificaciones=verificaciones)
-        else:
+        elif session['cargo'] == 5:
             print("entro como validador")
             if proveedor == "":
                 print("cargooo")
                 print(session['cargo'])
-                consulta_extra = "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 5 AND "
+                consulta_extra = "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 4 AND "
                 # LLamar la verificacion de ese proveedor
                 cur = mysql.connection.cursor()
-                cur.execute("select v.NoBoleta,v.PO,count(v.NoBoleta) as boleta from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner JOIN tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario inner join tb_cargo as car ON u.IdCargo = car.Id_Cargo Where v.IdEstado = 5 group BY v.NoBoleta,v.PO")
+                cur.execute("select v.NoBoleta,v.PO,count(v.NoBoleta) as boleta from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner JOIN tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario inner join tb_cargo as car ON u.IdCargo = car.Id_Cargo Where v.IdEstado = 4 group BY v.NoBoleta,v.PO")
                 verificacionesRep = cur.fetchall()
                 verificaciones = ""
                 banderaConsultas = 0
@@ -906,6 +996,69 @@ def listaProveedores():
                 print("VERIFICADICA")
                 print(verificaciones)
                 return render_template('tablas/tabla-comparacion.html', verificaciones=verificaciones)
+        
+
+
+        elif session['cargo'] == 6:
+            print("entro como jefe")
+            if proveedor == "":
+                print("cargooo")
+                print(session['cargo'])
+                # PARTE DEL FILTRO DE LAS VERIFICACIONES
+                consulta_extra = "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 7 AND "
+                # LLamar la verificacion de ese proveedor
+                cur = mysql.connection.cursor()
+                cur.execute("select v.NoBoleta,v.PO,count(v.NoBoleta) as boleta from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner JOIN tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario inner join tb_cargo as car ON u.IdCargo = car.Id_Cargo Where v.IdEstado = 7 group BY v.NoBoleta,v.PO")
+                verificacionesRep = cur.fetchall()
+                verificaciones = ""
+                banderaConsultas = 0
+
+                for ver in verificacionesRep:
+                    if ver[2] == 2:
+                        consulta_extra += " v.NoBoleta = '" + \
+                            str(ver[0])+"' AND v.PO = '" + str(ver[1])+"' OR "
+                        print(ver)
+                        print("cambiar bandera")
+                        banderaConsultas = 1
+                # print(consulta_extra)
+                print("Bandera consulta: ", banderaConsultas)
+                if banderaConsultas == 1:
+                    total = consulta_extra[:-4]
+                    print(total)
+                    # LLamar las verificaciones validas
+                    cur = mysql.connection.cursor()
+                    cur.execute("" + total)
+                    verificaciones = cur.fetchall()
+                    print("verifi")
+                    return render_template('tablas/tabla-comparacion.html', verificaciones=verificaciones)
+                else:
+                    verificaciones = ""
+                # TENEMOS QUE AGARRAR LA PO Y COMPARARLA PARA VER SI
+                    print("fuera")
+                    return render_template('tablas/tabla-comparacion.html', verificaciones=verificaciones)
+            else:
+                # SELECCIONAR EL ID DEL PROVEEDOR
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    "select * from tb_proveedor Where NombreProveedor = %s", [proveedor])
+                proveedornuevo = cur.fetchone()
+                # INSERTAMOS LA VERIFICACION
+                # hora = capturarHora()
+                # fecha = hora.replace(microsecond=0)
+                # print(fecha)
+                # cur = mysql.connection.cursor()
+                # cur.execute("INSERT INTO tb_verificacion (Fecha,NoBoleta,IdPuntoCompra,IdEstado,IdUsuarioCreacion) VALUES (%s,%s,%s,%s,%s)",
+                #             (fecha, proveedor, 5, 3, session["userId"]))
+                # proveedornuevo = cur.fetchone()
+                # LLAMAMOS LAS VERIFICACIONES DEL USUARIO
+                cur = mysql.connection.cursor()
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 7 AND v.NoBoleta LIKE %s", [
+                            proveedor + '%'])
+                verificaciones = cur.fetchall()
+                mysql.connection.commit()
+                print("VERIFICADICA")
+                print(verificaciones)
+                return render_template('tablas/tabla-comparacion.html', verificaciones=verificaciones)
     else:
         return "No"
 # DETALLE VERIFICACION
@@ -916,7 +1069,7 @@ def detalleVerificacion():
     if request.method == "POST":
 
         id = request.form['id']
-        if session['cargo'] != 5:
+        if session['cargo'] != 5 and session['cargo'] != 6:
             print(id)
             print("aqui no")
             cur = mysql.connection.cursor()
@@ -978,12 +1131,12 @@ def detalleVerificacion():
             usuariopunto = cur.fetchone()
             print(usuariopunto)
             return render_template('modal/verificaciones-modal.html', idpunto=session['puntoid'], punto=session['punto'], usuariopunto=usuariopunto, usuariolog=usuariolog, verificacion=verificacion, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
-        else:
+        elif session['cargo'] == 5:
             print(id)
             print("pesoss")
             cur = mysql.connection.cursor()
             cur.execute(
-                "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 5 AND v.PO= %s", [id])
+                "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 4 AND v.PO= %s", [id])
             nueva = cur.fetchall()
             mysql.connection.commit()
             print("nueva")
@@ -991,13 +1144,13 @@ def detalleVerificacion():
             if nueva:
                 cur = mysql.connection.cursor()
                 cur.execute(
-                    "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 5 AND v.PO = %s", [id])
+                    "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 4 AND v.PO = %s", [id])
                 verificacion = cur.fetchall()
                 mysql.connection.commit()
             else:
                 cur = mysql.connection.cursor()
                 cur.execute(
-                    "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 5 AND v.Id_Verificacion = %s", [id])
+                    "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra Where v.IdEstado = 4 AND v.Id_Verificacion = %s", [id])
                 verificacion = cur.fetchall()
                 mysql.connection.commit()
 
@@ -1032,6 +1185,23 @@ def detalleVerificacion():
                         session['userId']])
             usuariopunto = cur.fetchone()
             return render_template('modal/comparacion-modal.html', usuariopunto=usuariopunto, usuariolog=usuariolog, verificacion=verificacion, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
+        
+        elif session['cargo'] == 6:
+            print("JEFE")
+            print(id)
+            print("pesoss")
+            # TENGO EL ID DE UNA VERIFICACION ( SE NECESITA MANDAR A EXTRAER EL NUNMERO DE BOLETA CON AMBOS PESOS)
+            # * MANDAMOS A TRAER LOS PESOS DEL DIGITADOR Y VERIFICADOR
+            cur = mysql.connection.cursor()
+            cur.execute(
+                "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 7 AND v.Id_Verificacion= %s", [id])
+            verificacion = cur.fetchall()
+            mysql.connection.commit()
+            print("nueva")
+            print("datos verificacion: ",verificacion)
+
+
+            return render_template('modal/modal-jefe.html', verificacion = verificacion)
 
 
 # DETALLE VERIFICACION
@@ -1178,6 +1348,142 @@ def datosGeneralesVerificacion():
         return "done"
 
 # CARGAR LOS PESOS DE LAS VERIFICACIONES
+@app.route('/listaPesosJefe', methods=["POST", "GET"])
+def listaPesosJefe():
+    if request.method == "POST":
+        nbol = request.form['nboleta']
+        print(nbol)
+        # total de materiales del verificador
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.NoBoleta = %s and u.IdCargo = %s and v.IdEstado = 7 Group BY ver.IdMaterial', (nbol, 2))
+        matverificador = cur.fetchall()
+        mysql.connection.commit()
+        print(matverificador)
+        print("MAT DEL VERIFICADOR")
+
+        # total de materiales del digitador
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.NoBoleta = %s and u.IdCargo = %s and v.IdEstado = 7 Group BY ver.IdMaterial', (nbol, 1))
+        matdigitador = cur.fetchall()
+        mysql.connection.commit()
+        print(matdigitador)
+        print("MAT DEL digitador")
+
+        # LLamar los pesos del verificador
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.NoBoleta = %s and u.IdCargo = %s and v.IdEstado = 7", (nbol, 2))
+        pesosverificador = cur.fetchall()
+
+        # LLamar los pesos del digitador
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.NoBoleta = %s and u.IdCargo = %s and v.IdEstado = 7", (nbol, 1))
+        pesosdigitador = cur.fetchall()
+
+        idver = pesosverificador[0][1]
+        print("idveeeeeeeeeeeeeer")
+        print(idver)
+
+        iddig = pesosdigitador[0][1]
+        print("iddigiii")
+        print(iddig)
+
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT SUM(PesoBruto) FROM tb_detalleverificacion WHERE IdVerificacion = %s ", [idver])
+        sumaBruto1 = cur.fetchone()
+        if sumaBruto1[0]:
+            sumaBrutover = round(sumaBruto1[0], 2)
+        else:
+            sumaBrutover = 0.00
+
+        print(sumaBrutover)
+        #  SUMA DE LA COLUMNA PESOS TARA
+        cur = mysql.connection.cursor()
+        cur.execute(
+                    "SELECT SUM(PesoTara) FROM tb_detalleverificacion WHERE IdVerificacion = %s", [idver])
+        sumaTara1 = cur.fetchone()
+        if sumaTara1[0]:
+            sumaTaraver = round(sumaTara1[0], 2)
+        else:
+            sumaTaraver = 0.00
+
+        #  SUMA DE LA COLUMNA PESOS DESTARE
+        cur = mysql.connection.cursor()
+        cur.execute(
+                    "SELECT SUM(Destare) FROM tb_detalleverificacion WHERE IdVerificacion = %s", [id])
+        sumaDestare1 = cur.fetchone()
+        mysql.connection.commit()
+        if sumaDestare1[0]:
+            sumaDestarever = round(sumaDestare1[0], 2)
+        else:
+            sumaDestarever = 0.00
+
+        #  SUMA DE LA COLUMNA PESOS NETO
+        cur = mysql.connection.cursor()
+        cur.execute(
+                    "SELECT SUM(PesoNeto) FROM tb_detalleverificacion WHERE IdVerificacion = %s", [idver])
+        sumaNeto1 = cur.fetchone()
+        mysql.connection.commit()
+        if sumaNeto1[0]:
+            sumaNetover = round(sumaNeto1[0], 2)
+        else:
+            sumaNetover = 0.00
+
+        # HACEMOS LOA SUMA DE CADA COLUMNA PARA LOS DIGITADORES
+        #  SUMA DE LA COLUMNA PESOS BRUTOS
+        cur = mysql.connection.cursor()
+        cur.execute(
+                    "SELECT SUM(PesoBruto) FROM tb_detalleverificacion WHERE IdVerificacion = %s", [iddig])
+        sumaBruto2 = cur.fetchone()
+        if sumaBruto2[0]:
+            sumaBrutodig = round(sumaBruto2[0], 2)
+        else:
+            sumaBrutodig = 0.00
+
+        #  SUMA DE LA COLUMNA PESOS TARA
+        cur = mysql.connection.cursor()
+        cur.execute(
+                    "SELECT SUM(PesoTara) FROM tb_detalleverificacion WHERE IdVerificacion = %s", [iddig])
+        sumaTara2 = cur.fetchone()
+        if sumaTara2[0]:
+                    sumaTaradigi = round(sumaTara2[0], 2)
+        else:
+            sumaTaradigi = 0.00
+
+        #  SUMA DE LA COLUMNA PESOS DESTARE
+        cur = mysql.connection.cursor()
+        cur.execute(
+                    "SELECT SUM(Destare) FROM tb_detalleverificacion WHERE IdVerificacion = %s", [id])
+        sumaDestare2 = cur.fetchone()
+        mysql.connection.commit()
+        if sumaDestare2[0]:
+            sumaDestaredigi = round(sumaDestare2[0], 2)
+        else:
+            sumaDestaredigi = 0.00
+
+        #  SUMA DE LA COLUMNA PESOS NETO
+        cur = mysql.connection.cursor()
+        cur.execute(
+                    "SELECT SUM(PesoNeto) FROM tb_detalleverificacion WHERE IdVerificacion = %s", [iddig])
+        sumaNeto2 = cur.fetchone()
+        mysql.connection.commit()
+        if sumaNeto2[0]:
+            sumaNetodigi = round(sumaNeto2[0], 2)
+        else:
+            sumaNetodigi = 0.00
+
+        return render_template('tablas/tabla-pesoscomparacion.html', id=0, pesosdigitador=matdigitador, ids=0, pesosverificador=matverificador, sumaBrutover=sumaBrutover, sumaTaraver=sumaTaraver, sumaDestarever=sumaDestarever, sumaNetover=sumaNetover, sumaBrutodig=sumaBrutodig, sumaTaradigi=sumaTaradigi, sumaDestaredigi=sumaDestaredigi, sumaNetodigi=sumaNetodigi)   
+
+#DESBLOQUEO DE VERIFICACIONES
+@app.route('/desbloquear', methods=["POST", "GET"])
+def desbloquear():
+    if request.method == "POST":
+        nboleta = request.form['nboleta']
+        cur = mysql.connection.cursor()
+        cur.execute(
+                    'Update tb_verificacion set IdEstado = 3 Where NoBoleta = %s and IdEstado = 7', [nboleta])
+        mysql.connection.commit()
+        return "Done"
+
 
 
 @app.route('/listaPesos', methods=["POST", "GET"])
@@ -1250,10 +1556,10 @@ def listaPesos():
                 return render_template('tablas/tabla-pesos.html', pesos=pesos)
         else:
             if id != "":
-
+                print("id: ",id)
                 # total de materiales del verificador
                 cur = mysql.connection.cursor()
-                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 5 Group BY ver.IdMaterial', (id, 2))
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 4 Group BY ver.IdMaterial', (id, 2))
                 matverificador = cur.fetchall()
                 mysql.connection.commit()
                 print(matverificador)
@@ -1261,7 +1567,7 @@ def listaPesos():
 
                 # total de materiales del digitador
                 cur = mysql.connection.cursor()
-                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 5 Group BY ver.IdMaterial', (id, 1))
+                cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 4 Group BY ver.IdMaterial', (id, 1))
                 matdigitador = cur.fetchall()
                 mysql.connection.commit()
                 print(matdigitador)
@@ -1269,17 +1575,17 @@ def listaPesos():
 
                 # LLamar los pesos del verificador
                 cur = mysql.connection.cursor()
-                cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 5", (id, 2))
+                cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 4", (id, 2))
                 pesosverificador = cur.fetchall()
 
                 # LLamar los pesos del digitador
                 cur = mysql.connection.cursor()
-                cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 5", (id, 1))
+                cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and u.IdCargo = %s and v.IdEstado = 4", (id, 1))
                 pesosdigitador = cur.fetchall()
                 # LISTA DE IDS CON LA MISMA PO
                 cur = mysql.connection.cursor()
                 cur.execute(
-                    "SELECT dt.IdVerificacion FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material Where v.PO = %s and v.IdEstado = 5 ORDER BY v.Id_Verificacion ASC", [id])
+                    "SELECT dt.IdVerificacion FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material Where v.PO = %s and v.IdEstado = 4 ORDER BY v.Id_Verificacion ASC", [id])
                 ids = cur.fetchall()
                 # SELECCIONAR LAS VERIFICACIONES QUE TRAEN EL MISMO PO
                 # cur = mysql.connection.cursor()
@@ -1873,12 +2179,12 @@ def finalizarVerificacion():
                         "SELECT u.NombreUsuario FROM `tb_verificacion` as v inner join tb_usuarios as u ON v.IdUsuarioCreacion = u.Id_Usuario WHERE Id_Verificacion = %s", [id])
                     usuario = cur.fetchone()
                     mysql.connection.commit()
-                    # Cambiar el estado de la verificacion
+                    # # Cambiar el estado de la verificacion
                     cur = mysql.connection.cursor()
                     cur.execute(
-                        'Update tb_verificacion set IdEstado = 5 Where Id_Verificacion = %s', [id])
+                        'Update tb_verificacion set IdEstado = 8 Where Id_Verificacion = %s', [id])
                     mysql.connection.commit()
-                    # total de materiales RESUMEN
+                    #total de materiales RESUMEN
 
                     # total de materiales
                     cur = mysql.connection.cursor()
@@ -2008,7 +2314,7 @@ def finalizarVerificacion():
                     while cantBol != 2:
                         # SELECCIONAMOS CUANTAS VERIFICACIONES TIENEN ESE NUMERO DE BOLETA
                         cur = mysql.connection.cursor()
-                        cur.execute("SELECT count(NoBoleta) from tb_verificacion Where NoBoleta = %s and IdDigitador = %s and IdEstado = 5", (
+                        cur.execute("SELECT count(NoBoleta) from tb_verificacion Where NoBoleta = %s and IdDigitador = %s and IdEstado = 8", (
                             nboletaver[0], session['userId']))
                         cantidadBoleta = cur.fetchone()
                         mysql.connection.commit()
@@ -2018,7 +2324,7 @@ def finalizarVerificacion():
                         time.sleep(1)
                      # total de materiales del verificador
                     cur = mysql.connection.cursor()
-                    cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto,round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and NoBoleta = %s and u.IdCargo = %s and v.IdEstado = 5 Group BY ver.IdMaterial', (
+                    cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto,round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.PO = %s and NoBoleta = %s and u.IdCargo = %s and v.IdEstado = 8 Group BY ver.IdMaterial', (
                         Verificacion[0][2], Verificacion[0][3], 2))
                     matverificador = cur.fetchall()
                     mysql.connection.commit()
@@ -2049,8 +2355,14 @@ def finalizarVerificacion():
                             'Update tb_verificacion set PO = %s Where NoBoleta = %s', (po[0]['name'], nboletaver[0]))
                         mysql.connection.commit()
                         print("SON IGUALES VALOR: ", iguales)
+                        cur = mysql.connection.cursor()
+                        cur.execute('Update tb_verificacion set IdEstado = 4 Where NoBoleta = %s and IdEstado = 8', [nboletaver[0]])
+                        mysql.connection.commit()
                         return "Iguales"
                     else:
+                        cur = mysql.connection.cursor()
+                        cur.execute('Update tb_verificacion set IdEstado = 7 Where NoBoleta = %s and IdEstado = 8', [nboletaver[0]])
+                        mysql.connection.commit()
                         return "Diferentes"
 
                     # cur = mysql.connection.cursor()
@@ -2301,7 +2613,7 @@ def finalizarVerificacion():
                     # Cambiar el estado de la verificacion
                     cur = mysql.connection.cursor()
                     cur.execute(
-                        'Update tb_verificacion set IdEstado = 5 Where Id_Verificacion = %s', [id])
+                        'Update tb_verificacion set IdEstado = 8 Where Id_Verificacion = %s', [id])
                     mysql.connection.commit()
 
                     # =========================

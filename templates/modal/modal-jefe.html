@@ -1,0 +1,200 @@
+<div class="modal fade" id="detalleVerificacionmodal" data-bs-focus="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
+        <div class="modal-content" style="background-color: #e4e9f7">
+            <div class="modal-header encabezado_modales">
+                <h5 class="modal-title fuente-grande-titulo" id="exampleModalLabel">
+                    Detalle de verificación
+                </h5>
+                <button type="button" class="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close"
+                    onclick="cargarLista()"></button>
+            </div>
+            <div class="modal-body">
+                {% for verifi in verificacion %}
+                <div class="tab-pane fade show active mt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="form-group" id="detalles">
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <div class="form-outline">
+                                    <label class="form-label fuentelabel" for="proveedor"><strong>Proveedor
+                                        </strong></label>
+                                    <input type="text" id="proveedor" name="proveedor" style="text-transform: uppercase"
+                                        onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                                        required="required" disabled class="form-control" value="{{ verifi[6] }}" />
+
+
+                                </div>
+                            </div>
+
+
+                            <div class="col-4">
+                                <div class="form-outline">
+                                    <label class="form-label fuentelabel" for="form3Example3"><strong>Punto de
+                                            compra</strong></label>
+                                    <input type="text" id="proveedor" name="proveedor" style="text-transform: uppercase"
+                                        onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                                        required="required" disabled class="form-control" value="{{ verifi[4] }}" />
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row mt-2">
+                            <!-- PONEMOS UN INPUT CON EL CARGO PARA USARLO COMO BANDERA PARA EL MOMENTO DE BLOQUEAR -->
+
+                            <div class="col-6">
+                                <div class="form-outline">
+                                    <label class="form-label fuentelabel"
+                                        for="form3Example3"><strong>Verificador</strong></label>
+                                    <input type="text" id="idusuariolog" name="digitador" placeholder="Punto de Compra"
+                                        required="required" class="form-control" disabled value="{{ verifi[7] }}" />
+
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-outline">
+                                    <label class="form-label fuentelabel"
+                                        for="form3Example3"><strong>Digitador</strong></label>
+                                    <input type="text" id="digitador" name="digitador" placeholder="Punto de Compra"
+                                        required="required" class="form-control" disabled value="{{ verifi[8] }}" />
+
+
+                                    <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
+                                                                                                                                                                                                                                                                                                                                                                                                        style="display: none;">Las
+                                                                                                                                                                                                                                                                                                                                                                                                        constraseñas no coinciden</label> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div id="form">
+                            <div class="row mt-2">
+                                <div class="col-3">
+                                    <div class="form-outline">
+                                        <label class="form-label fuentelabel"
+                                            for="form3Example1"><strong>PO</strong></label>
+                                        <input type="text" id="po" name="nombre" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="PO"
+                                            required="required" class="form-control" value="{{ verifi[2] }}" />
+
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-outline">
+                                        <label class="form-label fuentelabel"
+                                            for="form3Example1"><strong>Fecha</strong></label>
+                                        <input type="text" id="fecha" disabled name="nombre" placeholder="nombres"
+                                            required="required" class="form-control" value="{{ verifi[1] }}" />
+                                        <!-- <label id="mensaje_error_input" class="control-label col-md-12 text-danger"
+                                                                                                                                                                                                                                                                                                                                                                                                            style="display: block;">Las
+                                                                                                                                                                                                                                                                                                                                                                                                            constraseñas no coinciden</label> -->
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-outline">
+                                        <label class="form-label fuentelabel" for="form3Example2"><strong>No
+                                                Boleta</strong></label>
+                                        <input type="text" id="nboleta" name="nboleta" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="PO"
+                                            required="required" class="form-control" value="{{ verifi[3] }}" />
+
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-outline">
+                                        <label class="form-label fuentelabel"
+                                            for="form3Example2"><strong>Bahia</strong></label>
+                                        <input type="text" id="bahia" name="bahia" disabled placeholder="PO"
+                                            required="required" class="form-control" value="{{ verifi[9] }}" />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col mt-3 bg-light overflow-scroll" id="tabla-peso"></div>
+                    </div>
+                    <div id="content" class="col-lg-12"></div>
+                </div>
+                {%endfor%}
+
+                <!-- INICIO DE LA FUNCIONALIDAD DE LOS BOTONES CON JQUERY  DE LA PRIMERA PANTALLA-->
+            </div>
+            <div class="p-2">
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" class="btn btn-primary col-12" style="height: 50px" id="finalizar"
+                            onclick="desbloquear()">
+                            Desbloquear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        // MANDAR A LLAMAR LA TABLA
+
+        cargarPesos();
+        //
+
+    });
+    function cargarPesos() {
+        $.ajax({
+            url: "/listaPesosJefe",
+            type: "POST",
+            data: {
+                nboleta: $("#nboleta").val(),
+            },
+            success: function (response) {
+                $("#tabla-peso").html(response);
+                $("#tabla-peso").append(response.htmlresponse);
+            },
+            error: function (error) {
+                // console.log(error);
+            },
+        });
+    }
+
+    function desbloquear() {
+
+        Swal.fire({
+            title: "Desbloquear Verificación!",
+            text: "Ingrese el código",
+            html: '<input type="text" id="codigo" class="swal2-input" style="width:280px;" placeholder="código de desbloqueo">',
+            preConfirm: (value) => {
+                if ($('#codigo').val() == "" && $('#codigo').val() != "desbloquear123" ) {
+                    Swal.showValidationMessage(
+                        'Debe ingresar datos válidos.'
+                    )
+                }
+            },
+
+            showCancelButton: true,
+        }).then((result) => {
+            if ($("#codigo").val() == "desbloquear123") {
+                $.ajax({
+                    url: "/desbloquear",
+                    type: "POST",
+                    data: {
+                        nboleta: $("#nboleta").val(),
+                    },
+                    success: function (response) {
+                        window.location = "/home";
+                    },
+                    error: function (error) {
+                        // console.log(error);
+                    },
+                });
+            }
+
+
+        })
+
+
+
+
+    }
+</script>
