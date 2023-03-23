@@ -1049,11 +1049,22 @@
                                     }
                                 });
                             }else if(response == "Diferentes"){
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Las verificaciones son Diferentes.",
+                                    confirmButtonText: "Ok",
+                                    text: "La verificación se bloqueará.",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        window.location = "/home";
+                                    }
+                                });
 
                             }else{
                                 Swal.fire({
                                     icon: "success",
-                                    title: "Las verificaciones se creo con exitosamente.",
+                                    title: "Las verificaciones se creó exitosamente.",
                                     confirmButtonText: "Ok",
                                     text: "Se generó la verificación.",
                                 }).then((result) => {
