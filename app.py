@@ -2727,7 +2727,7 @@ def finalizarVerificacion():
             if pesos:
                 cur = mysql.connection.cursor()
                 cur.execute(
-                    "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 5 AND v.Id_Verificacion = %s", [id])
+                    "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 4 AND v.Id_Verificacion = %s", [id])
                 Verificacion = cur.fetchall()
                 mysql.connection.commit()
                 print("VERIFICACION")
@@ -2775,12 +2775,12 @@ def finalizarVerificacion():
                 # Cambiar el estado de la verificacion
                 cur = mysql.connection.cursor()
                 cur.execute(
-                    'Update tb_verificacion set IdEstado = 4 Where Id_Verificacion = %s', [id])
+                    'Update tb_verificacion set IdEstado = 9 Where Id_Verificacion = %s', [id])
                 mysql.connection.commit()
 
                 # Cambiar el estado de la verificacion
                 cur = mysql.connection.cursor()
-                cur.execute('Update tb_verificacion set IdEstado = 4 Where PO = %s', [
+                cur.execute('Update tb_verificacion set IdEstado = 9 Where PO = %s', [
                             Verificacion[0][2]])
                 mysql.connection.commit()
 
@@ -2897,11 +2897,16 @@ def finalizarVerificacionmal():
             if pesos:
                 cur = mysql.connection.cursor()
                 cur.execute(
-                    "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 5 AND v.Id_Verificacion = %s", [id])
+                    "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 4 AND v.Id_Verificacion = %s", [id])
                 Verificacion = cur.fetchall()
                 mysql.connection.commit()
                 print("VERIFICACION")
-                print(Verificacion[0][2])
+                po = Verificacion[0][2]
+                print(po)
+                # MANDAR EL COMENTARIO A ODOO
+                
+
+
                 # HACEMOS LOA SUMA DE CADA COLUMNA
                 #  SUMA DE LA COLUMNA PESOS BRUTOS
                 cur = mysql.connection.cursor()
@@ -2946,12 +2951,12 @@ def finalizarVerificacionmal():
                 # Cambiar el estado de la verificacion
                 cur = mysql.connection.cursor()
                 cur.execute(
-                    'Update tb_verificacion set IdEstado = 6 Where Id_Verificacion = %s', [id])
+                    'Update tb_verificacion set IdEstado = 7 Where Id_Verificacion = %s', [id])
                 mysql.connection.commit()
 
                 # Cambiar el estado de la verificacion
                 cur = mysql.connection.cursor()
-                cur.execute('Update tb_verificacion set IdEstado = 6 Where PO = %s', [
+                cur.execute('Update tb_verificacion set IdEstado = 7 Where PO = %s', [
                             Verificacion[0][2]])
                 mysql.connection.commit()
 

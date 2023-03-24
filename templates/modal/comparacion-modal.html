@@ -1,3 +1,4 @@
+
 {% for verifi in verificacion %}
 
 <div class="modal fade" id="detalleVerificacionmodal" data-bs-focus="true" tabindex="-1"
@@ -11,6 +12,7 @@
                 <button type="button" class="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close"
                     onclick="cargarLista()"></button>
             </div>
+            <div id="contener"></div>
             <div class="modal-body fondo-modal">
                 <div class="container">
                     <div class="row">
@@ -18,7 +20,7 @@
                             <div class="col">
                                 <label class="form-label fuentelabel" for="form3Example2"><strong>PO</strong></label>
 
-                                <input type="text" id="" name="id" style="text-transform: uppercase"
+                                <input type="text" id="po" name="id" style="text-transform: uppercase"
                                     onkeyup="this.value=this.value.toUpperCase()" value="{{ verifi[2] }}"
                                     placeholder="Peso báscula" disabled class="form-control" />
 
@@ -144,22 +146,22 @@
 
                 </script>
             </div>
-            <!-- <div class="p-2">
+            <div class="p-2">
                 <div class="row">
                     <div class="col-6">
                         <button type="button" class="btn btn-success col-12" style="height: 50px" id="finalizar"
-                            onclick="finalizar()">
-                            Correcta
+                            onclick="finalizar()"><i class="fa-regular fa-circle-check"></i> 
+                            Validar
                         </button>
                     </div>
                     <div class="col-6">
                         <button type="button" class="btn btn-danger col-12" style="height: 50px" id="finalizar"
-                            onclick="finalizarmal()">
-                            Incorrecta
+                            onclick="finalizarmal()"><i class="fa-solid fa-xmark"></i>
+                             Denegar
                         </button>
                     </div>
                 </div>
-            </div> -->
+            </div>
         </div>
     </div>
 </div>
@@ -369,32 +371,7 @@
                                     }
                                 });
                             } else {
-                                $("#factura").html(response);
-                                $("#factura").append(response.htmlresponse);
-                                // Escuchamos el click del botón
-                                elementoParaConvertir = document.querySelector(".div-verpdf"); // <-- Aquí puedes elegir cualquier elemento del DOM
-                                elementoParaConvertir.style.display = "block";
-                                html2pdf()
-                                    .set({
-                                        filename: "Factura.pdf",
-                                        image: {
-                                            type: "jpeg",
-                                            quality: 9,
-                                        },
-                                        html2canvas: {
-                                            scale: 5, // A mayor escala, mejores gráficos, pero más peso
-                                            letterRendering: false,
-                                        },
-                                        jsPDF: {
-                                            unit: "in",
-                                            format: "letter",
-                                            orientation: "portrait", // landscape o portrait
-                                        },
-                                    })
-                                    .from(elementoParaConvertir)
-                                    .save();
-                                setTimeout(() => {
-                                    Swal.fire({
+                                Swal.fire({
                                         icon: "success",
                                         title: "Verificación impresa",
                                         confirmButtonText: "Ok",
@@ -402,11 +379,9 @@
                                     }).then((result) => {
                                         /* Read more about isConfirmed, isDenied below */
                                         if (result.isConfirmed) {
-                                            elementoParaConvertir.style.display = "none";
                                             window.location = "/home";
                                         }
                                     });
-                                }, 1000);
                             }
                         },
                         error: function (error) {
@@ -449,26 +424,32 @@
                         id: $("#idboleta").val(),
                     },
                     success: function (response) {
-                        $('#whatsapp').attr('href', 'https://wa.me/50589940240?text=Cancelar%20esta%20verificación%20id:' + String($("#idboleta").val()) + '.');
+                        var link = $('<a></a>').text('Ir a Google');
+                        link.attr('href', 'https://wa.me/50589940240?text=Favor%20cancelar%20esta%20verificación%20\nPO:' + String($("#po").val()) + '.');
+                        link.attr('target', '_blank');
+                        link.attr('class', 'd-none');
+                        link.appendTo('#contener');
+                        setTimeout(function() {
+                            link.get(0).click();
+                        }, 100);
+                       
 
-
-
-                        setTimeout(() => {
-                            Swal.fire({
-                                icon: "success",
-                                title: "Verificación cancelada",
-                                confirmButtonText: "Ok",
-                                text: "Se canceló la verificación.",
-                            }).then((result) => {
-                                //establece el valor del href utilizando el método attr()
-                                // $('#whatsapp').click();
-                                // /* Read more about isConfirmed, isDenied below */
-                                if (result.isConfirmed) {
-                                    $('#whatsapp').click();
-                                    //window.location = "/home";
-                                }
-                            });
-                        }, 1000);
+                        // setTimeout(() => {
+                        //     Swal.fire({
+                        //         icon: "success",
+                        //         title: "Verificación cancelada",
+                        //         confirmButtonText: "Ok",
+                        //         text: "Se canceló la verificación.",
+                        //     }).then((result) => {
+                        //         //establece el valor del href utilizando el método attr()
+                        //         // $('#whatsapp').click();
+                        //         // /* Read more about isConfirmed, isDenied below */
+                        //         if (result.isConfirmed) {
+                        //             // $('#whatsapp').click();
+                        //             window.location = "/home";
+                        //         }
+                        //     });
+                        // }, 1000);
                     },
                     error: function (error) {
                         // console.log(error);
