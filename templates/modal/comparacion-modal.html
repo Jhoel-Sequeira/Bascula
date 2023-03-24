@@ -373,9 +373,9 @@
                             } else {
                                 Swal.fire({
                                         icon: "success",
-                                        title: "Verificación impresa",
+                                        title: "Verificación validada",
                                         confirmButtonText: "Ok",
-                                        text: "Se generó el pdf con la verificación.",
+                                        text: "Se validó la verificación.",
                                     }).then((result) => {
                                         /* Read more about isConfirmed, isDenied below */
                                         if (result.isConfirmed) {
@@ -431,6 +431,20 @@
                         link.appendTo('#contener');
                         setTimeout(function() {
                             link.get(0).click();
+                            Swal.fire({
+                                icon: "success",
+                                title: "Verificación cancelada",
+                                confirmButtonText: "Ok",
+                                text: "Se canceló la verificación.",
+                            }).then((result) => {
+                                //establece el valor del href utilizando el método attr()
+                                // $('#whatsapp').click();
+                                // /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                    // $('#whatsapp').click();
+                                    window.location = "/home";
+                                }
+                            });
                         }, 100);
                        
 
