@@ -2342,7 +2342,7 @@ def finalizarVerificacion():
                         print(IdOrden)
                         for material in mat:
 
-                            print(material)
+                            print("Cada Material: ",material)
                             if material[0] == "Rechazo (cobre)" or material[0] == "RECHAZO" or material[0] == "JUMBO" or material[0] == "Rechazo (Aluminio)" or material[0] == "Rechazo (Acero)" or material[0] == "Rechazo (Bronce)" or material[0] == "Rechazo (Cable)" or material[0] == "Rechazo (lata)":
 
                                 print("sosretroll")

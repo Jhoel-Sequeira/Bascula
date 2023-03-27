@@ -134,7 +134,7 @@ def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rech
     return pOrder
 
 def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
-    print(material)
+    print("material:",material)
     id = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['name', '=',material],['purchase_ok','=',True]]],{'fields':['pricelist_id']}) 
     print("id vacio")
     print(id)
@@ -142,9 +142,15 @@ def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
         idMaterial = id[0]['id']
     else:
         
-        id = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['name', '=',material+' '],['purchase_ok','=',True]]],{'fields':['pricelist_id']}) 
+        id1 = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['name', '=',material+' '],['purchase_ok','=',True]]],{'fields':['pricelist_id']}) 
         print(id)
-        idMaterial = id[0]['id']
+        if id1:
+
+            idMaterial = id1[0]['id']
+        else:
+            id2 = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['product_tmpl_id','=',([material+'  '])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+            idMaterial = id2[0]['id']
+        
 
 
     precio = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
@@ -154,9 +160,18 @@ def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
         Id = precio[0]['id']
         print(precio)
     else:
-        precio = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+' '])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
-        precioUnidad = precio[0]['price']
-        Id = precio[0]['id']
+        precio1 = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+' '])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+        if precio1:
+
+            precioUnidad = precio1[0]['price']
+            Id = precio1[0]['id']
+            print("id dentro del if: ",precio1)
+        else:
+            precio2 = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+'  '])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+            precioUnidad = precio2[0]['price']
+            Id = precio2[0]['id']
+        
+        
 
 
     #FORMATEAR EL STRING
