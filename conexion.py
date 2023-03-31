@@ -13,17 +13,43 @@ import datetime
 # PRIMERA PRUEBA
 # CONEXION A LA BASE DE DATOS
 # TENEMOS LOS DATOS DE LA API Y EL USUARIO CON SU CONTRASEÑA
-url = 'https://recicladora-31012023-7116641.dev.odoo.com/'
-db = 'recicladora-31012023-7116641'
+url = 'https://recicladora.odoo.com/'
+#db = 'recicladora-31012023-7116641'
+db = 'fdelanuez-itc-recicladora-master-668849'
+#username = 'jhoel.sequeira@crn.com.ni'
+#username = 'SOPORTE IT'
+username = 'soporte@crn.com.ni'
+#password = 'crn2023'
+password = 'CRN!2023@bdserver'
+#HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
+info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
+info.version()
+uid = info.authenticate(db, username, password,{})
 
-username = 'jhoel.sequeira@crn.com.ni'
-password = 'crn2023'
-info = xmlrpc.client.ServerProxy(
-        'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/common')
+# PRUEBAS PARA INSERCION EN UNA TABLA
+#PRUEBAS DE PERMISOS DE CADA USUARIO
+#models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
+models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
 
-uid =  info.authenticate(db, username, password, {})
-models= xmlrpc.client.ServerProxy(
-        'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/object')
+
+
+
+
+
+
+
+
+# url = 'https://recicladora-31012023-7116641.dev.odoo.com/'
+# db = 'recicladora-31012023-7116641'
+
+# username = 'jhoel.sequeira@crn.com.ni'
+# password = 'crn2023'
+# info = xmlrpc.client.ServerProxy(
+#         'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/common')
+
+# uid =  info.authenticate(db, username, password, {})
+# models= xmlrpc.client.ServerProxy(
+#         'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/object')
 def conectar(user,contra):
     global username 
     username = ''+user
@@ -110,7 +136,7 @@ def buscarProveedor(prov,cargo):
 
         return proveedores
     else:
-        proveedores = conectarTemp('doris.fonseca@crn.com.ni','123',prov)
+        proveedores = conectarTemp('soporte@crn.com.ni','CRN!2023@bdserver',prov)
         return proveedores
 
 
@@ -148,26 +174,26 @@ def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
 
             idMaterial = id1[0]['id']
         else:
-            id2 = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['product_tmpl_id','=',([material+'  '])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+            id2 = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['product_tmpl_id','=',([material+'  '])],['pricelist_id','=',9]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
             idMaterial = id2[0]['id']
         
 
 
-    precio = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+    precio = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material])],['pricelist_id','=',9]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
 
     if precio:
         precioUnidad = precio[0]['price']
         Id = precio[0]['id']
         print(precio)
     else:
-        precio1 = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+' '])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+        precio1 = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+' '])],['pricelist_id','=',9]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
         if precio1:
 
             precioUnidad = precio1[0]['price']
             Id = precio1[0]['id']
             print("id dentro del if: ",precio1)
         else:
-            precio2 = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+'  '])]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+            precio2 = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+'  '])],['pricelist_id','=',9]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
             precioUnidad = precio2[0]['price']
             Id = precio2[0]['id']
         
