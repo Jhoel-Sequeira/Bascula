@@ -26,7 +26,7 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'verificacion'
 # CONFIGURAR TIEMPO DE LA SESION
-# app.config['PERMANENT_SESSION_LIFETIME'] = 3600
+#app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(seconds=10)
 
 # CIERRE CONFIGURACIONES
 
@@ -41,7 +41,11 @@ def capturarHora():
 
 
 # cursor.execute("") para ejecutar las instrucciones sql
-
+#PONEMOS LA VALIDACION DE LA CADUCACION DE SESION
+def ValidarSesion():
+    if not session['user']:
+    
+        return redirect(url_for('Index'))
 
 @app.route('/')
 def Index():
@@ -964,7 +968,7 @@ def listaProveedores():
                     print(total)
                     # LLamar las verificaciones validas
                     cur = mysql.connection.cursor()
-                    cur.execute("" + total)
+                    cur.execute("" + total+'group BY v.NoBoleta,v.PO')
                     verificaciones = cur.fetchall()
                     print("verifi")
                     return render_template('tablas/tabla-comparacion.html', verificaciones=verificaciones)
@@ -1027,7 +1031,7 @@ def listaProveedores():
                     print(total)
                     # LLamar las verificaciones validas
                     cur = mysql.connection.cursor()
-                    cur.execute("" + total)
+                    cur.execute("" + total+'group BY v.NoBoleta,v.PO')
                     verificaciones = cur.fetchall()
                     print("verifi")
                     return render_template('tablas/tabla-comparacion.html', verificaciones=verificaciones)
