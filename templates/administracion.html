@@ -40,6 +40,7 @@ encabezado %}
             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filtromodal">
                 <i class="fa-solid fa-filter"></i>
             </button>
+            
             <button type="button" style="color:fff; font-size: 18px;" onclick="ExcelTabla()"
                 class="btn btn-success ml-auto">
                 <i class="fa-solid fa-file-csv"></i><a class="borrarletra" style="text-decoration: none; color: white;">
@@ -52,6 +53,52 @@ encabezado %}
 
 </div>
 <script>
+    function ExcelTablaVal() {
+        // Seleccionar todos los elementos de la tabla con el selector de jQuery
+        var elementosTabla = $('table td');
+
+        // Crear un array para almacenar los valores de los atributos "id"
+        var ids = [];
+
+        // Iterar a través de cada elemento de la tabla y obtener el valor del atributo "id"
+        elementosTabla.each(function () {
+            var id = $(this).attr('id');
+
+            // Agregar el valor del atributo "id" al array si existe
+            if (id) {
+                ids.push(id);
+            }
+        });
+        let array_ids = JSON.stringify(ids);
+        $.ajax({
+            url: "/reporteValidador",
+            type: "POST",
+            beforeSend: function () {
+                Swal.fire({
+                    html:'<div class="col-lg-12" style="z-index:99999; display:absolute; width"><img src="../static/img/loader.gif" alt="loading" /><br/>Generando el reporte...</div>'
+                })
+
+            },
+            data: {
+                valor: array_ids,
+
+            },
+            success: function (response) {
+                swal.close();
+                // Generar la exportacion del archivo para descargarlo
+                var link = document.createElement('a');
+                link.href = response.url;
+                link.download = 'ejemplo.xlsx';
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            },
+            error: function (error) { // console.log(error);
+            }
+        });
+        // console.log(ids);
+    }
     function ExcelTabla() {
         // Seleccionar todos los elementos de la tabla con el selector de jQuery
         var elementosTabla = $('table td');
@@ -176,10 +223,11 @@ encabezado %}
                                 <label class="form-label" for="proveedor">Estado</label>
 
                                 <select class="form-control" name="IdEstado" id="IdEstado">
-                                    <option value="3">Pendiente</option>
+                                    <!-- <option value="3">Pendiente</option> -->
                                     <option value="4">Completado</option>
                                     <option value="5">Por validar</option>
                                     <option value="6">Cancelado</option>
+                                    <!-- <option value="7">Desbloqueados</option> -->
                                 </select>
 
                             </div>

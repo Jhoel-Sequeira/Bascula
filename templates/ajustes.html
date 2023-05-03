@@ -18,26 +18,7 @@ encabezado %}
 <div class="p-1 mt-2">
     <div class="centrar">
         <div class="row mt-5">
-            {% if session.user %} {% if session.userrole == 1%}
-            <!-- <div class="col-lg-3 col-6" style="padding: 10px;">
-                
-                <div class="card cartas" onclick="verProveedores()" style="padding: 5px; background-color: #b4583f">
-                    <div class="inner">
-                        <h3>
-                            <sup style="font-size: 20px"></sup>
-                        </h3>
-                        <br>
-                        <br>
-                    </div>
-                    <div class="icon">
-                        <i class="fa-solid fa-truck"></i>
-                    </div>
-                    <a style="cursor: pointer;" onclick="verProveedores()" class="card-footer">
-                        Proveedores
-                    </a>
-                </div>
-            </div> -->
-            {% endif %}{% endif %}
+           
             <br>
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
@@ -61,9 +42,12 @@ encabezado %}
                 function homeMenu() {
                     window.location = '/home'
                 }
+                function homeDesbloqueo() {
+                    window.location = '/desbloqueo'
+                }
             </script>
             <br>
-            {% if session.user %} {% if session.cargo != 5 and session.cargo != 3 and session.cargo != 6%}
+            {% if session.user %} {% if session.cargo != 3 and session.cargo != 6%}
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
                 <div class="card cartas" onclick="misVer()" style="padding: 5px; background-color: #b4583f">
@@ -125,23 +109,53 @@ encabezado %}
                         <br>
                         <br>
                     </div>
-                    <div class="icon mr-1">
-                        <i class="fa-solid fa-users"></i>
+                    <div class="icon mr-2">
+                        <i class="fa-solid fa-users delgado1"></i>
                     </div>
                     <a style="cursor: pointer;" onclick="verUsuarios()" class="card-footer">
                         Usuarios
                     </a>
                 </div>
             </div>
+            <br>
+            <div class="col-lg-3 col-6" style="padding: 10px;">
+                <!-- small box -->
+                <div class="card cartas" onclick="homeDesbloqueo()" style="padding: 5px; background-color: #b4583f">
+                    <div class="inner">
+                        <h3>
+                            <sup style="font-size: 20px"></sup>
+                        </h3>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="icon mr-1">
+                        <i class=" fa-solid fas fa-lock delgado"></i>
+                        
+                    </div>
+                    <a href="/desbloqueo" id="home" class="card-footer">
+                        Desbloqueos
+                    </a>
+                </div>
+            </div>
+            <!-- <div class="col-lg-3 col-6" style="padding: 10px;">
+                
+                <div class="card cartas" onclick="verProveedores()" style="padding: 5px; background-color: #b4583f">
+                    <div class="inner">
+                        <h3>
+                            <sup style="font-size: 20px"></sup>
+                        </h3>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="icon">
+                        <i class="fa-solid fa-truck"></i>
+                    </div>
+                    <a style="cursor: pointer;" onclick="verProveedores()" class="card-footer">
+                        Proveedores
+                    </a>
+                </div>
+            </div> -->
             {% endif %}{% endif %}
-
-
-
-            
-
-
-
-
         </div>
     </div>
 </div>

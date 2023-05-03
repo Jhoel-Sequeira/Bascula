@@ -365,7 +365,9 @@
 .cuadro-comparacion{
   width: 25%;
 }
-
+#topbar:hover{
+  cursor: pointer;
+}
 
 
 @media (max-width: 900px) {

@@ -80,6 +80,14 @@
     transition: transform 0.3s linear;
     transition: transform 0.3s linear, -webkit-transform 0.3s linear;
   }
+  .card .icon>.delgado1{
+    position: absolute;
+    right: 35%;
+    top: 15px;
+    transition: -webkit-transform 0.3s linear;
+    transition: transform 0.3s linear;
+    transition: transform 0.3s linear, -webkit-transform 0.3s linear;
+  }
 }
 
 /* DIMENSIONES PARA UNA LAPTOP */

@@ -120,9 +120,10 @@
         }).then((result) => {
             tipo = $("#tipo option:selected").val()
             valor = $('#valor').val()
+            // alert('entro al tara')
             if (valor > 0) {
                 $.ajax({
-                    url: "/añadirTarasExtras",
+                    url: "/addTarasExtras",
                     type: "POST",
                     data: {
                         id: idDet,

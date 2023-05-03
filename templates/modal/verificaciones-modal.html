@@ -1035,6 +1035,18 @@
                                 if (result.isConfirmed) {
                                 }
                             });
+                        }else if(response == "ValoresErroneos"){
+                            Swal.fire({
+                                    icon: "error",
+                                    title: "Las verificaciones son Diferentes.",
+                                    confirmButtonText: "Ok",
+                                    text: "La verificación se bloqueará.",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        window.location = "/home";
+                                    }
+                                });
                         } else {
                             if (response == "Iguales"){
                                 Swal.fire({

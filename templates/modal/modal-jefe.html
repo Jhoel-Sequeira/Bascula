@@ -163,7 +163,7 @@
         Swal.fire({
             title: "Desbloquear Verificación!",
             text: "Ingrese el código",
-            html: '<input type="text" id="codigo" class="swal2-input" style="width:280px;" placeholder="código de desbloqueo">',
+            html: '<input type="password" id="codigo" class="swal2-input" style="width:280px;" placeholder="código de desbloqueo">',
             preConfirm: (value) => {
                 if ($('#codigo').val() == "" && $('#codigo').val() != "desbloquear123" ) {
                     Swal.showValidationMessage(

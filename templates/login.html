@@ -114,32 +114,32 @@
     $('#verContra').mouseup(function () {
         $('#contra').attr('type', 'password');
     });
-    function iniciarSesion() {
-        $.ajax({
-            url: "/login",
-            type: "POST",
-            beforeSend: function () {
-                Swal.fire({
-                    html: '<div class="col-lg-12" style="z-index:99999; display:absolute;" ><img src="../static/img/loader.gif" alt="loading" /><br/>Cargando datos del usuario...</div>'
-                }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
-                    if (result.isConfirmed) {
-                    }
-                });
+    // function iniciarSesion() {
+    //     $.ajax({
+    //         url: "/login",
+    //         type: "POST",
+    //         beforeSend: function () {
+    //             Swal.fire({
+    //                 html: '<div class="col-lg-12" style="z-index:99999; display:absolute;" ><img src="../static/img/loader.gif" alt="loading" /><br/>Cargando datos del usuario...</div>'
+    //             }).then((result) => {
+    //                 /* Read more about isConfirmed, isDenied below */
+    //                 if (result.isConfirmed) {
+    //                 }
+    //             });
 
-            },
-            data: {
-                loginUser: $("#loginUser"),
-                loginPassword: $("#loginPassword")
+    //         },
+    //         data: {
+    //             loginUser: $("#loginUser"),
+    //             loginPassword: $("#loginPassword")
 
-            },
-            success: function (response) {
+    //         },
+    //         success: function (response) {
 
-            },
-            error: function (error) { // console.log(error);
-            }
-        });
-    }
+    //         },
+    //         error: function (error) { // console.log(error);
+    //         }
+    //     });
+    // }
 </script>
 
 </html>

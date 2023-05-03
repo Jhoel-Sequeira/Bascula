@@ -50,6 +50,7 @@
         </tr>
     </tbody>
 </table>
+
 <table class="table" id="tabla-peso">
     
     <thead>
@@ -100,6 +101,8 @@
         </tr>
     </tbody>
 </table>
+<input type="hidden" id="totalFilas" value="{{ pesosdigitador|length}}">
 <script>
     $('#neto').val('{{sumaNetodigi}}')
+    $('#registrosTotal').val('{{ pesosdigitador|length}}')
 </script>

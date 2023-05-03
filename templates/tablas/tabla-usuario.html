@@ -1,5 +1,5 @@
 
-<table class="table rounded" id="tabla-usuario1" style=" width:100vw">
+<table class="table rounded" id="tabla-usuario1">
     <thead>
         <tr>
             <th colspan="6" class="" style="text-align: center; font-size: 35px;">
@@ -7,13 +7,13 @@
             </th>
         </tr>
         <tr class="fuente-tabla">
-            <th style="width: 10px">Id Usuario</th>
-            <th>Nombre</th>
-            <th>Usuario</th>
-            <th>Cedula</th>
-            <th>Cargo</th>
-            <th>Rol</th>
-            <th>Estado</th>
+            <th style="width: 10px">Id</th>
+            <th style="width: 350px">Nombre</th>
+            <th style="width: 200px; padding-left: 80px;">Usuario</th>
+            <th style="width: 200px; padding-left: 50px;">Cedula</th>
+            <th style="width: 200px; padding-left: 20px;">Cargo</th>
+            <th style="width: 200px; padding-left: 20px;">Rol</th>
+            <th style="width: 200px; padding-left: 20px;">Estado</th>
             <th></th>
             <th></th>
         </tr>
@@ -24,24 +24,24 @@
             <td>
                 {%if i[0] == None%}--{%else%}{{i[0]}}{%endif%}</td>
             </td>
-            <td align="center" style="padding-right: 100px">
+            <td align="center" style="width: 350px">
                 {%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
             </td>
-            <td align="center" style="padding-right: 100px">
+            <td align="center" style="width:200px">
                 {%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
             </td>
             <!-- viene el rol -->
-            <td align="center" style="padding-right: 100px">
+            <td align="center" style="width:200px">
                 {%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>
             </td>
 
-            <td align="center" style="padding-right: 100px">
+            <td align="center" style="width:200px">
                 {%if i[6] == None%}--{%else%}{{i[6]}}{%endif%}</td>
             <!--  cargo -->
-            <td align="center" style="padding-right: 100px">
+            <td align="center" style="width:200px">
                 {%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
             </td>
-            <td align="center" style="padding-right: 100px">
+            <td align="center" style="width:200px">
                 {%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
 
             {%if i[4] == 'Inactivo'%}
