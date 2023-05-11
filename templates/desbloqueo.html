@@ -37,9 +37,9 @@ encabezado %}
         </div>
         <div class="col mt-3" style="color:rgb(121, 121, 121); font-size: 20px; margin-left: 30px; ">
 
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filtromodal">
+            <!-- <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filtromodal">
                 <i class="fa-solid fa-filter"></i>
-            </button>
+            </button> -->
             
             <button type="button" style="color:fff; font-size: 18px;" onclick="ExcelTablaDesbloqueo()"
                 class="btn btn-success ml-auto">
@@ -62,7 +62,7 @@ encabezado %}
         // Iterar a través de cada elemento de la tabla y obtener el valor del atributo "id"
         elementosTabla.each(function () {
             var id = $(this).attr('id');
-
+            
             // Agregar el valor del atributo "id" al array si existe
             if (id) {
                 ids.push(id);
@@ -70,6 +70,7 @@ encabezado %}
         });
         
         let array_ids = JSON.stringify(ids);
+        alert(array_ids)
         $.ajax({
             url: "/reporteDesbloqueo",
             type: "POST",
@@ -242,8 +243,7 @@ encabezado %}
                 </div>
             </div>
             <div class="modal-footer">
-                <!-- x -->
-                <button type="button" onclick="filtrar()" class="btn btn-primary">Buscar</button>
+                <button type="button" onclick="filtrarDesb()" class="btn btn-primary">Buscar</button>
             </div>
         </div>
     </div>
@@ -292,8 +292,8 @@ encabezado %}
 
             },
             success: function (response) {
-                $('#tabla-adm').html(response);
-                $('#tabla-adm').append(response.htmlresponse);
+                $('#tabla-prov').html(response);
+                $('#tabla-prov').append(response.htmlresponse);
             },
             error: function (error) { // console.log(error);
             }
@@ -439,7 +439,7 @@ encabezado %}
         return result;
     }
     // new MultiSelectTag('filtroOpc')  // id
-    function filtrar() {
+    function filtrarDesb() {
 
         var inputs = $('#filtrosInputs :input:visible');
         var values = {};
@@ -451,15 +451,15 @@ encabezado %}
         console.log(values);
         var JSon = JSON.stringify(values);
         $.ajax({
-            url: "/AñadirFiltroBloqueo",
+            url: "/AñadirFiltroDesbloqueo",
             type: "POST",
             data: {
                 filtro: JSon,
 
             },
             success: function (response) {
-                $('#tabla-adm').html(response);
-                $('#tabla-adm').append(response.htmlresponse);
+                $('#tabla-prov').html(response);
+                $('#tabla-prov').append(response.htmlresponse);
             },
             error: function (error) { // console.log(error);
             }

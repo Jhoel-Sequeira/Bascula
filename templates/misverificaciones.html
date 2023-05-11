@@ -21,7 +21,8 @@ Historial
 encabezado %}
 <div class="row">
     <div class="col">
-        <h1><a href="/ajustes" style="text-decoration: none;" class="fuente-grande-titulo-principal">Mi Historial</a></h1>
+        <h1><a href="/ajustes" style="text-decoration: none;" class="fuente-grande-titulo-principal">Mi Historial</a>
+        </h1>
     </div>
 </div>
 {% endblock %}
@@ -36,17 +37,18 @@ encabezado %}
 
         </div>
         <div class="col " style="color:rgb(121, 121, 121); font-size: 20px; margin-left: 30px; ">
-
+            {%if session.cargo == 3 %}
             <button type="button" class="btn btn-secondary mt-3" data-bs-toggle="modal" data-bs-target="#filtromodal">
                 <i class="fa-solid fa-filter"></i>
             </button>
+            {%endif%}
             {%if session.cargo == 5 %}
             <button type="button" style="color:fff; font-size: 18px;" onclick="ExcelTablaVal()"
                 class="btn btn-success mt-3 ml-auto">
                 <i class="fa-solid fa-file-csv"></i><a class="borrarletra" style="text-decoration: none; color: white;">
                     Excel</a>
             </button>
-            {%elif session.cargo == 1%}
+            {%elif session.cargo == 3%}
             <button type="button" style="color:fff; font-size: 18px;" onclick="ExcelTabla()"
                 class="btn btn-success mt-3 ml-auto">
                 <i class="fa-solid fa-file-csv"></i><a class="borrarletra" style="text-decoration: none; color: white;">
@@ -82,7 +84,7 @@ encabezado %}
             type: "POST",
             beforeSend: function () {
                 Swal.fire({
-                    html:'<div class="col-lg-12" style="z-index:99999; display:absolute; width"><img src="../static/img/loader.gif" alt="loading" /><br/>Generando el reporte...</div>'
+                    html: '<div class="col-lg-12" style="z-index:99999; display:absolute; width"><img src="../static/img/loader.gif" alt="loading" /><br/>Generando el reporte...</div>'
                 })
 
             },
@@ -128,7 +130,7 @@ encabezado %}
             type: "POST",
             beforeSend: function () {
                 Swal.fire({
-                    html:'<div class="col-lg-12" style="z-index:99999; display:absolute; width"><img src="../static/img/loader.gif" alt="loading" /><br/>Generando el reporte...</div>'
+                    html: '<div class="col-lg-12" style="z-index:99999; display:absolute; width"><img src="../static/img/loader.gif" alt="loading" /><br/>Generando el reporte...</div>'
                 })
 
             },
@@ -177,12 +179,19 @@ encabezado %}
                     <div class="row">
                         <div class="col-12">
                             <select multiple name="filtro" id="filtroOpc" class="filter-multi-select">
-
+                                {%if session.cargo == 5%}
+                                <option value="2">Fecha</option>
+                                {%elif session.cargo == 1%}
+                                <option value="1">Proveedor</option>
+                                <option value="2">Fecha</option>
+                                <option value="3">Estado</option>
+                                {%else%}
                                 <option value="1">Proveedor</option>
                                 <option value="2">Fecha</option>
                                 <option value="3">Estado</option>
                                 <option value="4">Digitador</option>
                                 <option value="5">Verificador</option>
+                                {%endif%}
                             </select>
 
                         </div>
@@ -221,14 +230,16 @@ encabezado %}
                         <div class="col-6" id="estado_filtro">
                             <div class="form-outline">
                                 <label class="form-label" for="proveedor">Estado</label>
+                                {%if session.cargo == 3%}
 
+                                {%else%}
                                 <select class="form-control" name="IdEstado" id="IdEstado">
                                     <option value="3">Pendiente</option>
                                     <option value="4">Completado</option>
                                     <option value="5">Por validar</option>
                                     <option value="6">Cancelado</option>
                                 </select>
-
+                                {%endif%}
                             </div>
 
                         </div>
@@ -260,7 +271,18 @@ encabezado %}
             </div>
             <div class="modal-footer">
                 <!-- x -->
+                {%if session.cargo == 3%}
                 <button type="button" onclick="filtrar()" class="btn btn-primary">Buscar</button>
+                {%elif session.cargo == 5%} 
+                <!-- validador -->
+                <button type="button" onclick="filtrarVal()" class="btn btn-primary">Buscar</button>
+                {%elif session.cargo == 1%}
+                <!-- DIGITADOR -->
+                <button type="button" onclick="filtrarVal()" class="btn btn-primary">Buscar</button>
+                {%elif session.cargo == 2%}
+                <!-- VERIFICADOR -->
+                <button type="button" onclick="filtrarVer()" class="btn btn-primary">Buscar</button>
+                {%endif%}
             </div>
         </div>
     </div>
@@ -500,7 +522,7 @@ encabezado %}
         return result;
     }
     // new MultiSelectTag('filtroOpc')  // id
-    function filtrar() {
+    function filtrarVer() {
 
         var inputs = $('#filtrosInputs :input:visible');
         var values = {};
@@ -512,7 +534,61 @@ encabezado %}
         console.log(values);
         var JSon = JSON.stringify(values);
         $.ajax({
-            url: "/AñadirFiltro",
+            url: "/AñadirFiltroVer",
+            type: "POST",
+            data: {
+                filtro: JSon,
+
+            },
+            success: function (response) {
+                $('#tabla-adm').html(response);
+                $('#tabla-adm').append(response.htmlresponse);
+            },
+            error: function (error) { // console.log(error);
+            }
+        });
+    }
+    //FILREO VALIDADOR
+    function filtrarVal() {
+
+        var inputs = $('#filtrosInputs :input:visible');
+        var values = {};
+
+        inputs.each(function () {
+            values[this.name] = $(this).val();
+        });
+
+        console.log(values);
+        var JSon = JSON.stringify(values);
+        $.ajax({
+            url: "/AñadirFiltroVal",
+            type: "POST",
+            data: {
+                filtro: JSon,
+
+            },
+            success: function (response) {
+                $('#tabla-adm').html(response);
+                $('#tabla-adm').append(response.htmlresponse);
+            },
+            error: function (error) { // console.log(error);
+            }
+        });
+    }
+    //FILREO DIGITADOR
+    function filtrarDi() {
+
+        var inputs = $('#filtrosInputs :input:visible');
+        var values = {};
+
+        inputs.each(function () {
+            values[this.name] = $(this).val();
+        });
+
+        console.log(values);
+        var JSon = JSON.stringify(values);
+        $.ajax({
+            url: "/AñadirFiltroDi",
             type: "POST",
             data: {
                 filtro: JSon,

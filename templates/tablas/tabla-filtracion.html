@@ -5,6 +5,7 @@
                 Tabla</th>
         </tr> -->
         <tr class="fuente-tabla">
+            <th>Id</th>
             <th style="width: 350px">Proveedor</th>
             <th style="width: 200px; padding-left: 80px;">Fecha</th>
             <th style="width: 200px; padding-left: 60px;">Po</th>
@@ -17,6 +18,7 @@
     <tbody>
         {%for i in verificaciones%}
             <tr class="fuente-tabla">
+                <td >{{i[0]}}</td>
                 <td >{{i[6]}}</td>
                 <td align="center" style="width: 500px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
                 <td align="center" style="width: 200px" id="{{i[2]}}">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>

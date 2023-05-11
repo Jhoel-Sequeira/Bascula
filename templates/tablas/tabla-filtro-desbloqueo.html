@@ -24,8 +24,7 @@
     <tbody>
         {%if verificaciones%}
         
-        {%for i in verificaciones%}
-        {%for ver in i%}
+        {%for ver in verificaciones%}
         <tr class="fuente-tabla">
             <td id="{{ver[0]}}">{{ver[0]}}</td>
             <td>{{ver[1]}}</td>
@@ -36,7 +35,6 @@
             <td align="center" style="width:200px">{{ver[6]}}</td>
 
         </tr>
-        {%endfor%}
         {%endfor%}
         {%else%}
         <tr>

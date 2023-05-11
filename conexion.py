@@ -38,7 +38,7 @@ import datetime
 
 
 
-
+#BASE DE DATOS DE PRODUCCION
 url = 'https://recicladora-31012023-7116641.dev.odoo.com/'
 db = 'recicladora-31012023-7116641'
 
@@ -137,12 +137,12 @@ def buscarProveedor(prov,cargo):
 
         return proveedores
     else:
-        #proveedores = conectarTemp('soporte@crn.com.ni','CRN!2023@bdserver',prov) ESTA LINEA ES PARA EL DE PRODUCCION
+        #proveedores = conectarTemp('soporte@crn.com.ni','CRN!2023@bdserver',prov) #ESTA LINEA ES PARA EL DE PRODUCCION
         proveedores = conectarTemp('doris.fonseca@crn.com.ni','123',prov) #ESTA LINEA ES PARA EL DE PRUEBA
         return proveedores
 
 
-def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rechazoPet,primera,segunda,uid1,contra1):
+def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,devolucion,liquido,rechazoPet,primera,segunda,uid1,contra1):
     
     
     print(jumbo)
@@ -153,13 +153,16 @@ def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,liquido,rech
                                            'x_studio_field_WLD1C':NoBoleta,
                                            'x_studio_rechazo_1': rechazo,
                                            'x_studio_jumbo': jumbo,
+                                           'x_studio_rechazo_pet': devolucion,
                                            'x_studio_lquido': liquido,
-                                           'x_studio_rechazo_pet': 0,
                                            'x_studio_material_de_primera': primera,
                                            'x_studio_material_de_segunda': segunda}])
     
     
     return pOrder
+def CrearAlbaran(pOrder,uid1,contra1):
+    models.execute_kw(db, uid1, contra1, 'purchase.order', 'button_confirm', [[pOrder]])
+
 
 def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
     print("material:",material)
@@ -219,7 +222,7 @@ def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
     
     datos = models.execute_kw(db,uid1,contra1,'purchase.order.line','create',[line_data])
     print("bloqueamos aqui")
-    models.execute_kw(db, uid1, contra1, 'purchase.order', 'button_confirm', [[pOrder]])
+    
 
 def traerPo(idOrden):
    
@@ -312,6 +315,7 @@ def GenerarExcel_1(contra,ids,uid1):
 
 
     filaCont = 3
+    print(ids)
     # Añade los datos a la hoja de trabajo
     for id in ids:
         potemp = models.execute_kw(db, uid1, contra, 'purchase.order', 'search_read', [[['name', '=',''+str(id)]]])
@@ -452,10 +456,10 @@ def GenerarExcel_3(contra,ids,uid1,datos):
         potemp = models.execute_kw(db, uid1, contra, 'purchase.order', 'search_read', [[['name', '=',''+str(id)]]])
         # Recuperar las líneas de pedido de compra asociadas a la orden de compra
         print(potemp[0]['id'])
-        print("valores: ",datos)
+        #print("valores: ",datos[1][0])
         
         order_lines = models.execute_kw(db, uid1, contra, 'purchase.order.line', 'search_read', [[('order_id', '=', potemp[0]['id'])]], {'fields': ['product_qty']})
-        
+        print('order_Line: ',order_lines)
         # Sumar las cantidades de cada línea de pedido de compra
         total_cantidad = sum(line['product_qty'] for line in order_lines)
         for row_num, fila in enumerate(potemp, filaCont):
@@ -472,13 +476,14 @@ def GenerarExcel_3(contra,ids,uid1,datos):
             ws.cell(row=row_num, column=8, value='0')
             ws.cell(row=row_num, column=9, value='0')
             ws.cell(row=row_num, column=10, value='=SUMA(D'+str(row_num)+',E'+str(row_num)+',F'+str(row_num)+',G'+str(row_num)+')')
-            ws.cell(row=row_num, column=11, value=datos[contador][1])
-            ws.cell(row=row_num, column=12, value=datos[contador][2])
-            ws.cell(row=row_num, column=13, value=datos[contador][3])
-            ws.cell(row=row_num, column=14, value=datos[contador][0])
+            ws.cell(row=row_num, column=11, value=datos[contador][0][1])
+            ws.cell(row=row_num, column=12, value=datos[contador][0][3])
+            ws.cell(row=row_num, column=13, value=datos[contador][0][2])
+            ws.cell(row=row_num, column=14, value=datos[contador][0][0])
             ws.cell(row=row_num, column=15, value='0')
         filaCont += 1
         contador += 1
+       
 
 
 

@@ -20,6 +20,7 @@
     </thead>
     <tbody>
         {%for i in pesosverificador%}
+        
         <tr class="fuente-tabla">
             <td>{{i[0]}}</td>
             <input type="hidden" id="valorNeto1" value="">
@@ -102,6 +103,7 @@
     </tbody>
 </table>
 <input type="hidden" id="totalFilas" value="{{ pesosdigitador|length}}">
+
 <script>
     $('#neto').val('{{sumaNetodigi}}')
     $('#registrosTotal').val('{{ pesosdigitador|length}}')

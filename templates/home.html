@@ -49,6 +49,9 @@ encabezado %}
         {%endif%}
 
     </div>
+    {%if cargo != 5 and cargo != 6 and cargo != 3%}
+    <p>Sugerencia de Boleta: <a  onclick="PonerNumero()" id="valorGenerado"></a></p>
+    {%endif%}
 
     <script>
         function ver() {
@@ -66,10 +69,31 @@ encabezado %}
 </div>
 <div id="factura"></div>
 <script>
-
+    function PonerNumero(){
+        $('#buscar').val($('#valorGenerado').text());
+        $('#verificar').removeAttr('disabled')
+    }
     $(document).ready(function () {
         cargarLista();
+        TraerNumero();
+       
     });
+    function TraerNumero(){
+        $.ajax({
+            url: "/traerNumero",
+            type: "POST",
+            data: {
+                data:'',
+
+            },
+            success: function (response) {
+                $('#valorGenerado').text(response);
+            },
+            error: function (error) {
+                //console.log(error);
+            },
+        });
+    }
 
     function verFiltros() {
         if ($('#filtros').is(':visible')) {
@@ -114,6 +138,10 @@ encabezado %}
                     }else{
                         $('#buscar').val("");
                     }
+                    if (proveedor == $('#valorGenerado').text()){
+                        TraerNumero();
+                    }
+                    
                     
                 },
                 error: function (error) {
@@ -132,7 +160,7 @@ encabezado %}
     // Funcion para poner lista de resultados
     var buscarBoleta = function () {
         if ($('#cargo').val() != 5) {
-            if ($('#buscar').val() != "" && $('#buscar').val() > 0) {
+            if ($('#buscar').val() != "" ) {
                 $('#verificar').removeAttr('disabled')
             } else {
                 $('#verificar').attr('disabled', 'true');

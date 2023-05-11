@@ -63,9 +63,9 @@
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel"
                                         for="form3Example3"><strong>Verificador</strong></label>
-                                    {% if verifi[7] %}
+                                    {% if verifi[8] %}
                                     <input type="text" id="idusuariolog" name="digitador" placeholder="Punto de Compra"
-                                        required="required" class="form-control" disabled value="{{ verifi[7] }}" />
+                                        required="required" class="form-control" disabled value="{{ verifi[8] }}" />
                                     {% else %}
                                     {%if usuariolog[1] == 'Verificador'%}
                                     <input type="text" value="{{usuariolog[2]}}" name="" id="" disabled="disabled"
@@ -94,9 +94,9 @@
 
 
 
-                                    {% if verifi[8] %}
+                                    {% if verifi[7] %}
                                     <input type="text" id="digitador" name="digitador" placeholder="Punto de Compra"
-                                        required="required" class="form-control" disabled value="{{ verifi[8] }}" />
+                                        required="required" class="form-control" disabled value="{{ verifi[7] }}" />
                                     {% else %}
                                     {%if usuariolog[1] == 'Digitador'%}
                                     <input type="text" value="{{usuariolog[2]}}" name="" id="" disabled="disabled"
@@ -151,7 +151,8 @@
                                                                                                                                                                                                                                                                                                                                                                                                             constraseñas no coinciden</label> -->
                                     </div>
                                 </div>
-                                <div class="col-3">
+
+                                <div class="col-2">
                                     <div class="form-outline">
                                         <label class="form-label fuentelabel" for="form3Example2"><strong>No
                                                 Boleta</strong></label>
@@ -166,7 +167,7 @@
                                         {% endif %}
                                     </div>
                                 </div>
-                                <div class="col-3">
+                                <div class="col">
                                     <div class="form-outline">
                                         <label class="form-label fuentelabel"
                                             for="form3Example2"><strong>Bahia</strong></label>
@@ -190,6 +191,30 @@
                                         {% endif %}
                                     </div>
                                 </div>
+                                <!-- <div class="col" id="idDocumento" style="display: none;">
+                                    <div class="form-outline">
+                                        <label class="form-label fuentelabel"
+                                            for="form3Example2"><strong>Id Documento</strong></label>
+                                        {% if verifi[9] %}
+                                        <input type="text" id="doc" name="doc" disabled placeholder="PO"
+                                            required="required" class="form-control" value="{{ verifi[9] }}" />
+                                        {% else %}
+                                        <select class="form-select" id="bahia" aria-label="Default select example">
+                                            <option selected="selected" hidden>
+                                                Seleccionar Bahia
+                                            </option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                        </select>
+                                        {% endif %}
+                                    </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -371,7 +396,12 @@
 
                     $(document).ready(function () {
                         $("#totalmat").hide();
+                        // if ($("#nboleta").val() == 'CASETA'){
+                        //     $('#idDocumento').show();  
+                        // }else{
+                        //     $('#idDocumento').hide(); 
 
+                        // }
                         // MANDAR A LLAMAR LA TABLA
 
                         cargarPesos();
@@ -424,6 +454,8 @@
                                 $("#finalizar").removeAttr("disabled");
 
                                 flagbloquear = 1;
+                                //MANDAR A PREGUNTAR EL ID 
+
                                 $.ajax({
                                     url: "/datosGeneralesVerificacion",
                                     type: "POST",
@@ -532,6 +564,7 @@
                                 $("#finalizar").removeAttr("disabled");
 
                                 flagbloquear = 1;
+                                //MANDAR A PREGUNTAR EL ID DEL VERIFICADOR
                                 $.ajax({
                                     url: "/datosGeneralesVerificacion",
                                     type: "POST",
@@ -774,9 +807,10 @@
                     $("#buscarmat").on("keyup", buscarMaterial);
 
                     function añadir() {
-                        var bruto = parseInt($("#bruto").val());
-                        var tara = parseInt($("#tara").val());
-                        var destare = parseInt($("#destare").val());
+                        var bruto = parseFloat($("#bruto").val());
+                        var tara = parseFloat($("#tara").val());
+                        var destare = parseFloat($("#destare").val());
+
                         if (
                             $("#buscarmat").val() == "" ||
                             $("#bruto").val() == "" ||
@@ -804,10 +838,11 @@
                                 if (result.isConfirmed) {
                                 }
                             });
-                        } else if (destare <= 0 && $("#buscarmat").val() == "ALUMINIO MIXTO") {
+                        } else if (destare < 0.5 && $("#buscarmat").val() == "ALUMINIO MIXTO") {
+
                             Swal.fire({
                                 icon: "error",
-                                title: "Datos Inválidos",
+                                title: "Datos Inválidos" + destare,
                                 confirmButtonText: "Ok",
                                 text: "El valor del destare no puede ser menor o igual a 0.",
                             }).then((result) => {
@@ -994,9 +1029,11 @@
     //   });
     //###########################
     function finalizar() {
+        var flagRol = $('#banderaRol').val();
+
         Swal.fire({
             title: "¿Desea guardar?",
-            text: "Se imprimira una verificación con los detalles",
+            text: "Se compararan ambos documentos",
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Sí, aceptar",
@@ -1035,20 +1072,20 @@
                                 if (result.isConfirmed) {
                                 }
                             });
-                        }else if(response == "ValoresErroneos"){
+                        } else if (response == "ValoresErroneos") {
                             Swal.fire({
-                                    icon: "error",
-                                    title: "Las verificaciones son Diferentes.",
-                                    confirmButtonText: "Ok",
-                                    text: "La verificación se bloqueará.",
-                                }).then((result) => {
-                                    /* Read more about isConfirmed, isDenied below */
-                                    if (result.isConfirmed) {
-                                        window.location = "/home";
-                                    }
-                                });
+                                icon: "error",
+                                title: "Las verificaciones son Diferentes.",
+                                confirmButtonText: "Ok",
+                                text: "La verificación se bloqueará.",
+                            }).then((result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                    window.location = "/home";
+                                }
+                            });
                         } else {
-                            if (response == "Iguales"){
+                            if (response == "Iguales") {
                                 Swal.fire({
                                     icon: "success",
                                     title: "Las verificaciones son correctas",
@@ -1060,7 +1097,7 @@
                                         window.location = "/home";
                                     }
                                 });
-                            }else if(response == "Diferentes"){
+                            } else if (response == "Diferentes") {
                                 Swal.fire({
                                     icon: "error",
                                     title: "Las verificaciones son Diferentes.",
@@ -1073,7 +1110,7 @@
                                     }
                                 });
 
-                            }else{
+                            } else {
                                 Swal.fire({
                                     icon: "success",
                                     title: "Las verificaciones se creó exitosamente.",
@@ -1097,6 +1134,7 @@
                 console.log("*NO se elimina la venta*");
             }
         });
+
     }
 </script>
 

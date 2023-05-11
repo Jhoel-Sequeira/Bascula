@@ -45,6 +45,7 @@
 
     $("#tabla-filtracionval button[name=detalleverusu]").click(function () {
         id = $(this).val();
+       
         $.ajax({
             url: "/detalleVerificacionVal",
             type: "POST",
