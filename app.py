@@ -295,7 +295,7 @@ def login():
                     digitador = cur.fetchall()
                     return render_template('ajustes.html', Proveedores=Proveedores, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
 
-                elif cargo[1] == "VALIDADORA DE DATOS":
+                elif cargo[1] == "VALIDADORA DE DATOS" or cargo[1] == "ANALISTA DE DATOS Y SISTEMAS":
                     # ESTE ES VALIDADOR
                     session["pass"] = Contraseña
                     session["user"] = usuario
@@ -1009,16 +1009,16 @@ def listaProveedores():
                 hi = capturarHora()
                 fecha = hi.replace(microsecond=0)
                 print(proveedor)
-                if proveedor == "001":
-                    print("entro en la condicion del codigo")
-                    proveedor = 'CUADRILLA CHATARRA'
-                elif proveedor == "002":
-                    proveedor = 'CASETA'
-                elif proveedor == '003':
-                    proveedor = 'MOVIL'
-                elif proveedor == '004':
-                    proveedor = 'CRN'
-                print(proveedor)
+                # if proveedor == "001":
+                #     print("entro en la condicion del codigo")
+                #     proveedor = 'CUADRILLA CHATARRA'
+                # elif proveedor == "002":
+                #     proveedor = 'CASETA'
+                # elif proveedor == '003':
+                #     proveedor = 'MOVIL'
+                # elif proveedor == '004':
+                #     proveedor = 'CRN'
+                # print(proveedor)
 
                 #GENERAMOS EL NUMERO RANDOM PARA EL ENLACE 
                 if session['cargo'] == 1: # SOLAMENTE EL DIGITADOR PODRA ASIGNAR EL N DE ENLACE
@@ -2437,6 +2437,12 @@ def finalizarVerificacion():
                     devolucion = cur.fetchall()
                     mysql.connection.commit()
 
+                    #BATERIAS TOTALES
+                    cur = mysql.connection.cursor()
+                    cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.NombreMaterial like %s Group BY m.TipoMaterial', (id, 'BATERIA%'))
+                    bateria = cur.fetchall()
+                    mysql.connection.commit()
+
                     # TOTAL LIQUIDO
                     # cur = mysql.connection.cursor()
                     # cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2),round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_material as m ON ver.IdMaterial = m.Id_Material WHERE ver.IdVerificacion = %s and m.NombreMaterial like %s Group BY m.TipoMaterial',(id,'liquido%'))
@@ -2457,6 +2463,13 @@ def finalizarVerificacion():
                         jumboNuevo = jumbo[0][3]
                     else:
                         jumboNuevo = 0.0
+
+                    if bateria:
+                        #print("jumbo tiene")
+                        if bateria[0][3] > 200:
+                            bateriaflag = 1
+                    else:
+                        bateriaflag = 0
 
                    # print(rechazo)
                     if rechazo:
@@ -2587,22 +2600,25 @@ def finalizarVerificacion():
                     iguales = 0
                     if mat == matverificador:
                         iguales = 1
-                        IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10], Verificacion[0][11], Verificacion[0][3],
+                        if session['punto'] == 'CASETA: Recepciones':
+                            IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10], Verificacion[0][11], Verificacion[0][3],
+                                                            rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, 1, 1, session['uid'], session['pass'])
+                        else:
+                            IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10], Verificacion[0][11], Verificacion[0][3],
                                                             rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, primeraNuevo, segundaNuevo, session['uid'], session['pass'])
-
                         print("ORDEN AQUI")
                         print(IdOrden)
                         banderaValidador = 0
                         for material in mat:
 
                             print("Cada Material: ",material)
-                            if material[0] == "Rechazo (cobre)" or material[0] == "RECHAZO" or material[0] == "JUMBO" or material[0] == "Rechazo (Aluminio)" or material[0] == "Rechazo (Acero)" or material[0] == "Rechazo (Bronce)" or material[0] == "Rechazo (Cable)" or material[0] == "Rechazo (lata)":
+                            if material[0] == "Rechazo (cobre)" or material[0] == "RECHAZO" or material[0] == "JUMBO" or material[0] == "Rechazo (Aluminio)" or material[0] == "Rechazo (Acero)" or material[0] == "Rechazo (Bronce)" or material[0] == "Rechazo (Cable)" or material[0] == "Rechazo (lata)" or material[0] == "DEVOLUCION MATERIAL":
 
                                 print("sosretroll")
                             else:
                                 print('Material: ',material[0])
                                 print('valor bruto: ',material[3])
-                                if "BATERIA" in material[0]  and material[3] > 200:
+                                if bateriaflag == 1:
                                     print('AQUI PASA POR EL VALIDADOR')
                                     conexion.IngresarMaterialOrdenCompra(
                                         material[0], material[3], IdOrden, session['uid'], session['pass'])

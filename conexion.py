@@ -13,23 +13,23 @@ import datetime
 # PRIMERA PRUEBA
 # CONEXION A LA BASE DE DATOS
 # TENEMOS LOS DATOS DE LA API Y EL USUARIO CON SU CONTRASEÑA
-# url = 'https://recicladora.odoo.com/'
-# #db = 'recicladora-31012023-7116641'
-# db = 'fdelanuez-itc-recicladora-master-668849'
-# #username = 'jhoel.sequeira@crn.com.ni'
-# #username = 'SOPORTE IT'
-# username = 'soporte@crn.com.ni'
-# #password = 'crn2023'
-# password = 'CRN!2023@bdserver'
-# #HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
-# info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
-# info.version()
-# uid = info.authenticate(db, username, password,{})
+url = 'https://recicladora.odoo.com/'
+#db = 'recicladora-31012023-7116641'
+db = 'fdelanuez-itc-recicladora-master-668849'
+#username = 'jhoel.sequeira@crn.com.ni'
+#username = 'SOPORTE IT'
+username = 'soporte@crn.com.ni'
+#password = 'crn2023'
+password = 'CRN!2023@bdserver'
+#HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
+info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
+info.version()
+uid = info.authenticate(db, username, password,{})
 
-# # PRUEBAS PARA INSERCION EN UNA TABLA
-# #PRUEBAS DE PERMISOS DE CADA USUARIO
-# #models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
-# models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
+# PRUEBAS PARA INSERCION EN UNA TABLA
+#PRUEBAS DE PERMISOS DE CADA USUARIO
+#models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
+models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
 
 
 
@@ -39,17 +39,17 @@ import datetime
 
 
 #BASE DE DATOS DE PRODUCCION
-url = 'https://recicladora-31012023-7116641.dev.odoo.com/'
-db = 'recicladora-31012023-7116641'
+# url = 'https://recicladora-31012023-7116641.dev.odoo.com/'
+# db = 'recicladora-31012023-7116641'
 
-username = 'jhoel.sequeira@crn.com.ni'
-password = 'crn2023'
-info = xmlrpc.client.ServerProxy(
-        'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/common')
+# username = 'jhoel.sequeira@crn.com.ni'
+# password = 'crn2023'
+# info = xmlrpc.client.ServerProxy(
+#         'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/common')
 
-uid =  info.authenticate(db, username, password, {})
-models= xmlrpc.client.ServerProxy(
-        'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/object')
+# uid =  info.authenticate(db, username, password, {})
+# models= xmlrpc.client.ServerProxy(
+#         'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/object')
 
 def conectar(user,contra):
     global username 
@@ -137,8 +137,8 @@ def buscarProveedor(prov,cargo):
 
         return proveedores
     else:
-        #proveedores = conectarTemp('soporte@crn.com.ni','CRN!2023@bdserver',prov) #ESTA LINEA ES PARA EL DE PRODUCCION
-        proveedores = conectarTemp('doris.fonseca@crn.com.ni','123',prov) #ESTA LINEA ES PARA EL DE PRUEBA
+        proveedores = conectarTemp('soporte@crn.com.ni','CRN!2023@bdserver',prov) #ESTA LINEA ES PARA EL DE PRODUCCION
+        #proveedores = conectarTemp('doris.fonseca@crn.com.ni','123',prov) #ESTA LINEA ES PARA EL DE PRUEBA
         return proveedores
 
 
@@ -207,10 +207,11 @@ def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
 
     #FORMATEAR EL STRING
     print(float(precioUnidad[0:10]))
+    fecha_plan = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     line_data = {
         'order_id':pOrder,
         'name':material,
-        'date_planned':'05/05/23',
+        'date_planned':fecha_plan,
         'product_uom':12, #valor de libras es constante
         'price_unit':float(precioUnidad[0:10]),
         'product_qty':monto, #aqui van las libras totales

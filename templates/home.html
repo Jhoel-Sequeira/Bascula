@@ -49,7 +49,7 @@ encabezado %}
         {%endif%}
 
     </div>
-    {%if cargo != 5 and cargo != 6 and cargo != 3%}
+    {%if cargo == 1%}
     <p>Sugerencia de Boleta: <a  onclick="PonerNumero()" id="valorGenerado"></a></p>
     {%endif%}
 
@@ -140,7 +140,10 @@ encabezado %}
                     }
                     if (proveedor == $('#valorGenerado').text()){
                         TraerNumero();
+                    }else{
+                        TraerNumero();
                     }
+                    
                     
                     
                 },
