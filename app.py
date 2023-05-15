@@ -648,6 +648,20 @@ def buscarProveedorApi():
             return "no"
     else:
         return "No"
+    
+@app.route('/buscarCuadrillaApi', methods=["POST", "GET"])
+def buscarCuadrillaApi():
+    if request.method == "POST":
+        cuadrilla = request.form['cuadrilla']
+        cuadrilla = conexion.buscarCuadrilla(cuadrilla, session['cargo'])
+        # print(proveedores)
+        if cuadrilla:
+
+            return render_template('otros/cuadrilla-busqueda.html', proved=cuadrilla)
+        else:
+            return "no"
+    else:
+        return "No"
 
 
 @app.route('/buscarProveedorAdmin', methods=["POST", "GET"])
@@ -1178,7 +1192,7 @@ def detalleVerificacion():
                 print("tiene algo")
                 cur = mysql.connection.cursor()
                 cur.execute(
-                    "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 3 AND v.Id_Verificacion = %s", [id])
+                    "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia,cuad.NombreJefe from tb_verificacion as v inner join tb_cuadrilla as cuad on v.IdJefeCuadrilla = cuad.Id_CuadrillaJefe inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.IdEstado = 3 AND v.Id_Verificacion = %s", [id])
                 verificacion = cur.fetchall()
                 mysql.connection.commit()
                 print(verificacion)
@@ -1480,6 +1494,7 @@ def datosGeneralesVerificacion():
         verificador = request.form['verificador']
         digitador = request.form['digitador']
         proveedor = request.form['proveedor']
+        cuadrilla = request.form['cuadrilla']
         po = request.form['po']
         nboleta = request.form['nboleta']
         bahia = request.form['bahia']
@@ -1491,33 +1506,108 @@ def datosGeneralesVerificacion():
         idprov = cur.fetchone()
         cur = mysql.connection.cursor()
 
+        # BUSCAR EL JEFE
+        cur = mysql.connection.cursor()
+        cur.execute(
+            'SELECT Id_CuadrillaJefe from tb_cuadrilla where NombreJefe = %s', [cuadrilla])
+        idcuadrilla = cur.fetchone()
+        cur = mysql.connection.cursor()
+
         print("aqui se muestra el proveedor:")
         print(idprov)
 
         if idprov:
-            cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s where Id_Verificacion = %s',
-                        (po, nboleta, idprov[0], verificador, digitador, puntoCompra, bahia, id))
-            digitador = cur.fetchall()
-            mysql.connection.commit()
-        else:
-            # llamar el id de oddo
-            idOddo = conexion.buscarIdProveedor(proveedor)
-            # INSERTAMOS EL PROVEEDOR DE ODDO EN LA BASE
-            cur = mysql.connection.cursor()
-            cur.execute(
-                "INSERT INTO tb_proveedor (NombreProveedor,IdOddo,IdEstado) VALUES (%s,%s,1)", (proveedor, idOddo))
-            proveedornuevo = cur.fetchone()
-            # LLAMAMOS AL PROVEEDOR DE NOMBRE TAL
-            cur = mysql.connection.cursor()
-            cur.execute(
-                'SELECT Id_Proveedor from tb_proveedor where NombreProveedor = %s', [proveedor])
-            idprov = cur.fetchone()
-            cur = mysql.connection.cursor()
+            if idcuadrilla:
+                cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s,IdJefeCuadrilla = %s where Id_Verificacion = %s',
+                            (po, nboleta, idprov[0], verificador, digitador, puntoCompra, bahia,idcuadrilla[0], id))
+                digitador = cur.fetchall()
+                mysql.connection.commit()
+            else:
+                # llamar el id de oddo
+                idOddocuad = conexion.buscarIdCuadrilla(cuadrilla)
+                # INSERTAMOS EL PROVEEDOR DE ODDO EN LA BASE
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    "INSERT INTO tb_cuadrilla (Id_CuadrillaJefe,NombreJefe) VALUES (%s,%s)", (idOddocuad,cuadrilla))
+                cuadrillanuevo = cur.fetchone()
+                # LLAMAMOS AL PROVEEDOR DE NOMBRE TAL
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    'SELECT Id_CuadrillaJefe from tb_cuadrilla where NombreJefe = %s', [cuadrilla])
+                idcuad = cur.fetchone()
+                cur = mysql.connection.cursor()
 
-            cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s where Id_Verificacion = %s',
-                        (po, nboleta, idprov[0], verificador, digitador, puntoCompra, bahia, id))
-            digitador = cur.fetchall()
-            mysql.connection.commit()
+                cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s,IdJefeCuadrilla = %s where Id_Verificacion = %s',
+                            (po, nboleta, idprov[0], verificador, digitador, puntoCompra, bahia,idcuad[0], id))
+                digitador = cur.fetchall()
+                mysql.connection.commit()
+
+            
+        else:
+            # VALIDACIONES DE CUADRILLA
+            if idcuadrilla:
+                 # llamar el id de oddo
+                idOddo = conexion.buscarIdProveedor(proveedor)
+                # INSERTAMOS EL PROVEEDOR DE ODDO EN LA BASE
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    "INSERT INTO tb_proveedor (NombreProveedor,IdOddo,IdEstado) VALUES (%s,%s,1)", (proveedor, idOddo))
+                proveedornuevo = cur.fetchone()
+                # LLAMAMOS AL PROVEEDOR DE NOMBRE TAL
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    'SELECT Id_Proveedor from tb_proveedor where NombreProveedor = %s', [proveedor])
+                idprov = cur.fetchone()
+                cur = mysql.connection.cursor()
+
+                
+
+
+                cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s,IdJefeCuadrilla = %s where Id_Verificacion = %s',
+                            (po, nboleta, idprov[0], verificador, digitador, puntoCompra, bahia,idcuadrilla[0], id))
+                digitador = cur.fetchall()
+                mysql.connection.commit()
+            else:
+                # llamar el id de oddo
+                idOddocuad = conexion.buscarIdCuadrilla(cuadrilla)
+                # INSERTAMOS EL PROVEEDOR DE ODDO EN LA BASE
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    "INSERT INTO tb_cuadrilla (Id_CuadrillaJefe,NombreJefe) VALUES (%s,%s)", (idOddocuad,cuadrilla))
+                cuadrillanuevo = cur.fetchone()
+                # LLAMAMOS AL PROVEEDOR DE NOMBRE TAL
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    'SELECT Id_CuadrillaJefe from tb_cuadrilla where NombreJefe = %s', [cuadrilla])
+                idcuad = cur.fetchone()
+                cur = mysql.connection.cursor()
+                # ======================================================
+                 # llamar el id de oddo
+                idOddo = conexion.buscarIdProveedor(proveedor)
+                # INSERTAMOS EL PROVEEDOR DE ODDO EN LA BASE
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    "INSERT INTO tb_proveedor (NombreProveedor,IdOddo,IdEstado) VALUES (%s,%s,1)", (proveedor, idOddo))
+                proveedornuevo = cur.fetchone()
+                # LLAMAMOS AL PROVEEDOR DE NOMBRE TAL
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    'SELECT Id_Proveedor from tb_proveedor where NombreProveedor = %s', [proveedor])
+                idprov = cur.fetchone()
+                cur = mysql.connection.cursor()
+
+                
+
+
+                cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s,IdJefeCuadrilla = %s where Id_Verificacion = %s',
+                            (po, nboleta, idprov[0], verificador, digitador, puntoCompra, bahia,idcuad[0], id))
+                digitador = cur.fetchall()
+                mysql.connection.commit()
+
+
+
+            #========================================
+           
         return "done"
 #GUARDAMOS EL ID CON EL QUE QUEREMOS COMPARAR
 # @app.route('/agregarComparacion', methods=["POST", "GET"])
@@ -2604,8 +2694,20 @@ def finalizarVerificacion():
                             IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10], Verificacion[0][11], Verificacion[0][3],
                                                             rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, 1, 1, session['uid'], session['pass'])
                         else:
-                            IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10], Verificacion[0][11], Verificacion[0][3],
-                                                            rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, primeraNuevo, segundaNuevo, session['uid'], session['pass'])
+                            cur = mysql.connection.cursor()
+                            cur.execute(
+                                "SELECT IdJefeCuadrilla from tb_verificacion Where Id_Verificacion = %s", [id])
+                            jefe = cur.fetchone()
+                            mysql.connection.commit()
+                            print(jefe)
+                            print("JEFE: ",jefe[0])
+                            if jefe:
+                                IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10], Verificacion[0][11], Verificacion[0][3],
+                                                            rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, primeraNuevo, segundaNuevo, session['uid'], session['pass'],jefe[0])
+                            else:
+
+                                IdOrden = conexion.CrearOrdenCompra(Verificacion[0][10], Verificacion[0][11], Verificacion[0][3],
+                                                            rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, primeraNuevo, segundaNuevo, session['uid'], session['pass'],"")
                         print("ORDEN AQUI")
                         print(IdOrden)
                         banderaValidador = 0
@@ -3283,6 +3385,31 @@ def finalizarVerificacionmal():
         return "No"
 
 
+
+# MODULO DE ERRORES
+@app.route('/administracionErrores')
+def administracionErrores():
+    try:
+        if session['userrole'] == 1:
+            # NECESITAMOS LA LISTA DE VERIFICADORES, DIGITADORES
+            # CONSULTA PARA LOS VERIFICADORES
+            cur = mysql.connection.cursor()
+            cur.execute(
+                "select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+            verificador = cur.fetchall()
+            # CONSULTA PARA LOS DIGITADOR
+            cur = mysql.connection.cursor()
+            cur.execute(
+                "select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+            digitador = cur.fetchall()
+            return render_template('AdminErrores.html', verificadores=verificador, digitadores=digitador)
+        else:
+            return render_template('otros/error.html')
+    except:
+        return render_template('otros/error.html')
+
+
+
 # MODULO DE ADMINISTRACION
 @app.route('/administracion')
 def administracion():
@@ -3420,6 +3547,55 @@ def valorTablaAdmin():
             print(verificaciones)
             return render_template('tablas/tabla-filtracion.html', opc=opc, verificaciones=verificaciones)
         return render_template('tablas/tabla-filtracion.html', opc=opc)
+
+# VALOR TABLA DE ERRORES
+@app.route('/traerBoletasSolas', methods=["POST", "GET"])
+def traerBoletasSolas():
+    if request.method == "POST":
+        opc = request.form['valor']
+        # OPCIONES DE FILTRO
+
+        po = request.form['po']
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "select * from tb_verificacion where NoBoleta like %s and IdProveedor is Null", [po+'%'])
+        verificaciones = cur.fetchall()
+        mysql.connection.commit()
+        return render_template('tablas/tabla-vacias.html', verificaciones=verificaciones)
+        
+       
+    return render_template('tablas/tabla-filtracionusu.html', opc=opc)
+
+@app.route('/eliminarVacia', methods=["POST", "GET"])
+def eliminarVacia():
+    if request.method == "POST":
+        id = request.form['id']
+        # OPCIONES DE FILTRO
+
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "DELETE from tb_verificacion where Id_Verificacion = %s", [id])
+        mysql.connection.commit()
+        return "ELIMINADO"
+        
+       
+    return render_template('tablas/tabla-filtracionusu.html')
+
+# CAMBIAMOS EL ESTADOP
+@app.route('/cambiarEstado', methods=["POST", "GET"])
+def cambiarEstado():
+    if request.method == "POST":
+        id = request.form['id']
+        # OPCIONES DE FILTRO
+
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "Update tb_verificacion set IdEstado = 3 Where Id_Verificacion = %s", [id])
+        mysql.connection.commit()
+        return "Cambiado"
+
+
+
 
 # VALOR DE LA TABLA DE ADMINISTRACION
 
@@ -4008,7 +4184,7 @@ def AñadirFiltro():
                     consulta += 'v.'+headers[contador]+' = '+value+' AND '
                 contador += 1
                 # consultaBase += ' AND '+data
-            consulta_total = consultaBase+' '+consulta[:-4] + 'and v.PO != "--"'
+            consulta_total = consultaBase+' '+consulta[:-4]
             print(consulta_total)
         else:
             consulta_total = 'select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.PO != "--" and v.IdEstado = 9'
@@ -4686,7 +4862,7 @@ def traerNumero():
             contador = cur.fetchone()
             resultado = contador[0]+1
             return 'MV'+str(resultado)
-        print('CONTADOR: ',contador)
+       
         
         # CONSULTA PARA LOS DIGITADOR
     

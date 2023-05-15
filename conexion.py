@@ -111,12 +111,26 @@ def conectarTemp(user, contra,prov):
     models.execute_kw(db, uid, password, "res.users", "write", [[uidtemp], {'session_ids': [(1, uidtemp, {'active': False})]}])
     return proveedores
 
+def conectarTempCuadrilla(user, contra,prov):
+    # primero autenticamos como un usuario
+    uidtemp = info.authenticate(db, user, contra, {})
+    #BUSCAMOS EL PROVEEDOR
+    proveedores = models.execute_kw(db, uidtemp, contra, 'res.partner', 'search_read', [
+                                        [['supplier', '=', True],['category_id','=',25], ['name', 'ilike', ''+prov+'%']]], {'fields': ['id', 'name'], 'limit': 5})
+    models.execute_kw(db, uid, password, "res.users", "write", [[uidtemp], {'session_ids': [(1, uidtemp, {'active': False})]}])
+    return proveedores
+
 
 
 
 def buscarIdProveedor(prov):
     id = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
                            [['supplier', '=', True], ['name', '=', ''+prov]]], {'fields': ['id']})
+    return id[0]['id']
+
+def buscarIdCuadrilla(prov):
+    id = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
+                           [['supplier', '=', True],['category_id','=',25], ['name', '=', ''+prov]]], {'fields': ['id']})
     return id[0]['id']
 
 
@@ -140,26 +154,54 @@ def buscarProveedor(prov,cargo):
         proveedores = conectarTemp('soporte@crn.com.ni','CRN!2023@bdserver',prov) #ESTA LINEA ES PARA EL DE PRODUCCION
         #proveedores = conectarTemp('doris.fonseca@crn.com.ni','123',prov) #ESTA LINEA ES PARA EL DE PRUEBA
         return proveedores
+    
+def buscarCuadrilla(cuad,cargo):
+    if cargo != 2:
+        cuadrilla = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
+                                        [['supplier', '=', True],['category_id','=',25], ['name', 'ilike', ''+cuad+'%']]], {'fields': ['id', 'name'], 'limit': 5})
+
+        return cuadrilla
+    else:
+        cuadrilla = conectarTempCuadrilla('soporte@crn.com.ni','CRN!2023@bdserver',cuad) #ESTA LINEA ES PARA EL DE PRODUCCION
+        #proveedores = conectarTempCuadrilla('doris.fonseca@crn.com.ni','123',prov) #ESTA LINEA ES PARA EL DE PRUEBA
+        return cuadrilla
 
 
-def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,devolucion,liquido,rechazoPet,primera,segunda,uid1,contra1):
+def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,devolucion,liquido,rechazoPet,primera,segunda,uid1,contra1,jefe):
     
-    
-    print(jumbo)
-    pOrder = models.execute_kw(db, uid1, contra1, 'purchase.order',
-                               'create', [{'picking_type_id': puntoCompra,
-                                           'supplier': True,
-                                           'partner_id': proveedorId,
-                                           'x_studio_field_WLD1C':NoBoleta,
-                                           'x_studio_rechazo_1': rechazo,
-                                           'x_studio_jumbo': jumbo,
-                                           'x_studio_rechazo_pet': devolucion,
-                                           'x_studio_lquido': liquido,
-                                           'x_studio_material_de_primera': primera,
-                                           'x_studio_material_de_segunda': segunda}])
-    
-    
-    return pOrder
+    if jefe:
+        print(jumbo)
+        pOrder = models.execute_kw(db, uid1, contra1, 'purchase.order',
+                                'create', [{'picking_type_id': puntoCompra,
+                                            'supplier': True,
+                                            'partner_id': proveedorId,
+                                            'x_studio_field_WLD1C':NoBoleta,
+                                            'x_studio_rechazo_1': rechazo,
+                                            'x_studio_field_8Fq79': jefe,
+                                            'x_studio_jumbo': jumbo,
+                                            'x_studio_rechazo_pet': devolucion,
+                                            'x_studio_lquido': liquido,
+                                            'x_studio_material_de_primera': primera,
+                                            'x_studio_material_de_segunda': segunda}])
+        
+        
+        return pOrder
+    else:
+        print(jumbo)
+        pOrder = models.execute_kw(db, uid1, contra1, 'purchase.order',
+                                'create', [{'picking_type_id': puntoCompra,
+                                            'supplier': True,
+                                            'partner_id': proveedorId,
+                                            'x_studio_field_WLD1C':NoBoleta,
+                                            'x_studio_rechazo_1': rechazo,
+                                            'x_studio_jumbo': jumbo,
+                                            'x_studio_rechazo_pet': devolucion,
+                                            'x_studio_lquido': liquido,
+                                            'x_studio_material_de_primera': primera,
+                                            'x_studio_material_de_segunda': segunda}])
+        
+        
+        return pOrder
 def CrearAlbaran(pOrder,uid1,contra1):
     models.execute_kw(db, uid1, contra1, 'purchase.order', 'button_confirm', [[pOrder]])
 
