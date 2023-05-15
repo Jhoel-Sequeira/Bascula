@@ -4844,23 +4844,64 @@ def traerNumero():
         # NECESITAMOS LA LISTA DE VERIFICADORES, DIGITADORES
         # CONSULTA PARA LOS VERIFICADORES
         if session['punto'] == 'CASETA: Recepciones':
+            # cur = mysql.connection.cursor()
+            # cur.execute("select ROUND(COUNT(NoBoleta)/2,0) from tb_verificacion Where NoBoleta like 'CS%'")
+            # contador = cur.fetchone()
+
+            #TRAER EL ULTIMO VALOR DEL NUM BOLETA
             cur = mysql.connection.cursor()
-            cur.execute("select ROUND(COUNT(NoBoleta)/2,0) from tb_verificacion Where NoBoleta like 'CS%'")
+            cur.execute("SELECT NoBoleta FROM `tb_verificacion` WHERE NoBoleta like 'CS%' group by NoBoleta order by Id_Verificacion DESC limit 1")
             contador = cur.fetchone()
-            resultado = int(contador[0])+1
+            # MANDAMOS A SACAR EL NUMERO DEL ULTIMO NUMERO DE BOLETA
+            caracteres_a_eliminar = "CS"
+            if contador:
+                cont = contador[0].replace(caracteres_a_eliminar, "")
+            else:
+                cont = 0
+
+            resultado = int(cont)+1
+            #resultado = int(contador[0])+1
             print('entrastes aqui')
             return 'CS'+str(resultado)
         elif session['punto'] == 'GRANEL/PLANTA: Receipts':
+            # cur = mysql.connection.cursor()
+            # cur.execute("select ROUND(COUNT(NoBoleta)/2,0) from tb_verificacion Where NoBoleta like 'GR%'")
+            # contador = cur.fetchone()
+            # resultado = contador[0]+1
+
+            #TRAER EL ULTIMO VALOR DEL NUM BOLETA
             cur = mysql.connection.cursor()
-            cur.execute("select ROUND(COUNT(NoBoleta)/2,0) from tb_verificacion Where NoBoleta like 'GR%'")
+            cur.execute("SELECT NoBoleta FROM tb_verificacion WHERE NoBoleta like 'GR%' group by NoBoleta order by Id_Verificacion DESC limit 1")
             contador = cur.fetchone()
-            resultado = contador[0]+1
+            # MANDAMOS A SACAR EL NUMERO DEL ULTIMO NUMERO DE BOLETA
+            caracteres_a_eliminar = "GR"
+            if contador:
+                cont = contador[0].replace(caracteres_a_eliminar, "")
+            else:
+                cont = 0
+
+            resultado = int(cont)+1
+            print(resultado)
             return 'GR'+str(resultado)
         elif session['punto'] == 'MOVIL: Recepciones':
+            # cur = mysql.connection.cursor()
+            # cur.execute("select ROUND(COUNT(NoBoleta)/2,0) from tb_verificacion Where NoBoleta like 'MV%'")
+            # contador = cur.fetchone()
+            # resultado = contador[0]+1
+
+            #TRAER EL ULTIMO VALOR DEL NUM BOLETA
             cur = mysql.connection.cursor()
-            cur.execute("select ROUND(COUNT(NoBoleta)/2,0) from tb_verificacion Where NoBoleta like 'MV%'")
+            cur.execute("SELECT NoBoleta FROM tb_verificacion WHERE NoBoleta like 'MV%' group by NoBoleta order by Id_Verificacion DESC limit 1")
             contador = cur.fetchone()
-            resultado = contador[0]+1
+            # MANDAMOS A SACAR EL NUMERO DEL ULTIMO NUMERO DE BOLETA
+            caracteres_a_eliminar = "MV"
+            if contador:
+                cont = contador[0].replace(caracteres_a_eliminar, "")
+            else:
+                cont = 0
+
+            resultado = int(cont)+1
+
             return 'MV'+str(resultado)
        
         
