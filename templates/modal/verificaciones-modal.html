@@ -63,14 +63,20 @@
                                     <label class="form-label fuentelabel" for="proveedor"><strong>Jefe de Cuadrilla
                                         </strong></label>
                                         {% if verifi[10] %}
-                                    <input type="text" id="proveedor" name="proveedor" style="text-transform: uppercase"
+                                        {%if verifi[10] == 'SIN JEFE'%}
+                                        <input type="text" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
+                                        onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                                        required="required" disabled class="form-control" value="" />
+                                        {%else%}
+                                    <input type="text" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
                                         onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
                                         required="required" disabled class="form-control" value="{{ verifi[10] }}" />
+                                        {%endif%}
 
                                     {% else %}
-                                    <input type="text" id="cuadrilla" style="text-transform: uppercase"
+                                    <input type="text" id="cuadrilla"  style="text-transform: uppercase"
                                         onkeyup="this.value=this.value.toUpperCase()" name="proveedor"
-                                        placeholder="Nombre cuadrilla" required="required" class="form-control" />
+                                        placeholder="Nombre cuadrilla"  class="form-control" />
 
                                     {% endif %}
                                     
@@ -88,7 +94,11 @@
 
                             
                         </div>
-                        {%endif%}
+                        {%else%}
+                        <input type="hidden" id="cuadrilla"  style="text-transform: uppercase"
+                                        onkeyup="this.value=this.value.toUpperCase()" value="" name="proveedor"
+                                        placeholder="Nombre cuadrilla"  class="form-control" />
+                        {%endif%} 
                         <div class="row mt-2">
                             <!-- PONEMOS UN INPUT CON EL CARGO PARA USARLO COMO BANDERA PARA EL MOMENTO DE BLOQUEAR -->
                             <input type="hidden" name="" value="{{usuariolog[1]}}" id="banderaRol">
@@ -532,7 +542,7 @@
                                     data: {
                                         id: $("#id").val(),
                                         proveedor: $("#proveedor").val(),
-                                        cuadrilla: $("#cuadrilla").val(),
+                                        cuadrilla: '',
                                         puntoCompra: $("#idpunto").val(),
                                         verificador: $("#idusuariolog").val(),
                                         digitador: $("#digitador").val(),
@@ -644,7 +654,7 @@
                                     data: {
                                         id: $("#id").val(),
                                         proveedor: $("#proveedor").val(),
-                                        cuadrilla: $("#cuadrilla").val(),
+                                        cuadrilla: '',
                                         puntoCompra: $("#idpunto").val(),
                                         verificador: $("#verificador option:selected").val(),
                                         digitador: $("#digitador").val(),

@@ -1494,7 +1494,6 @@ def datosGeneralesVerificacion():
         verificador = request.form['verificador']
         digitador = request.form['digitador']
         proveedor = request.form['proveedor']
-        cuadrilla = request.form['cuadrilla']
         po = request.form['po']
         nboleta = request.form['nboleta']
         bahia = request.form['bahia']
@@ -1506,13 +1505,33 @@ def datosGeneralesVerificacion():
         idprov = cur.fetchone()
         cur = mysql.connection.cursor()
 
-        # BUSCAR EL JEFE
-        cur = mysql.connection.cursor()
-        cur.execute(
-            'SELECT Id_CuadrillaJefe from tb_cuadrilla where NombreJefe = %s', [cuadrilla])
-        idcuadrilla = cur.fetchone()
-        cur = mysql.connection.cursor()
+        
 
+        if session['punto'] == 'GRANEL/PLANTA: Receipts':
+            print('entroooooooo')
+
+            cuadrilla = request.form['cuadrilla']
+            # BUSCAR EL JEFE
+            cur = mysql.connection.cursor()
+            cur.execute(
+                'SELECT Id_CuadrillaJefe from tb_cuadrilla where NombreJefe = %s', [cuadrilla])
+            idcuadrilla = cur.fetchone()
+            cur = mysql.connection.cursor()
+             # llamar el id de oddo
+            idOddocuad = conexion.buscarIdCuadrilla(cuadrilla)
+            # INSERTAMOS EL PROVEEDOR DE ODDO EN LA BASE
+            cur = mysql.connection.cursor()
+            cur.execute(
+                "INSERT INTO tb_cuadrilla (Id_CuadrillaJefe,NombreJefe) VALUES (%s,%s)", (idOddocuad,cuadrilla))
+            cuadrillanuevo = cur.fetchone()
+            # LLAMAMOS AL PROVEEDOR DE NOMBRE TAL
+            cur = mysql.connection.cursor()
+            cur.execute(
+                'SELECT Id_CuadrillaJefe from tb_cuadrilla where NombreJefe = %s', [cuadrilla])
+            idcuad = cur.fetchone()
+            cur = mysql.connection.cursor()
+        else:
+            idcuadrilla = ''
         print("aqui se muestra el proveedor:")
         print(idprov)
 
@@ -1523,19 +1542,7 @@ def datosGeneralesVerificacion():
                 digitador = cur.fetchall()
                 mysql.connection.commit()
             else:
-                # llamar el id de oddo
-                idOddocuad = conexion.buscarIdCuadrilla(cuadrilla)
-                # INSERTAMOS EL PROVEEDOR DE ODDO EN LA BASE
-                cur = mysql.connection.cursor()
-                cur.execute(
-                    "INSERT INTO tb_cuadrilla (Id_CuadrillaJefe,NombreJefe) VALUES (%s,%s)", (idOddocuad,cuadrilla))
-                cuadrillanuevo = cur.fetchone()
-                # LLAMAMOS AL PROVEEDOR DE NOMBRE TAL
-                cur = mysql.connection.cursor()
-                cur.execute(
-                    'SELECT Id_CuadrillaJefe from tb_cuadrilla where NombreJefe = %s', [cuadrilla])
-                idcuad = cur.fetchone()
-                cur = mysql.connection.cursor()
+               
 
                 cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s,IdJefeCuadrilla = %s where Id_Verificacion = %s',
                             (po, nboleta, idprov[0], verificador, digitador, puntoCompra, bahia,idcuad[0], id))
@@ -1568,19 +1575,7 @@ def datosGeneralesVerificacion():
                 digitador = cur.fetchall()
                 mysql.connection.commit()
             else:
-                # llamar el id de oddo
-                idOddocuad = conexion.buscarIdCuadrilla(cuadrilla)
-                # INSERTAMOS EL PROVEEDOR DE ODDO EN LA BASE
-                cur = mysql.connection.cursor()
-                cur.execute(
-                    "INSERT INTO tb_cuadrilla (Id_CuadrillaJefe,NombreJefe) VALUES (%s,%s)", (idOddocuad,cuadrilla))
-                cuadrillanuevo = cur.fetchone()
-                # LLAMAMOS AL PROVEEDOR DE NOMBRE TAL
-                cur = mysql.connection.cursor()
-                cur.execute(
-                    'SELECT Id_CuadrillaJefe from tb_cuadrilla where NombreJefe = %s', [cuadrilla])
-                idcuad = cur.fetchone()
-                cur = mysql.connection.cursor()
+                
                 # ======================================================
                  # llamar el id de oddo
                 idOddo = conexion.buscarIdProveedor(proveedor)
@@ -1600,7 +1595,7 @@ def datosGeneralesVerificacion():
 
 
                 cur.execute('Update tb_verificacion set PO = %s,NoBoleta = %s,IdProveedor = %s,IdVerificador = %s,IdDigitador = %s,IdPuntoCompra = %s,Bahia = %s,IdJefeCuadrilla = %s where Id_Verificacion = %s',
-                            (po, nboleta, idprov[0], verificador, digitador, puntoCompra, bahia,idcuad[0], id))
+                            (po, nboleta, idprov[0], verificador, digitador, puntoCompra, bahia,2, id))
                 digitador = cur.fetchall()
                 mysql.connection.commit()
 
