@@ -13,23 +13,23 @@ import datetime
 # PRIMERA PRUEBA
 # CONEXION A LA BASE DE DATOS
 # TENEMOS LOS DATOS DE LA API Y EL USUARIO CON SU CONTRASEÑA
-url = 'https://recicladora.odoo.com/'
-#db = 'recicladora-31012023-7116641'
-db = 'fdelanuez-itc-recicladora-master-668849'
-#username = 'jhoel.sequeira@crn.com.ni'
-#username = 'SOPORTE IT'
-username = 'soporte@crn.com.ni'
-#password = 'crn2023'
-password = 'CRN!2023@bdserver'
-#HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
-info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
-info.version()
-uid = info.authenticate(db, username, password,{})
+# url = 'https://recicladora.odoo.com/'
+# #db = 'recicladora-31012023-7116641'
+# db = 'fdelanuez-itc-recicladora-master-668849'
+# #username = 'jhoel.sequeira@crn.com.ni'
+# #username = 'SOPORTE IT'
+# username = 'soporte@crn.com.ni'
+# #password = 'crn2023'
+# password = 'CRN!2023@bdserver'
+# #HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
+# info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
+# info.version()
+# uid = info.authenticate(db, username, password,{})
 
-# PRUEBAS PARA INSERCION EN UNA TABLA
-#PRUEBAS DE PERMISOS DE CADA USUARIO
-#models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
-models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
+# # PRUEBAS PARA INSERCION EN UNA TABLA
+# #PRUEBAS DE PERMISOS DE CADA USUARIO
+# #models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
+# models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
 
 
 
@@ -39,17 +39,17 @@ models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
 
 
 #BASE DE DATOS DE PRODUCCION
-# url = 'https://recicladora-31012023-7116641.dev.odoo.com/'
-# db = 'recicladora-31012023-7116641'
+url = 'https://recicladora-31012023-7116641.dev.odoo.com/'
+db = 'recicladora-31012023-7116641'
 
-# username = 'jhoel.sequeira@crn.com.ni'
-# password = 'crn2023'
-# info = xmlrpc.client.ServerProxy(
-#         'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/common')
+username = 'jhoel.sequeira@crn.com.ni'
+password = 'crn2023'
+info = xmlrpc.client.ServerProxy(
+        'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/common')
 
-# uid =  info.authenticate(db, username, password, {})
-# models= xmlrpc.client.ServerProxy(
-#         'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/object')
+uid =  info.authenticate(db, username, password, {})
+models= xmlrpc.client.ServerProxy(
+        'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/object')
 
 def conectar(user,contra):
     global username 
@@ -129,8 +129,9 @@ def buscarIdProveedor(prov):
     return id[0]['id']
 
 def buscarIdCuadrilla(prov):
+    
     id = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
-                           [['supplier', '=', True],['category_id','=',25], ['name', '=', ''+prov]]], {'fields': ['id']})
+                           [['supplier', '=', True],['category_id','=',25], ['name', 'ilike', ''+prov+'%']]], {'fields': ['id']})
     return id[0]['id']
 
 

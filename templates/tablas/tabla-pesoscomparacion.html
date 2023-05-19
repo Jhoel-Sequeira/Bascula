@@ -102,9 +102,9 @@
         </tr>
     </tbody>
 </table>
-<input type="hidden" id="totalFilas" value="{{ pesosdigitador|length}}">
+<input type="hidden" id="totalFilas" value="{{ totalLinea|length}}">
 
 <script>
     $('#neto').val('{{sumaNetodigi}}')
-    $('#registrosTotal').val('{{ pesosdigitador|length}}')
+    $('#registrosTotal').val('{{ totalLinea|length}}')
 </script>
