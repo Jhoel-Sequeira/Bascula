@@ -45,6 +45,12 @@ encabezado %}
                     style="text-decoration: none; color: white;">
                     Cambio</a>
             </button>
+            <button type="button" style="color:fff; font-size: 18px;" onclick="elimSwal()"
+                class="btn btn-danger ml-auto">
+                <i class="fas fa-exclamation-triangle" style="color: white;"></i><a class="borrarletra"
+                    style="text-decoration: none; color: white;">
+                    Eliminar</a>
+            </button>
         </div>
 
     </div>
@@ -79,7 +85,9 @@ encabezado %}
                 success: function (response) {
                     Swal.fire({
                         title: 'Éxito',
-                        confirmButtonText: 'Ok',
+                        icon: "success",
+                        text: "Se habilitó la verificación.",
+                        confirmButtonText: 'Listo',
                     }).then((result) => {
                         /* Read more about isConfirmed, isDenied below */
                         if (result.isConfirmed) {
@@ -92,6 +100,66 @@ encabezado %}
                     // console.log(error);
                 },
             });
+
+
+        });
+
+
+
+    }
+    function elimSwal() {
+        Swal.fire({
+            title: "Ingrese el ID",
+            text: "Ingrese el id que desea eliminar.",
+            html: '<input type="number" id="valor" class="swal2-input" style="width:280px;" placeholder="ID">',
+            preConfirm: (value) => {
+                if ($('#brutoswal').val() == "" || $('#valor').val() < 0) {
+                    Swal.showValidationMessage(
+                        'Debe ingresar datos válidos.'
+                    )
+                }
+            },
+
+            showCancelButton: true,
+        }).then((result) => {
+            valor = $('#valor').val()
+            Swal.fire({
+            title: "¿Desea guardar?",
+            text: "Se compararan ambos documentos",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, aceptar",
+            cancelButtonText: "Cancelar",
+            }).then((resultado) => {
+            if (resultado.isConfirmed) {
+                $.ajax({
+                url: "/eliminarVer",
+                type: "POST",
+                data: {
+                    id: valor,
+
+                },
+                success: function (response) {
+                    Swal.fire({
+                        title: 'Éxito',
+                        icon: "success",
+                        text: "Se eliminó la verificación.",
+                        confirmButtonText: 'Listo',
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                            vacioVer();
+                        } 
+                    })
+                   
+                },
+                error: function (error) {
+                    // console.log(error);
+                },
+            });
+            }});
+            // alert('entro al tara')
+           
 
 
         });

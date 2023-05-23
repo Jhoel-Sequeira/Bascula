@@ -90,12 +90,25 @@
 
                                 </div>
                                 {%endif%}
-                                <label class="form-label fuentelabel" for="form3Example2"><strong>Peso
-                                        Neto</strong></label>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="form-label fuentelabel" for="form3Example2"><strong>Peso
+                                            Neto</strong></label>
+    
+                                    <input type="text" id="neto" name="nboleta" style="text-transform: uppercase"
+                                        onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="Peso neto"
+                                        required="required" class="form-control" value="" />
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label fuentelabel" for="form3Example2"><strong>Destare</strong></label>
 
-                                <input type="text" id="neto" name="nboleta" style="text-transform: uppercase"
-                                    onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="Peso neto"
+                                <input type="text" id="destare" name="nboleta" style="text-transform: uppercase"
+                                    onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="Peso destare"
                                     required="required" class="form-control" value="" />
+                                    </div>
+                                </div>
+                                
+                                    
 
 
 
@@ -236,7 +249,7 @@
 <script>
     var bruto = parseInt($("#bruto").val());
     var tara = parseInt($("#tara").val());
-    var destare = parseInt($("#destare").val());
+    var destare = parseFloat($("#destare").val());
     $(document).ready(function () {
         $("#bruto").val(0);
         $("#tara").val(0);
@@ -246,7 +259,7 @@
     var calcularVariacion = function () {
         var totalRows = $('#registrosTotal').val();
         var calculoPorcentaje = totalRows * 0.3;
-        var neto = parseFloat($('#neto').val())+ calculoPorcentaje;
+        var neto = parseFloat($('#neto').val())+ calculoPorcentaje + parseFloat($('#destare').val());
         if ($("#pesobascula").val() != "") {
             var resultado = parseFloat($('#pesobascula').val()) - (neto - $('#var').val());
             if (resultado < 0) {
@@ -278,9 +291,10 @@
     var calcularVariacion1 = function () {
         var totalRows = $('#registrosTotal').val();
         var calculoPorcentaje = totalRows * 0.3;
-        var neto = parseFloat($('#neto').val())+ calculoPorcentaje;
+        var destare = parseFloat($("#destare").val());
+        var neto = parseFloat($('#neto').val())+ calculoPorcentaje+parseFloat($('#destare').val());
         if ($("#pesobascula").val() != "") {
-            var resultado = parseFloat($('#pesobascula').val()) - (neto - $('#var').val())
+            var resultado = parseFloat($('#pesobascula').val()) - (neto - $('#var').val());
             if (resultado < 0) {
                 $('#resultado').text('' + resultado.toFixed(2))
                 $('#resultado').css('font-weight', 'bold');

@@ -16,7 +16,7 @@
                 <div class="tab-pane fade show active mt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <div class="form-group" id="detalles">
                         <div class="row mt-2">
-                            <div class="col-6">
+                            <div class="col-5">
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel" for="proveedor"><strong>Proveedor
                                         </strong></label>
@@ -50,7 +50,7 @@
                                     <input type="hidden" value="{{idpunto}}" name="" id="idpunto" />
                                 </div>
                             </div>
-                            <div class="col pt-2">
+                            <div class="col pt-4">
                                 <button type="button" class="btn btn-primary bajar" id="bloquear" onclick="bloquear()">
                                     <a style="text-decoration: none;"><i class="fa-solid fa-lock"></i> Bloquear</a>
                                 </button>
@@ -62,26 +62,26 @@
                                 <div class="form-outline">
                                     <label class="form-label fuentelabel" for="proveedor"><strong>Jefe de Cuadrilla
                                         </strong></label>
-                                        {% if verifi[10] %}
+                                    {% if verifi[10] %}
                                         {%if verifi[10] == 'SIN JEFE'%}
                                         <input type="text" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
-                                        onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
-                                        required="required" disabled class="form-control" value="" />
+                                            onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                                            required="required" disabled class="form-control" value="" />
                                         {%else%}
-                                    <input type="text" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
-                                        onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
-                                        required="required" disabled class="form-control" value="{{ verifi[10] }}" />
+                                        <input type="text" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                                            required="required" disabled class="form-control" value="{{ verifi[10] }}" />
                                         {%endif%}
 
                                     {% else %}
-                                    <input type="text" id="cuadrilla"  style="text-transform: uppercase"
-                                        onkeyup="this.value=this.value.toUpperCase()" name="proveedor"
-                                        placeholder="Nombre cuadrilla"  class="form-control" />
+                                        <input type="text" id="cuadrilla" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" name="proveedor"
+                                            placeholder="Nombre cuadrilla" class="form-control" />
 
                                     {% endif %}
-                                    
 
-                                    
+
+
 
                                 </div>
                                 <div style="background-color:#fff;position: relative; height: 20%; width: 100%; margin-left: 0px;"
@@ -92,13 +92,14 @@
                             </div>
 
 
-                            
+
                         </div>
                         {%else%}
-                        <input type="hidden" id="cuadrilla"  style="text-transform: uppercase"
-                                        onkeyup="this.value=this.value.toUpperCase()" value="" name="proveedor"
-                                        placeholder="Nombre cuadrilla"  class="form-control" />
-                        {%endif%} 
+                        <input type="hidden" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                                            required="required" disabled class="form-control" value="" />
+
+                        {%endif%}
                         <div class="row mt-2">
                             <!-- PONEMOS UN INPUT CON EL CARGO PARA USARLO COMO BANDERA PARA EL MOMENTO DE BLOQUEAR -->
                             <input type="hidden" name="" value="{{usuariolog[1]}}" id="banderaRol">
@@ -374,6 +375,7 @@
                         $("#id").val() != ""
                     ) {
                         $("#proveedor").attr("disabled", "true");
+                        $("#cuadrilla").attr("disabled", "true");
                         $("#idpunto").attr("disabled", "true");
                         $("#idusuariolog").attr("disabled", "true");
                         $("#digitador").attr("disabled", "true");
@@ -517,8 +519,8 @@
                                 $("#id").val() != ""
                             ) {
                                 $("#proveedor").attr("disabled", "true");
-                                $("#cuadrilla").attr("disabled", "true");
                                 $("#idpunto").attr("disabled", "true");
+                                $("#cuadrilla").attr("disabled", "true");
                                 $("#idusuariolog").attr("disabled", "true");
                                 $("#digitador").attr("disabled", "true");
                                 $("#po").attr("disabled", "true");
@@ -542,8 +544,8 @@
                                     data: {
                                         id: $("#id").val(),
                                         proveedor: $("#proveedor").val(),
-                                        cuadrilla: '',
                                         puntoCompra: $("#idpunto").val(),
+                                        cuadrilla: $("#cuadrilla").val(),
                                         verificador: $("#idusuariolog").val(),
                                         digitador: $("#digitador").val(),
                                         po: $("#po").val(),
@@ -647,6 +649,7 @@
                                 $("#finalizar").removeAttr("disabled");
 
                                 flagbloquear = 1;
+
                                 //MANDAR A PREGUNTAR EL ID DEL VERIFICADOR
                                 $.ajax({
                                     url: "/datosGeneralesVerificacion",
@@ -654,7 +657,7 @@
                                     data: {
                                         id: $("#id").val(),
                                         proveedor: $("#proveedor").val(),
-                                        cuadrilla: '',
+                                        cuadrilla: $("#cuadrilla").val(),
                                         puntoCompra: $("#idpunto").val(),
                                         verificador: $("#verificador option:selected").val(),
                                         digitador: $("#digitador").val(),
@@ -1191,6 +1194,19 @@
                                     title: "Las verificaciones son Diferentes.",
                                     confirmButtonText: "Ok",
                                     text: "La verificación se bloqueará.",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        window.location = "/home";
+                                    }
+                                });
+
+                            } else if (response == "ErrorRed") {
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: "Error de Red",
+                                    confirmButtonText: "Ok",
+                                    text: "Bloquee nuevamente las verificaciones.",
                                 }).then((result) => {
                                     /* Read more about isConfirmed, isDenied below */
                                     if (result.isConfirmed) {

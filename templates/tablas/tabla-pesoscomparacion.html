@@ -11,6 +11,7 @@
             <th style="width: 450px" class="fuente-tabla">Material</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Bruto</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Tara</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Destare</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Neto</th>
             <th></th>
             <th></th>
@@ -26,6 +27,7 @@
             <input type="hidden" id="valorNeto1" value="">
             <td align="center" style="padding-right: 10px">{{i[1]}}</td>
             <td align="center" style="padding-right: 10px">{{i[2]}} </td>
+            <td align="center" style="padding-right: 10px">{{i[4]}} </td>
             <td align="center" style="padding-right: 10px">{{i[3]}}</td>
            
 
@@ -42,9 +44,9 @@
             <td colspan="1" align="center" class="fuente-tabla">
                 <strong>{%if sumaTaraver%}{{sumaTaraver}}{%else%}0.00{%endif%} Lb</strong>
             </td>
-            <!-- <td colspan="1" align="center" class="fuente-tabla">
+            <td colspan="1" align="center" class="fuente-tabla">
                 <strong>{%if sumaDestarever%}{{sumaDestarever}}{%else%}0.00{%endif%} Lb</strong>
-            </td> -->
+            </td>
             <td colspan="1" align="center" class="fuente-tabla">
                 <strong>{%if sumaNetover%}{{sumaNetover}}{%else%}0.00{%endif%} Lb</strong>
             </td>
@@ -64,6 +66,7 @@
             <th style="width: 450px" class="fuente-tabla">Material</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Bruto</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Tara</th>
+            <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Destare</th>
             <th align="center" style="padding-left: 50px" class="fuente-tabla">P.Neto</th>
             <th></th>
             <th></th>
@@ -77,6 +80,7 @@
             <td>{{i[0]}}</td>
             <td align="center" style="padding-right: 10px">{{i[1]}}</td>
             <td align="center" style="padding-right: 10px">{{i[2]}} </td>
+            <td align="center" style="padding-right: 10px">{{i[4]}} </td>
             <td align="center" style="padding-right: 10px">{{i[3]}}</td>
            
 
@@ -93,18 +97,19 @@
             <td colspan="1" align="center" class="fuente-tabla">
                 <strong>{%if sumaTaradigi%}{{sumaTaradigi}}{%else%}0.00{%endif%} Lb</strong>
             </td>
-            <!-- <td colspan="1" align="center" class="fuente-tabla">
-                <strong>{%if sumaDestare%}{{sumaDestare}}{%else%}0.00{%endif%} Lb</strong>
-            </td> -->
+            <td colspan="1" align="center" class="fuente-tabla">
+                <strong>{%if sumaDestaredigi%}{{sumaDestaredigi}}{%else%}0.00{%endif%} Lb</strong>
+            </td>
             <td colspan="1" align="center" class="fuente-tabla">
                 <strong>{%if sumaNetodigi%}{{sumaNetodigi}}{%else%}0.00{%endif%} Lb</strong>
             </td>
         </tr>
     </tbody>
 </table>
-<input type="hidden" id="totalFilas" value="{{ totalLinea|length}}">
+<input type="hidden" id="totalFilas" value="{{ TotalLinea|length}}">
 
 <script>
     $('#neto').val('{{sumaNetodigi}}')
-    $('#registrosTotal').val('{{ totalLinea|length}}')
+    $('#destare').val('{{sumaDestaredigi}}')
+    $('#registrosTotal').val('{{ TotalLinea|length}}')
 </script>

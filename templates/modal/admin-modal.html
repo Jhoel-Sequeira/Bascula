@@ -52,6 +52,27 @@
                                 </button>
                             </div> -->
                         </div>
+                        {% if verifi[4] == 'GRANEL/PLANTA: Receipts'%}
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <div class="form-outline">
+                                    <label class="form-label fuentelabel" for="proveedor"><strong>Jefe de Cuadrilla
+                                        </strong></label>
+                                        <input type="text" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                                            required="required" disabled class="form-control" value="{{ verifi[10] }}" />
+
+
+
+
+                                </div>
+                                
+                            </div>
+
+
+
+                        </div>
+                        {%endif%}
                         <div class="row mt-2">
                             <div class="col-6">
                                 <div class="form-outline">
