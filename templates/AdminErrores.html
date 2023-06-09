@@ -21,15 +21,50 @@ Errores
 encabezado %}
 <div class="row">
     <div class="col">
-        <h1><a href="/ajustes" style="text-decoration: none;" class="fuente-grande-titulo-principal">Administración</a></h1>
+        <h1><a href="/ajustes" style="text-decoration: none;" class="fuente-grande-titulo-principal">Administración</a>
+        </h1>
     </div>
 </div>
 {% endblock %}
 {% block content %}
 <div class="">
+    <div class="row bg-light m-2  p-2" style="border-radius: 5px;">
+        <div class="col d-flex justify-content-center">
+            <button type="button" style="color:fff; font-size: 18px;" onclick="erroresSwal()"
+                class="btn btn-warning ml-auto">
+                <i class="fas fa-exclamation-triangle" style="color: white;"></i><a class="borrarletra"
+                    style="text-decoration: none; color: white;">
+                    Desbloquear</a>
+            </button>
+        </div>
+        <div class="col d-flex justify-content-center">
+            <button type="button" style="color:fff; font-size: 18px;" onclick="elimSwal()"
+                class="btn btn-danger ml-auto">
+                <i class="fas fa-exclamation-triangle" style="color: white;"></i><a class="borrarletra"
+                    style="text-decoration: none; color: white;">
+                    Eliminar</a>
+            </button>
+        </div>
+        <div class="col d-flex justify-content-center">
+            <button type="button" style="color:fff; font-size: 18px;" onclick="validarSwal()"
+                class="btn btn-warning ml-auto">
+                <i class="fas fa-exclamation-triangle" style="color: white;"></i><a class="borrarletra"
+                    style="text-decoration: none; color: white;">
+                    Validar</a>
+            </button>
+        </div>
+        <div class="col d-flex justify-content-center">
+            <button type="button" style="color:fff; font-size: 18px;" onclick="anularSwal()"
+                class="btn btn-warning ml-auto">
+                <i class="fas fa-exclamation-triangle" style="color: white;"></i><a class="borrarletra"
+                    style="text-decoration: none; color: white;">
+                    Anular</a>
+            </button>
+        </div>
+    </div>
     <div class="d-flex flex-wrap mt-2">
 
-        <div class="col-10 mb-3 mb-lg-0 mt-3" id="filtros" role="search">
+        <div class="col-12 mb-3 mb-lg-0 mt-3" id="filtros" role="search">
             <input type="text" id="buscarAdmin" name="buscarAdmin" onkeyup="this.value=this.value.toUpperCase()"
                 style="text-transform:uppercase;" placeholder="Ingrese el No de boleta" required="required"
                 class="form-control" />
@@ -39,18 +74,8 @@ encabezado %}
 
 
 
-            <button type="button" style="color:fff; font-size: 18px;" onclick="erroresSwal()"
-                class="btn btn-warning ml-auto">
-                <i class="fas fa-exclamation-triangle" style="color: white;"></i><a class="borrarletra"
-                    style="text-decoration: none; color: white;">
-                    Cambio</a>
-            </button>
-            <button type="button" style="color:fff; font-size: 18px;" onclick="elimSwal()"
-                class="btn btn-danger ml-auto">
-                <i class="fas fa-exclamation-triangle" style="color: white;"></i><a class="borrarletra"
-                    style="text-decoration: none; color: white;">
-                    Eliminar</a>
-            </button>
+
+
         </div>
 
     </div>
@@ -73,33 +98,38 @@ encabezado %}
 
             showCancelButton: true,
         }).then((result) => {
-            valor = $('#valor').val()
-            // alert('entro al tara')
-            $.ajax({
-                url: "/cambiarEstado",
-                type: "POST",
-                data: {
-                    id: valor,
+            if (resultado.isConfirmed) {
+                valor = $('#valor').val()
+                // alert('entro al tara')
+                $.ajax({
+                    url: "/cambiarEstado",
+                    type: "POST",
+                    data: {
+                        id: valor,
 
-                },
-                success: function (response) {
-                    Swal.fire({
-                        title: 'Éxito',
-                        icon: "success",
-                        text: "Se habilitó la verificación.",
-                        confirmButtonText: 'Listo',
-                    }).then((result) => {
-                        /* Read more about isConfirmed, isDenied below */
-                        if (result.isConfirmed) {
-                            vacioVer();
-                        } 
-                    })
-                   
-                },
-                error: function (error) {
-                    // console.log(error);
-                },
-            });
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            icon: "success",
+                            text: "Se habilitó la verificación.",
+                            confirmButtonText: 'Listo',
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                                vacioVer();
+                            }
+                        })
+
+                    },
+                    error: function (error) {
+                        // console.log(error);
+                    },
+                });
+            } else {
+
+            }
+
 
 
         });
@@ -107,6 +137,123 @@ encabezado %}
 
 
     }
+
+
+
+    function validarSwal() {
+        Swal.fire({
+            title: "Número de Boleta",
+            text: "Ingrese el Número de Boleta para habilitar validación.",
+            html: '<input type="text" id="valor" class="swal2-input" style="width:280px;" placeholder="No Boleta">',
+            preConfirm: (value) => {
+                if ($('#valor').val() == "") {
+                    Swal.showValidationMessage(
+                        'Debe ingresar datos válidos.'
+                    )
+                }
+            },
+
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                valor = $('#valor').val()
+                alert('entro al tara')
+                $.ajax({
+                    url: "/HabilitarValidacion",
+                    type: "POST",
+                    data: {
+                        id: valor,
+
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            icon: "success",
+                            text: "Se habilitó la verificación.",
+                            confirmButtonText: 'Listo',
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                                vacioVer();
+                            }
+                        })
+
+                    },
+                    error: function (error) {
+                        // console.log(error);
+                    },
+                });
+            } else {
+
+            }
+
+
+
+        });
+    }
+
+
+    function anularSwal() {
+        Swal.fire({
+            title: "Id del registro",
+            text: "Ingrese el ID para anular la verificación.",
+            html: '<input type="number" id="valor" class="swal2-input" style="width:280px;" placeholder="No Boleta">',
+            preConfirm: (value) => {
+                if ($('#valor').val() == "") {
+                    Swal.showValidationMessage(
+                        'Debe ingresar datos válidos.'
+                    )
+                }
+            },
+
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                valor = $('#valor').val()
+                // alert('entro al tara')
+                $.ajax({
+                    url: "/AnularValidacion",
+                    type: "POST",
+                    data: {
+                        id: valor,
+
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            icon: "success",
+                            text: "Se anuló la verificación.",
+                            confirmButtonText: 'Listo',
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                                vacioVer();
+                            }
+                        })
+
+                    },
+                    error: function (error) {
+                        // console.log(error);
+                    },
+                });
+            } else {
+
+            }
+
+
+
+        });
+
+
+
+    }
+
+
+
+
+
+
+
     function elimSwal() {
         Swal.fire({
             title: "Ingrese el ID",
@@ -122,44 +269,50 @@ encabezado %}
 
             showCancelButton: true,
         }).then((result) => {
-            valor = $('#valor').val()
-            Swal.fire({
-            title: "¿Desea guardar?",
-            text: "Se compararan ambos documentos",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Sí, aceptar",
-            cancelButtonText: "Cancelar",
-            }).then((resultado) => {
             if (resultado.isConfirmed) {
-                $.ajax({
-                url: "/eliminarVer",
-                type: "POST",
-                data: {
-                    id: valor,
+                valor = $('#valor').val()
+                Swal.fire({
+                    title: "¿Desea guardar?",
+                    text: "Se compararan ambos documentos",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, aceptar",
+                    cancelButtonText: "Cancelar",
+                }).then((resultado) => {
+                    if (resultado.isConfirmed) {
+                        $.ajax({
+                            url: "/eliminarVer",
+                            type: "POST",
+                            data: {
+                                id: valor,
 
-                },
-                success: function (response) {
-                    Swal.fire({
-                        title: 'Éxito',
-                        icon: "success",
-                        text: "Se eliminó la verificación.",
-                        confirmButtonText: 'Listo',
-                    }).then((result) => {
-                        /* Read more about isConfirmed, isDenied below */
-                        if (result.isConfirmed) {
-                            vacioVer();
-                        } 
-                    })
-                   
-                },
-                error: function (error) {
-                    // console.log(error);
-                },
-            });
-            }});
+                            },
+                            success: function (response) {
+                                Swal.fire({
+                                    title: 'Éxito',
+                                    icon: "success",
+                                    text: "Se eliminó la verificación.",
+                                    confirmButtonText: 'Listo',
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        vacioVer();
+                                    }
+                                })
+
+                            },
+                            error: function (error) {
+                                // console.log(error);
+                            },
+                        });
+                    }
+                });
+            } else {
+
+            }
+
             // alert('entro al tara')
-           
+
 
 
         });
