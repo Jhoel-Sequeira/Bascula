@@ -190,6 +190,7 @@ encabezado %}
                                 <option value="2">Fecha</option>
                                 <option value="3">Estado</option>
                                 <option value="4">Digitador</option>
+                                
                                 <option value="5">Verificador</option>
                                 {%endif%}
                             </select>
@@ -231,12 +232,11 @@ encabezado %}
                             <div class="form-outline">
                                 <label class="form-label" for="proveedor">Estado</label>
                                 {%if session.cargo == 3%}
-
-                                {%else%}
                                 <select class="form-control" name="IdEstado" id="IdEstado">
                                     <option value="3">Pendiente</option>
                                     <option value="4">Completado</option>
                                     <option value="5">Por validar</option>
+                                    <option value="9">Validado</option>
                                     <option value="6">Cancelado</option>
                                 </select>
                                 {%endif%}

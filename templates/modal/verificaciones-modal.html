@@ -63,20 +63,20 @@
                                     <label class="form-label fuentelabel" for="proveedor"><strong>Jefe de Cuadrilla
                                         </strong></label>
                                     {% if verifi[10] %}
-                                        {%if verifi[10] == 'SIN JEFE'%}
-                                        <input type="text" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
-                                            onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
-                                            required="required" disabled class="form-control" value="" />
-                                        {%else%}
-                                        <input type="text" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
-                                            onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
-                                            required="required" disabled class="form-control" value="{{ verifi[10] }}" />
-                                        {%endif%}
+                                    {%if verifi[10] == 'SIN JEFE'%}
+                                    <input type="text" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
+                                        onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                                        required="required" disabled class="form-control" value="" />
+                                    {%else%}
+                                    <input type="text" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
+                                        onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                                        required="required" disabled class="form-control" value="{{ verifi[10] }}" />
+                                    {%endif%}
 
                                     {% else %}
-                                        <input type="text" id="cuadrilla" style="text-transform: uppercase"
-                                            onkeyup="this.value=this.value.toUpperCase()" name="proveedor"
-                                            placeholder="Nombre cuadrilla" class="form-control" />
+                                    <input type="text" id="cuadrilla" style="text-transform: uppercase"
+                                        onkeyup="this.value=this.value.toUpperCase()" name="proveedor"
+                                        placeholder="Nombre cuadrilla" class="form-control" />
 
                                     {% endif %}
 
@@ -96,8 +96,8 @@
                         </div>
                         {%else%}
                         <input type="hidden" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
-                                            onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
-                                            required="required" disabled class="form-control" value="" />
+                            onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                            required="required" disabled class="form-control" value="" />
 
                         {%endif%}
                         <div class="row mt-2">
@@ -1210,7 +1210,7 @@
                                 }).then((result) => {
                                     /* Read more about isConfirmed, isDenied below */
                                     if (result.isConfirmed) {
-                                        window.location = "/home";
+                                        // window.location = "/home";
                                     }
                                 });
 
@@ -1229,9 +1229,10 @@
                             }
                         }
                     },
-                    error: function (error) {
-                        // console.log(error);
-                    },
+                    error: function (xhr, status, error) {
+                        // Maneja el error aquí
+                        alert(xhr.responseText);  // Muestra el mensaje de error en la consola
+                    }
                 });
             } else {
                 // Dijeron que no

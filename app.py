@@ -98,7 +98,7 @@ def login():
             # MANDAMOS A VERIFICAR LOS DATOS EN ODDO
             # conexion.username = usuario
             # conexion.password = Contraseña
-            #try:
+            try:
                 print(usuario)
                 print('CONTRASEÑA: '+Contraseña)
                 uidUser = conexion.obtenerUid(usuario, Contraseña)
@@ -114,7 +114,7 @@ def login():
                 # session["puntoid"] = uid[0]['almacen'][0]
                 # session["punto"] = uid[0]['almacen'][1]
 
-                if cargo[1] == "JEFE DE TECNOLOGÍA" or cargo[1] == "SOPORTE DE INFORMA" or cargo[1] == 'SOPORTE DE INFORMA' or cargo[1] == "GERENTE ADMINISTRACIÓN":
+                if cargo[1] == "JEFE DE TECNOLOGÍA" or cargo[1] == "SOPORTE DE INFORMATICA" or cargo[1] == 'SOPORTE DE INFORMA' or cargo[1] == "GERENTE ADMINISTRACIÓN":
 
                     session["user"] = usuario
                     session["pass"] = Contraseña
@@ -490,79 +490,79 @@ def login():
                     digitador = cur.fetchall()
                     return render_template('ajustes.html', Proveedores=Proveedores, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
 
-            # except:
-            #     try:
+            except:
+                try:
 
-            #         # ESTE ES VERIFICADOR
-            #         print("else")
-            #         cur = mysql.connection.cursor()
-            #         cur.execute(
-            #             "select * from tb_credenciales Where Usuarios = %s", [usuario])
-            #         results = cur.fetchone()
-            #         print("aaaa")
-            #         print(results)
+                    # ESTE ES VERIFICADOR
+                    print("else")
+                    cur = mysql.connection.cursor()
+                    cur.execute(
+                        "select * from tb_credenciales Where Usuarios = %s", [usuario])
+                    results = cur.fetchone()
+                    print("aaaa")
+                    print(results)
                     
-            #         if results:
-            #             # si trae algo
-            #             print("SI TRAE")
-            #             # Recordar el usuario y rol que se logeo
-            #             session["userId"] = results[0]
-            #             session["user"] = results[1]
-            #             session["userrole"] = results[3]
-            #             cur = mysql.connection.cursor()
-            #             cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s", [
-            #                         session["userId"]])
-            #             cargo = cur.fetchone()
-            #             print(cargo[0])
-            #             session['cargo'] = cargo[0]
-            #             # ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
-            #             # CONSULTA PARA LOS PROVEEDORES
-            #             cur = mysql.connection.cursor()
-            #             cur.execute(
-            #                 "select * from tb_proveedor Where IdEstado = 1")
-            #             Proveedores = cur.fetchall()
-            #             # CONSULTA PARA LOS PUNTOS DE COMPRA
-            #             cur = mysql.connection.cursor()
-            #             cur.execute(
-            #                 "select * from tb_puntocompra Where IdEstado = 1")
-            #             punto = cur.fetchall()
-            #             # CONSULTA PARA LOS MATERIALES
-            #             cur = mysql.connection.cursor()
-            #             cur.execute(
-            #                 "select * from tb_material Where Id_Estado = 1")
-            #             material = cur.fetchall()
-            #             # CONSULTA PARA LOS VERIFICADORES
-            #             cur = mysql.connection.cursor()
-            #             cur.execute(
-            #                 "select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
-            #             verificador = cur.fetchall()
-            #             # CONSULTA PARA LOS DIGITADOR
-            #             cur = mysql.connection.cursor()
-            #             cur.execute(
-            #                 "select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
-            #             digitador = cur.fetchall()
+                    if results:
+                        # si trae algo
+                        print("SI TRAE")
+                        # Recordar el usuario y rol que se logeo
+                        session["userId"] = results[0]
+                        session["user"] = results[1]
+                        session["userrole"] = results[3]
+                        cur = mysql.connection.cursor()
+                        cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s", [
+                                    session["userId"]])
+                        cargo = cur.fetchone()
+                        print(cargo[0])
+                        session['cargo'] = cargo[0]
+                        # ESTAS CONSULTAS SON PARA TRAER LOS PROVEEDORES Y LOS DATOS DE LOS SELECT
+                        # CONSULTA PARA LOS PROVEEDORES
+                        cur = mysql.connection.cursor()
+                        cur.execute(
+                            "select * from tb_proveedor Where IdEstado = 1")
+                        Proveedores = cur.fetchall()
+                        # CONSULTA PARA LOS PUNTOS DE COMPRA
+                        cur = mysql.connection.cursor()
+                        cur.execute(
+                            "select * from tb_puntocompra Where IdEstado = 1")
+                        punto = cur.fetchall()
+                        # CONSULTA PARA LOS MATERIALES
+                        cur = mysql.connection.cursor()
+                        cur.execute(
+                            "select * from tb_material Where Id_Estado = 1")
+                        material = cur.fetchall()
+                        # CONSULTA PARA LOS VERIFICADORES
+                        cur = mysql.connection.cursor()
+                        cur.execute(
+                            "select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 2")
+                        verificador = cur.fetchall()
+                        # CONSULTA PARA LOS DIGITADOR
+                        cur = mysql.connection.cursor()
+                        cur.execute(
+                            "select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
+                        digitador = cur.fetchall()
 
-            #             cur = mysql.connection.cursor()
-            #             cur.execute("SELECT pu.Id_PuntoCompra,pu.NombrePuntoCompra FROM `tb_usuarios` as u inner join tb_puntocompra as pu on u.IdPuesto = pu.Id_PuntoCompra where u.Id_Usuario = %s", [
-            #                         session["userId"]])
-            #             control = cur.fetchone()
-            #             mysql.connection.commit()
-            #             session["puntoid"] = control[0]
-            #             session["punto"] = control[1]
+                        cur = mysql.connection.cursor()
+                        cur.execute("SELECT pu.Id_PuntoCompra,pu.NombrePuntoCompra FROM `tb_usuarios` as u inner join tb_puntocompra as pu on u.IdPuesto = pu.Id_PuntoCompra where u.Id_Usuario = %s", [
+                                    session["userId"]])
+                        control = cur.fetchone()
+                        mysql.connection.commit()
+                        session["puntoid"] = control[0]
+                        session["punto"] = control[1]
 
-            #             # CHEQUEAMOS LAS CONTRASEÑAS PARA VER SI SON IGUALES
-            #             if not check_password_hash(results[2], Contraseña):
-            #                 # contraseñas incorrectas
-            #                 print("contras")
-            #                 return render_template('login.html', errorlogin=2)
-            #             return render_template('ajustes.html', Proveedores=Proveedores, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
+                        # CHEQUEAMOS LAS CONTRASEÑAS PARA VER SI SON IGUALES
+                        if not check_password_hash(results[2], Contraseña):
+                            # contraseñas incorrectas
+                            print("contras")
+                            return render_template('login.html', errorlogin=2)
+                        return render_template('ajustes.html', Proveedores=Proveedores, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
 
                     # else:
                     #     #VIENE VACIO
                     #     return render_template('login.html', errorlogin=1)
-                # except:
+                except:
 
-                #     return render_template('login.html', errorlogin=1)
+                    return render_template('login.html', errorlogin=1)
 
         return render_template('login.html', errorlogin=1)
 
@@ -3727,7 +3727,19 @@ def cambiarEstado():
             "Update tb_verificacion set IdEstado = 3 Where Id_Verificacion = %s", [id])
         mysql.connection.commit()
         return "Cambiado"
-    
+
+# CAMBIAMOS EL ESTADOP
+@app.route('/eliminarVer', methods=["POST", "GET"])
+def eliminarVer():
+    if request.method == "POST":
+        id = request.form['id']
+        # OPCIONES DE FILTRO
+
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "DELETE from tb_verificacion Where Id_Verificacion = %s", [id])
+        mysql.connection.commit()
+        return "Cambiado"
 
 # ANULAMOS LA VERIFICACION CON NUMERO DE BOLETA
 @app.route('/AnularValidacion', methods=["POST", "GET"])
@@ -3769,18 +3781,6 @@ def HabilitarValidacion():
         mysql.connection.commit()
         return "Cambiado"
 
-# CAMBIAMOS EL ESTADOP
-@app.route('/eliminarVer', methods=["POST", "GET"])
-def eliminarVer():
-    if request.method == "POST":
-        id = request.form['id']
-        # OPCIONES DE FILTRO
-
-        cur = mysql.connection.cursor()
-        cur.execute(
-            "DELETE from tb_verificacion Where Id_Verificacion = %s", [id])
-        mysql.connection.commit()
-        return "Cambiado"
 
 
 

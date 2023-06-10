@@ -64,81 +64,35 @@ encabezado %}
     </div>
     <div class="d-flex flex-wrap mt-2">
 
-        <div class="col-12 mb-3 mb-lg-0 mt-3" id="filtros" role="search">
+        <div class="col-10 mb-3 mb-lg-0 mt-3" id="filtros" role="search">
             <input type="text" id="buscarAdmin" name="buscarAdmin" onkeyup="this.value=this.value.toUpperCase()"
                 style="text-transform:uppercase;" placeholder="Ingrese el No de boleta" required="required"
                 class="form-control" />
 
         </div>
-        <div class="col mt-3" style="color:rgb(121, 121, 121); font-size: 20px; margin-left: 30px; ">
+        <!-- <div class="col mt-3" style="color:rgb(121, 121, 121); font-size: 20px; margin-left: 30px; ">
 
 
 
-
-
-        </div>
+            <button type="button" style="color:fff; font-size: 18px;" onclick="erroresSwal()"
+                class="btn btn-warning ml-auto">
+                <i class="fas fa-exclamation-triangle" style="color: white;"></i><a class="borrarletra"
+                    style="text-decoration: none; color: white;">
+                    Cambio</a>
+            </button>
+            <button type="button" style="color:fff; font-size: 18px;" onclick="elimSwal()"
+                class="btn btn-danger ml-auto">
+                <i class="fas fa-exclamation-triangle" style="color: white;"></i><a class="borrarletra"
+                    style="text-decoration: none; color: white;">
+                    Eliminar</a>
+            </button>
+        </div> -->
 
     </div>
 
 
 </div>
 <script>
-    function erroresSwal() {
-        Swal.fire({
-            title: "Ingrese el ID",
-            text: "Ingrese el id para verificar su estado.",
-            html: '<input type="number" id="valor" class="swal2-input" style="width:280px;" placeholder="ID">',
-            preConfirm: (value) => {
-                if ($('#brutoswal').val() == "" || $('#valor').val() < 0) {
-                    Swal.showValidationMessage(
-                        'Debe ingresar datos válidos.'
-                    )
-                }
-            },
-
-            showCancelButton: true,
-        }).then((result) => {
-            if (resultado.isConfirmed) {
-                valor = $('#valor').val()
-                // alert('entro al tara')
-                $.ajax({
-                    url: "/cambiarEstado",
-                    type: "POST",
-                    data: {
-                        id: valor,
-
-                    },
-                    success: function (response) {
-                        Swal.fire({
-                            title: 'Éxito',
-                            icon: "success",
-                            text: "Se habilitó la verificación.",
-                            confirmButtonText: 'Listo',
-                        }).then((result) => {
-                            /* Read more about isConfirmed, isDenied below */
-                            if (result.isConfirmed) {
-                                vacioVer();
-                            }
-                        })
-
-                    },
-                    error: function (error) {
-                        // console.log(error);
-                    },
-                });
-            } else {
-
-            }
-
-
-
-        });
-
-
-
-    }
-
-
 
     function validarSwal() {
         Swal.fire({
@@ -250,10 +204,58 @@ encabezado %}
 
 
 
+    function erroresSwal() {
+        Swal.fire({
+            title: "Ingrese el ID",
+            text: "Ingrese el id para verificar su estado.",
+            html: '<input type="number" id="valor" class="swal2-input" style="width:280px;" placeholder="ID">',
+            preConfirm: (value) => {
+                if ($('#brutoswal').val() == "" || $('#valor').val() < 0) {
+                    Swal.showValidationMessage(
+                        'Debe ingresar datos válidos.'
+                    )
+                }
+            },
+
+            showCancelButton: true,
+        }).then((result) => {
+            if (resultado.isConfirmed) {
+                valor = $('#valor').val()
+                // alert('entro al tara')
+                $.ajax({
+                    url: "/cambiarEstado",
+                    type: "POST",
+                    data: {
+                        id: valor,
+
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            icon: "success",
+                            text: "Se habilitó la verificación.",
+                            confirmButtonText: 'Listo',
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                                vacioVer();
+                            }
+                        })
+
+                    },
+                    error: function (error) {
+                        // console.log(error);
+                    },
+                });
+            } else {
+
+            }
+
+        });
 
 
 
-
+    }
     function elimSwal() {
         Swal.fire({
             title: "Ingrese el ID",
@@ -269,7 +271,7 @@ encabezado %}
 
             showCancelButton: true,
         }).then((result) => {
-            if (resultado.isConfirmed) {
+            if (result.isConfirmed) {
                 valor = $('#valor').val()
                 Swal.fire({
                     title: "¿Desea guardar?",
@@ -310,7 +312,6 @@ encabezado %}
             } else {
 
             }
-
             // alert('entro al tara')
 
 

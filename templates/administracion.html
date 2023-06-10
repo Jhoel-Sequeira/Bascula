@@ -41,7 +41,7 @@ encabezado %}
                 <i class="fa-solid fa-filter"></i>
             </button>
             
-            <button type="button" style="color:fff; font-size: 18px;" onclick="ExcelTabla()"
+            <button type="button" style="color:fff; font-size: 18px;" onclick="ExcelTablaVal()"
                 class="btn btn-success ml-auto">
                 <i class="fa-solid fa-file-csv"></i><a class="borrarletra" style="text-decoration: none; color: white;">
                     Excel</a>
@@ -227,6 +227,7 @@ encabezado %}
                                     <option value="4">Completado</option>
                                     <option value="5">Por validar</option>
                                     <option value="6">Cancelado</option>
+                                    <option value="9">Validado</option>
                                     <!-- <option value="7">Desbloqueados</option> -->
                                 </select>
 
@@ -299,6 +300,7 @@ encabezado %}
 </script>
 
 <script>
+   
     $(document).on("change", "#filtroOpc", function (event) {
         var selected = $('#filtroOpc').val();
         $.ajax({
