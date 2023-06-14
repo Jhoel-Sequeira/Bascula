@@ -210,7 +210,7 @@ encabezado %}
             text: "Ingrese el id para verificar su estado.",
             html: '<input type="number" id="valor" class="swal2-input" style="width:280px;" placeholder="ID">',
             preConfirm: (value) => {
-                if ($('#brutoswal').val() == "" || $('#valor').val() < 0) {
+                if ($('#valor').val() == "" || $('#valor').val() < 0) {
                     Swal.showValidationMessage(
                         'Debe ingresar datos válidos.'
                     )
@@ -219,7 +219,7 @@ encabezado %}
 
             showCancelButton: true,
         }).then((result) => {
-            if (resultado.isConfirmed) {
+            if (result.isConfirmed) {
                 valor = $('#valor').val()
                 // alert('entro al tara')
                 $.ajax({
