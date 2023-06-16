@@ -20,20 +20,27 @@
                                 <label class="form-label fuentelabel" for="form3Example2"><strong>PO</strong></label>
                                 {%if ids%}
                                 <input type="hidden" id="varios_id" value="{{ids}}">
+                                <input type="text" id="po" name="id" style="text-transform: uppercase"
+                                    onkeyup="this.value=this.value.toUpperCase()" value="{%for po1 in po%}{{po1}},{%endfor%}"
+                                    placeholder="Peso báscula" disabled class="form-control" />
                                 {%else%}
                                 <input type="hidden" id="varios_id" value="">
-                                {%endif%}
                                 <input type="text" id="po" name="id" style="text-transform: uppercase"
                                     onkeyup="this.value=this.value.toUpperCase()" value="{{ verifi[2] }}"
                                     placeholder="Peso báscula" disabled class="form-control" />
+                                {%endif%}
+                                
+                                
 
                                 <label class="form-label fuentelabel" for="form3Example2"><strong>Tipo de
                                         Material </strong></label>
                                 {% if val %}
                                 {%for valor in validacion%}
+                                
                                 <input type="text" id="po" name="id" style="text-transform: uppercase"
                                     onkeyup="this.value=this.value.toUpperCase()" value="{{ valor[2] }}"
                                     placeholder="Peso báscula" disabled class="form-control" />
+                                
                                 {%endfor%}
                                 {%else%}
                                 <select class="form-select" id="tmaterial" aria-label="Default select example">

@@ -1322,7 +1322,7 @@ def detalleVerificacion():
             usuariopunto = cur.fetchone()
             
 
-            return render_template('modal/comparacion-modal.html',ids= '',validacion = "",val = "", usuariopunto=usuariopunto, usuariolog=usuariolog, verificacion=verificacion, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
+            return render_template('modal/comparacion-modal.html',po='',ids= '',validacion = "",val = "", usuariopunto=usuariopunto, usuariolog=usuariolog, verificacion=verificacion, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
         
         elif session['cargo'] == 6:
             print("JEFE")
@@ -1413,7 +1413,7 @@ def detalleVerificacionVal():
             validaciondatos = cur.fetchall()
             print(validaciondatos)
             print("VAL",val)
-            return render_template('modal/comparacion-modal.html',ids = "",validacion = validaciondatos,val = val, usuariopunto=usuariopunto, usuariolog=usuariolog, verificacion=verificacion, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
+            return render_template('modal/comparacion-modal.html',po='',ids = "",validacion = validaciondatos,val = val, usuariopunto=usuariopunto, usuariolog=usuariolog, verificacion=verificacion, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
         
         
 
@@ -4352,12 +4352,12 @@ def conciliarId():
             cur = mysql.connection.cursor()
             cur.execute(
                         "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.Id_Verificacion = %s", [id])
-            verificacion1 = cur.fetchall()
+            verificacion1 = cur.fetchone()
             mysql.connection.commit()
             mysql.connection.commit()
             print("LISTA DE POS")
             print(verificacion1)
-            lista_po.append(verificacion1[0])
+            lista_po.append(verificacion1[2])
             print(lista_po)
             
         
@@ -4395,8 +4395,9 @@ def conciliarId():
                     session['userId']])
         usuariopunto = cur.fetchone()
 
+        print("IDDDDS",ids)
         # LE PASAMOS EL JSON QUE CONTIENE LOS IDS DE LOS REGISTROS QUE VIENEN PARA CONCILIARSE
-        return render_template('modal/comparacion-modal.html',ids = id1,validacion = "",val = "", usuariopunto=usuariopunto, usuariolog=usuariolog, verificacion=verificacion, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
+        return render_template('modal/comparacion-modal.html',po = lista_po,ids = id1,validacion = "",val = "", usuariopunto=usuariopunto, usuariolog=usuariolog, verificacion=verificacion, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
 # ELIMINAR EL VALOR TARA DETALLE
 
 
