@@ -13,43 +13,39 @@ import datetime
 # PRIMERA PRUEBA
 # CONEXION A LA BASE DE DATOS
 # TENEMOS LOS DATOS DE LA API Y EL USUARIO CON SU CONTRASEÑA
-url = 'https://recicladora.odoo.com/'
-#db = 'recicladora-31012023-7116641'
-db = 'fdelanuez-itc-recicladora-master-668849'
-#username = 'jhoel.sequeira@crn.com.ni'
-#username = 'SOPORTE IT'
+# url = 'https://recicladora.odoo.com/'
+# db = 'fdelanuez-itc-recicladora-master-668849'
+# username = 'soporte@crn.com.ni'
+# password = 'CRN!2023@bdserver'
+# #HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
+# info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
+# info.version()
+# uid = info.authenticate(db, username, password,{})
+
+# # PRUEBAS PARA INSERCION EN UNA TABLA
+# #PRUEBAS DE PERMISOS DE CADA USUARIO
+# #models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
+# models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
+
+
+
+
+
+
+
+
+#BASE DE DATOS DE PRUEBA
+url = 'https://recicladora-250523-8393110.dev.odoo.com/'
+db = 'recicladora-250523-8393110'
+
 username = 'soporte@crn.com.ni'
-#password = 'crn2023'
-password = 'CRN!2023@bdserver'
-#HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
-info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
-info.version()
-uid = info.authenticate(db, username, password,{})
+password = '123crn123'
+info = xmlrpc.client.ServerProxy(
+        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
 
-# PRUEBAS PARA INSERCION EN UNA TABLA
-#PRUEBAS DE PERMISOS DE CADA USUARIO
-#models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
-models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
-
-
-
-
-
-
-
-
-#BASE DE DATOS DE PRODUCCION
-# url = 'https://recicladora-31012023-7116641.dev.odoo.com/'
-# db = 'recicladora-31012023-7116641'
-
-# username = 'jhoel.sequeira@crn.com.ni'
-# password = 'crn2023'
-# info = xmlrpc.client.ServerProxy(
-#         'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/common')
-
-# uid =  info.authenticate(db, username, password, {})
-# models= xmlrpc.client.ServerProxy(
-#         'https://recicladora-31012023-7116641.dev.odoo.com/xmlrpc/object')
+uid =  info.authenticate(db, username, password, {})
+models= xmlrpc.client.ServerProxy(
+        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
 
 def conectar(user,contra):
     global username 
@@ -57,8 +53,11 @@ def conectar(user,contra):
     global password 
     password = ''+contra
     # HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
+    # info1 = xmlrpc.client.ServerProxy(
+    #     'https://recicladora.odoo.com/xmlrpc/common')
+    # BASE DE DATOS DE PRUEBA
     info1 = xmlrpc.client.ServerProxy(
-        'https://recicladora.odoo.com/xmlrpc/common')
+        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
     info1.version()
     global info 
     info = info1
@@ -68,8 +67,11 @@ def conectar(user,contra):
     # PRUEBAS PARA INSERCION EN UNA TABLA
     # PRUEBAS DE PERMISOS DE CADA USUARIO
     # models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
+    # models1 = xmlrpc.client.ServerProxy(
+    #     'https://recicladora.odoo.com/xmlrpc/object')
+    # BASE DE DATOS DE PRUEBA
     models1 = xmlrpc.client.ServerProxy(
-        'https://recicladora.odoo.com/xmlrpc/object')
+        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
     global models 
     models = models1
     # permisos = models.execute_kw(db, uid, password, 'res.partner', 'check_access_rights', [
@@ -151,7 +153,7 @@ def buscarProveedor(prov,cargo):
 
         return proveedores
     else:
-        proveedores = conectarTemp('soporte@crn.com.ni','CRN!2023@bdserver',prov) #ESTA LINEA ES PARA EL DE PRODUCCION
+        proveedores = conectarTemp('soporte@crn.com.ni','123crn123',prov) #ESTA LINEA ES PARA EL DE PRODUCCION
         #proveedores = conectarTemp('doris.fonseca@crn.com.ni','123',prov) #ESTA LINEA ES PARA EL DE PRUEBA
         return proveedores
     
@@ -162,7 +164,7 @@ def buscarCuadrilla(cuad,cargo):
 
         return cuadrilla
     else:
-        cuadrilla = conectarTempCuadrilla('soporte@crn.com.ni','CRN!2023@bdserver',cuad) #ESTA LINEA ES PARA EL DE PRODUCCION
+        cuadrilla = conectarTempCuadrilla('soporte@crn.com.ni','123crn123',cuad) #ESTA LINEA ES PARA EL DE PRODUCCION
         #proveedores = conectarTempCuadrilla('doris.fonseca@crn.com.ni','123',prov) #ESTA LINEA ES PARA EL DE PRUEBA
         return cuadrilla
 

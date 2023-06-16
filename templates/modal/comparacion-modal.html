@@ -18,7 +18,11 @@
                         <div class="input-valor">
                             <div class="col">
                                 <label class="form-label fuentelabel" for="form3Example2"><strong>PO</strong></label>
-
+                                {%if ids%}
+                                <input type="hidden" id="varios_id" value="{{ids}}">
+                                {%else%}
+                                <input type="hidden" id="varios_id" value="">
+                                {%endif%}
                                 <input type="text" id="po" name="id" style="text-transform: uppercase"
                                     onkeyup="this.value=this.value.toUpperCase()" value="{{ verifi[2] }}"
                                     placeholder="Peso báscula" disabled class="form-control" />
@@ -93,22 +97,24 @@
                                 <div class="row">
                                     <div class="col">
                                         <label class="form-label fuentelabel" for="form3Example2"><strong>Peso
-                                            Neto</strong></label>
-    
-                                    <input type="text" id="neto" name="nboleta" style="text-transform: uppercase"
-                                        onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="Peso neto"
-                                        required="required" class="form-control" value="" />
+                                                Neto</strong></label>
+
+                                        <input type="text" id="neto" name="nboleta" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" disabled
+                                            placeholder="Peso neto" required="required" class="form-control" value="" />
                                     </div>
                                     <div class="col">
-                                        <label class="form-label fuentelabel" for="form3Example2"><strong>Destare</strong></label>
+                                        <label class="form-label fuentelabel"
+                                            for="form3Example2"><strong>Destare</strong></label>
 
-                                <input type="text" id="destare" name="nboleta" style="text-transform: uppercase"
-                                    onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="Peso destare"
-                                    required="required" class="form-control" value="" />
+                                        <input type="text" id="destare" name="nboleta" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" disabled
+                                            placeholder="Peso destare" required="required" class="form-control"
+                                            value="" />
                                     </div>
                                 </div>
-                                
-                                    
+
+
 
 
 
@@ -124,7 +130,8 @@
                                         <input type="text" id="registrosTotal" name="cantidad1"
                                             style="text-transform: uppercase"
                                             onkeyup="this.value=this.value.toUpperCase()" disabled
-                                            placeholder="cantidad registro" required="required" class="form-control" value="" />
+                                            placeholder="cantidad registro" required="required" class="form-control"
+                                            value="" />
                                     </div>
                                     <div class="col">
                                         <div class="row">
@@ -149,8 +156,8 @@
                             <div style="display: flex; justify-content: center; margin-top: 10px;"><label
                                     class="form-label" style="font-size: 20px;"
                                     for="form3Example2"><strong>VARIACIÓN</strong></label></div>
-                            <div style="display: flex; justify-content: center; align-items: center;"><label class="form-label"
-                                    id="resultado" style="font-size: 80px;"
+                            <div style="display: flex; justify-content: center; align-items: center;"><label
+                                    class="form-label" id="resultado" style="font-size: 80px;"
                                     for="form3Example2"><strong>00</strong></label></div>
 
 
@@ -174,7 +181,7 @@
                         <div class="col mt-3 bg-light overflow-scroll" id="tabla-peso"></div>
                     </div>
                 </div>
-                
+
                 <!-- INICIO DE LA FUNCIONALIDAD DE LOS BOTONES CON JQUERY  DE LA PRIMERA PANTALLA-->
                 <script>
                     flagbloquear = 0;
@@ -187,7 +194,7 @@
                         //alert($('#totalFilas').text());
                         $('#registrosTotal').val($('#totalFilas').val());
                         cargarPesos();
-                        //
+                        //MANDAMOS A BUSCAR LAS PO
                     });
 
                     $(document).on("change", "#proveedor", function (event) {
@@ -203,22 +210,45 @@
                     }
 
                     function cargarPesos() {
-                        $.ajax({
-                            url: "/listaPesos",
-                            type: "POST",
-                            data: {
-                                id: $("#id").val(),
-                            },
-                            success: function (response) {
-                                $("#tabla-peso").html(response);
-                                $("#tabla-peso").append(response.htmlresponse);
-                                calcularVariacion();
-                                calcularVariacion1();
-                            },
-                            error: function (error) {
-                                // console.log(error);
-                            },
-                        });
+                        if ($('#varios_id').val()) {
+                            var JSon = JSON.stringify($('#varios_id').val());
+                            // AQUI VA EL AJAX QUE CONTIENE VARIOS IDS
+                            alert(JSon)
+                            $.ajax({
+                                url: "/listaVariosPesos",
+                                type: "POST",
+                                data: {
+                                    id: $('#varios_id').val(),
+                                },
+                                success: function (response) {
+                                    $("#tabla-peso").html(response);
+                                    $("#tabla-peso").append(response.htmlresponse);
+                                    calcularVariacion();
+                                    calcularVariacion1();
+                                },
+                                error: function (error) {
+                                    // console.log(error);
+                                },
+                            });
+                        } else {
+                            $.ajax({
+                                url: "/listaPesos",
+                                type: "POST",
+                                data: {
+                                    id: $("#id").val(),
+                                },
+                                success: function (response) {
+                                    $("#tabla-peso").html(response);
+                                    $("#tabla-peso").append(response.htmlresponse);
+                                    calcularVariacion();
+                                    calcularVariacion1();
+                                },
+                                error: function (error) {
+                                    // console.log(error);
+                                },
+                            });
+                        }
+
                     }
 
                 </script>
@@ -259,7 +289,7 @@
     var calcularVariacion = function () {
         var totalRows = $('#registrosTotal').val();
         var calculoPorcentaje = totalRows * 0.3;
-        var neto = parseFloat($('#neto').val())+ calculoPorcentaje + parseFloat($('#destare').val());
+        var neto = parseFloat($('#neto').val()) + calculoPorcentaje + parseFloat($('#destare').val());
         if ($("#pesobascula").val() != "") {
             var resultado = parseFloat($('#pesobascula').val()) - (neto - $('#var').val());
             if (resultado < 0) {
@@ -292,7 +322,7 @@
         var totalRows = $('#registrosTotal').val();
         var calculoPorcentaje = totalRows * 0.3;
         var destare = parseFloat($("#destare").val());
-        var neto = parseFloat($('#neto').val())+ calculoPorcentaje+parseFloat($('#destare').val());
+        var neto = parseFloat($('#neto').val()) + calculoPorcentaje + parseFloat($('#destare').val());
         if ($("#pesobascula").val() != "") {
             var resultado = parseFloat($('#pesobascula').val()) - (neto - $('#var').val());
             if (resultado < 0) {

@@ -11,6 +11,7 @@
                 Activas</th>
         </tr>
         <tr class="fuente-tabla">
+            <th></th>
             <th>Id</th>
             <th style="width: 350px">Proveedor</th>
             <th style="width: 200px; padding-left: 80px;">Fecha</th>
@@ -24,6 +25,7 @@
     <tbody>
         {%for i in verificaciones%}
         <tr class="fuente-tabla">
+            <td><input type="checkbox" id="{{i[0]}}" class="seleccionar"></td>
             <td>{{i[0]}}</td>
             <td>{{i[6]}}</td>
             <td align="center" style="width: 350px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
@@ -55,6 +57,7 @@
 </div>
 <script>
 
+    
     $("#tabla-prov button[name=detallever]").click(function () {
         id = $(this).val();
         $.ajax({
@@ -92,4 +95,6 @@
             },
         });
     });
+
+    //mandamos el mensaje si dos registros estan con el check para unificarlos
 </script>

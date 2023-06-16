@@ -106,10 +106,10 @@
         </tr>
     </tbody>
 </table>
-<input type="hidden" id="totalFilas" value="{{ TotalLinea|length}}">
+<input type="hidden" id="totalFilas" value="{%if varios== 'si'%}{{TotalLinea}}{%else%}{{ TotalLinea|length}}{%endif%}">
 
 <script>
     $('#neto').val('{{sumaNetodigi}}')
     $('#destare').val('{{sumaDestaredigi}}')
-    $('#registrosTotal').val('{{ TotalLinea|length}}')
+    $('#registrosTotal').val('{%if varios== "si"%}{{TotalLinea}}{%else%}{{ TotalLinea|length}}{%endif%}')
 </script>

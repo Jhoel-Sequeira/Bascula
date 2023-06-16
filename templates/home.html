@@ -12,7 +12,8 @@ Verificacion
 encabezado %}
 <div class="row">
     <div class="col">
-        <h1><a href="/ajustes" style="text-decoration: none;" class="fuente-grande-titulo-principal">Verificación </a> </h1>
+        <h1><a href="/ajustes" style="text-decoration: none;" class="fuente-grande-titulo-principal">Verificación </a>
+        </h1>
     </div>
 </div>
 {% endblock %}
@@ -20,11 +21,11 @@ encabezado %}
 <div class="">
     <input type="hidden" id="cargo" value="{{cargo}}">
     <div class="d-flex flex-wrap mt-2 justify-content-md-center">
-        
+
         {%if punto == 'MOVIL: Recepciones'%}
         <div class="col-10 mb-3 mt-3 mb-lg-0" role="search">
             <input type="search" class="form-control" id="buscar" onkeyup="this.value=this.value.toUpperCase()"
-                style="text-transform:uppercase;"  value="MOVIL" disabled aria-label="Buscar">
+                style="text-transform:uppercase;" value="MOVIL" disabled aria-label="Buscar">
         </div>
         {%else%}
         <div class="col-10 mb-3 mt-3 mb-lg-0" role="search">
@@ -35,22 +36,27 @@ encabezado %}
 
         <br>
         {%if cargo != 5 and cargo != 6%}
-            {% if punto != 'MOVIL: Recepciones' %}
-            <div class=""><button type="button" class="btn btn-success boton  mt-3" disabled="disabled" id="verificar"
-                    onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>
-                    Crear</button></div>
-            {%else%}
-            <div class=""><button type="button" class="btn btn-success boton  mt-3" id="verificar"
+        {% if punto != 'MOVIL: Recepciones' %}
+        <div class=""><button type="button" class="btn btn-success boton  mt-3" disabled="disabled" id="verificar"
                 onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>
                 Crear</button></div>
-            {%endif%}
-            
+        {%else%}
+        <div class=""><button type="button" class="btn btn-success boton  mt-3" id="verificar"
+                onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>
+                Crear</button></div>
+        {%endif%}
 
+
+        {%endif%}
+        {% if cargo == 5%}
+        <div id="validar_multiples"><button type="button" class="btn btn-success boton  mt-3" 
+                id="verificar" onclick="obtenerRegistrosSeleccionados()"><i class="fa-solid fa-plus"></i>
+                Crear</button></div>
         {%endif%}
 
     </div>
     {%if cargo == 1%}
-    <p>Sugerencia de Boleta: <a  onclick="PonerNumero()" id="valorGenerado"></a></p>
+    <p>Sugerencia de Boleta: <a onclick="PonerNumero()" id="valorGenerado"></a></p>
     {%endif%}
 
     <script>
@@ -69,21 +75,53 @@ encabezado %}
 </div>
 <div id="factura"></div>
 <script>
-    function PonerNumero(){
+    
+    function PonerNumero() {
         $('#buscar').val($('#valorGenerado').text());
         $('#verificar').removeAttr('disabled')
     }
     $(document).ready(function () {
         cargarLista();
         TraerNumero();
-       
+        //$('#validar_multiples').hide();
     });
-    function TraerNumero(){
+    function obtenerRegistrosSeleccionados() {
+        const checkboxes = document.getElementsByClassName('seleccionar');
+        var registrosSeleccionados = [];
+
+        for (let i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                const fila = checkboxes[i].parentNode.parentNode;
+                const id = checkboxes[i].id;
+                registrosSeleccionados.push(id);
+            }
+        }
+
+        // TRAER LOS IDS SELECCIONADOS
+        $.ajax({
+            url: "/conciliarId",
+            type: "POST",
+            data: {
+                ids: JSON.stringify({registrosSeleccionados}),
+
+            },
+            success: function (response) {
+                $('#modal-act3').html(response);
+                $('#modal-act3').append(response.htmlresponse);
+                $('#launch2').click();
+            },
+            error: function (error) {
+                //console.log(error);
+            },
+        });
+        // MANDAR LOS IDS CON LOS QUE QUIERE CONCILIAR
+    }
+    function TraerNumero() {
         $.ajax({
             url: "/traerNumero",
             type: "POST",
             data: {
-                data:'',
+                data: '',
 
             },
             success: function (response) {
@@ -133,19 +171,19 @@ encabezado %}
                 success: function (response) {
                     $('#tabla-prov').html(response);
                     $('#tabla-prov').append(response.htmlresponse);
-                    if (proveedor == "MOVIL"){
+                    if (proveedor == "MOVIL") {
                         $('#buscar').val("MOVIL");
-                    }else{
+                    } else {
                         $('#buscar').val("");
                     }
-                    if (proveedor == $('#valorGenerado').text()){
+                    if (proveedor == $('#valorGenerado').text()) {
                         TraerNumero();
-                    }else{
+                    } else {
                         TraerNumero();
                     }
-                    
-                    
-                    
+
+
+
                 },
                 error: function (error) {
                     //console.log(error);
@@ -163,7 +201,7 @@ encabezado %}
     // Funcion para poner lista de resultados
     var buscarBoleta = function () {
         if ($('#cargo').val() != 5) {
-            if ($('#buscar').val() != "" ) {
+            if ($('#buscar').val() != "") {
                 $('#verificar').removeAttr('disabled')
             } else {
                 $('#verificar').attr('disabled', 'true');
