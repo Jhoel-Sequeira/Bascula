@@ -409,7 +409,7 @@ def GenerarExcel_1(contra,ids,uid1):
     return nombre
     #return output
 
-def GenerarExcel_3(contra,ids,uid1,datos):
+def GenerarExcel_3(contra,ids,uid1,datos,valores_extras):
     # #GENERANDO UN EXCEL CON LA INFORMACION DE ODDO
     # Crea un libro de trabajo y una hoja de trabajo
     wb = Workbook()
@@ -463,6 +463,9 @@ def GenerarExcel_3(contra,ids,uid1,datos):
     ws['M2'] = '%'
     ws['N2'] = 'MATERIAL'
     ws['O2'] = 'TURNO'
+    ws['P2'] = 'FECHA CREACION'
+    ws['Q2'] = 'FECHA FINALIZACION'
+    ws['R2'] = 'PUNTO COMPRA'
 
     ws.column_dimensions['A'].width = 11
     ws.column_dimensions['B'].width = 14
@@ -479,11 +482,14 @@ def GenerarExcel_3(contra,ids,uid1,datos):
     ws.column_dimensions['M'].width = 11
     ws.column_dimensions['N'].width = 11
     ws.column_dimensions['O'].width = 11
+    ws.column_dimensions['P'].width = 11
+    ws.column_dimensions['Q'].width = 11
+    ws.column_dimensions['R'].width = 11
 
     ws.row_dimensions[2].height = 15
     ws.row_dimensions[1].height = 44
 
-    columnas = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O']
+    columnas = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R']
     #APLICAMOS EL FORMATO A LAS CELDAS DEL FOR ENCABEZADOS
 
     for col in columnas:
@@ -507,9 +513,10 @@ def GenerarExcel_3(contra,ids,uid1,datos):
         print('order_Line: ',order_lines)
         # Sumar las cantidades de cada línea de pedido de compra
         total_cantidad = sum(line['product_qty'] for line in order_lines)
-        for row_num, fila in enumerate(potemp, filaCont):
+        for row_num, fila,valor in enumerate(potemp, filaCont,valores_extras):
             # Une las tres celdas para crear una celda combinada
             #ws.merge_cells('A'+str(row_num)+':C7')
+            print("VALORRR",valor)
             ws.cell(row=row_num, column=1, value=fila['name'])
             ws.cell(row=row_num, column=2, value=fila['partner_id'][1])
             ws.cell(row=row_num, column=3, value=fila['x_studio_field_WLD1C'])
@@ -526,6 +533,9 @@ def GenerarExcel_3(contra,ids,uid1,datos):
             ws.cell(row=row_num, column=13, value=datos[contador][0][2])
             ws.cell(row=row_num, column=14, value=datos[contador][0][0])
             ws.cell(row=row_num, column=15, value='0')
+            ws.cell(row=row_num, column=16, value=valor[0])
+            ws.cell(row=row_num, column=17, value=valor[1])
+            ws.cell(row=row_num, column=18, value=valor[2])
         filaCont += 1
         contador += 1
        

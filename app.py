@@ -2,6 +2,7 @@
 
 from datetime import datetime, date, timedelta
 import json
+import ast
 import random
 from flask import Flask, jsonify, redirect, render_template, request, send_file, session, url_for
 from flask_mysqldb import MySQL
@@ -1905,8 +1906,10 @@ def listaVariosPesos():
         sumaDestarever = suma_columnas[3]
         sumaNetover = suma_columnas[2]
         print("========================\n",total_fila)
+        lista = []
+        lista.append(ids['registrosSeleccionados'])
         #print("AQUI VA EL VALOR DE LA LISTA ",tamano_lista_total = sum(len(sublista) for sublista in lista_total_ver))
-        return render_template('tablas/tabla-pesoscomparacion.html',varios = "si",TotalLinea = sum(len(sublista) for sublista in lista_total_ver),  id=1, pesosdigitador=resultado, ids=ids, pesosverificador=resultado, sumaBrutover=sumaBrutover, sumaTaraver=sumaTaraver, sumaDestarever=sumaDestarever, sumaNetover=sumaNetover, sumaBrutodig=sumaBrutover, sumaTaradigi=sumaTaraver, sumaDestaredigi=sumaDestarever, sumaNetodigi=sumaNetover)
+        return render_template('tablas/tabla-pesoscomparacion.html',varios = "si",TotalLinea = sum(len(sublista) for sublista in lista_total_ver),  id=lista, pesosdigitador=resultado, ids=ids, pesosverificador=resultado, sumaBrutover=sumaBrutover, sumaTaraver=sumaTaraver, sumaDestarever=sumaDestarever, sumaNetover=sumaNetover, sumaBrutodig=sumaBrutover, sumaTaradigi=sumaTaraver, sumaDestaredigi=sumaDestarever, sumaNetodigi=sumaNetover)
 
 
 #===========================================
@@ -3422,6 +3425,41 @@ def finalizarVerificacion():
         return "No"
 
 
+@app.route('/finalizarVerificacionVarios', methods=["POST", "GET"])
+def finalizarVerificacionVarios():
+    if request.method == "POST":
+            print("VALIDADOR")
+            id = request.form['id']
+            tipoMaterial = request.form['tipo']
+            peso = request.form['peso']
+            var1 = request.form['variacion1']
+            var2 = request.form['variacion2']
+
+            array = ast.literal_eval(id)
+            for id1 in array:           
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    "INSERT INTO tb_validacion (IdVerificacion,TipoMaterial,PesoBascula,Variacion1,Variacion2) VALUES (%s,%s,%s,%s,%s)", (id1, tipoMaterial, peso,var1,var2))
+
+                mysql.connection.commit()
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.Id_Verificacion = %s", [id1])
+                Verificacion = cur.fetchone()
+                mysql.connection.commit()
+
+
+                print('IDDDD',id1)
+                # Cambiar el estado de la verificacion
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    'Update tb_verificacion set IdEstado = 9 Where NoBoleta = %s', [Verificacion[3]])
+                mysql.connection.commit()
+            return "Hecho"
+
+
+
+
 # FINALIZAR VERIFICACION
 @app.route('/finalizarVerificacionmal', methods=["POST", "GET"])
 def finalizarVerificacionmal():
@@ -3603,6 +3641,42 @@ def finalizarVerificacionmal():
             else:
                 print("vacio")
                 return "vacio"
+
+    else:
+        return "No"
+    
+# FINALIZAR VERIFICACION
+@app.route('/finalizarVerificacionmalVarios', methods=["POST", "GET"])
+def finalizarVerificacionmalVarios():
+    if request.method == "POST":
+        
+            print("VALIDADOR")
+            id = request.form['id']
+            print(id)
+            tipoMaterial = request.form['tipo']
+            peso = request.form['peso']
+            var1 = request.form['variacion1']
+            var2 = request.form['variacion2']
+            array = ast.literal_eval(id)
+            for id1 in array:           
+                
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,v.Bahia from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario Where v.Id_Verificacion = %s", [id1])
+                Verificacion = cur.fetchone()
+                mysql.connection.commit()
+
+
+                print('IDDDD',id1)
+                # Cambiar el estado de la verificacion
+                cur = mysql.connection.cursor()
+                cur.execute(
+                    'Update tb_verificacion set IdEstado = 6 Where NoBoleta = %s', [Verificacion[3]])
+                mysql.connection.commit()
+
+                
+            return "done"
+           
 
     else:
         return "No"
@@ -5170,13 +5244,19 @@ def reporteValidador():
             idtemp = cur.fetchone()
             #MANDAMOS A TRAER LOS VALORES BASCULA DE ESA PO
            # print(idtemp[0])
+           # TRAEMOS LAS FECHAS DE LAS CREACION Y CIERRE
+            cur = mysql.connection.cursor()
+            cur.execute("select v.Fecha,con.FechaConciliacion,p.NombrePuntoCompra from tb_verificacion as v inner join tb_conciliacion as con on v.Id_Verificacion = con.IdVerificacion inner join tb_puntocompra as p on v.IdPuntoCompra = p.Id_PuntoCompra Where v.Id_Verificacion = %s",(idtemp))
+            valores_extras = cur.fetchall()
+
+           #============================================
             cur = mysql.connection.cursor()
             cur.execute("select TipoMaterial,PesoBascula,Variacion1,Variacion2 from tb_validacion Where IdVerificacion = %s",(idtemp))
             valores = cur.fetchall()
             array_datos.append(valores)
             contador +=1
         print('arreglo con los datos: ',array_datos)
-        retorno = conexion.GenerarExcel_3(session['pass'], ids, session['uid'],array_datos)
+        retorno = conexion.GenerarExcel_3(session['pass'], ids, session['uid'],array_datos,valores_extras)
 
 
         return jsonify({'url': ''+retorno})

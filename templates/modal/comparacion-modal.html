@@ -21,26 +21,27 @@
                                 {%if ids%}
                                 <input type="hidden" id="varios_id" value="{{ids}}">
                                 <input type="text" id="po" name="id" style="text-transform: uppercase"
-                                    onkeyup="this.value=this.value.toUpperCase()" value="{%for po1 in po%}{{po1}},{%endfor%}"
-                                    placeholder="Peso báscula" disabled class="form-control" />
+                                    onkeyup="this.value=this.value.toUpperCase()"
+                                    value="{%for po1 in po%}{{po1}},{%endfor%}" placeholder="Peso báscula" disabled
+                                    class="form-control" />
                                 {%else%}
                                 <input type="hidden" id="varios_id" value="">
                                 <input type="text" id="po" name="id" style="text-transform: uppercase"
                                     onkeyup="this.value=this.value.toUpperCase()" value="{{ verifi[2] }}"
                                     placeholder="Peso báscula" disabled class="form-control" />
                                 {%endif%}
-                                
-                                
+
+
 
                                 <label class="form-label fuentelabel" for="form3Example2"><strong>Tipo de
                                         Material </strong></label>
                                 {% if val %}
                                 {%for valor in validacion%}
-                                
+
                                 <input type="text" id="po" name="id" style="text-transform: uppercase"
                                     onkeyup="this.value=this.value.toUpperCase()" value="{{ valor[2] }}"
                                     placeholder="Peso báscula" disabled class="form-control" />
-                                
+
                                 {%endfor%}
                                 {%else%}
                                 <select class="form-select" id="tmaterial" aria-label="Default select example">
@@ -220,7 +221,7 @@
                         if ($('#varios_id').val()) {
                             var JSon = JSON.stringify($('#varios_id').val());
                             // AQUI VA EL AJAX QUE CONTIENE VARIOS IDS
-                            alert(JSon)
+
                             $.ajax({
                                 url: "/listaVariosPesos",
                                 type: "POST",
@@ -464,60 +465,120 @@
 
     function finalizar() {
         if ($('#pesobascula').val() != 0 && $("#tmaterial option:selected").val() != "Seleccionar el material") {
-            Swal.fire({
-                title: "¿Desea Validar?",
-                text: "Se imprimira una verificación con los detalles",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Sí, aceptar",
-                cancelButtonText: "Cancelar",
-            }).then((resultado) => {
-                if (resultado.value) {
-                    $.ajax({
-                        url: "/finalizarVerificacion",
-                        type: "POST",
-                        data: {
-                            id: $("#idboleta").val(),
-                            tipo: $('#tmaterial option:selected').text(),
-                            peso: $('#pesobascula').val(),
-                            variacion1: $('#var').val(),
-                            variacion2: $('#resultado').text(),
-                        },
-                        success: function (response) {
-                            if (response == "vacio") {
-                                Swal.fire({
-                                    icon: "warning",
-                                    title: "Datos faltantes",
-                                    confirmButtonText: "Ok",
-                                    text: "Esta verificación no posee pesajes",
-                                }).then((result) => {
-                                    /* Read more about isConfirmed, isDenied below */
-                                    if (result.isConfirmed) {
-                                    }
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Verificación validada",
-                                    confirmButtonText: "Ok",
-                                    text: "Se validó la verificación.",
-                                }).then((result) => {
-                                    /* Read more about isConfirmed, isDenied below */
-                                    if (result.isConfirmed) {
-                                        window.location = "/home";
-                                    }
-                                });
-                            }
-                        },
-                        error: function (error) {
-                            // console.log(error);
-                        },
-                    });
-                } else {
-                    // Dijeron que no
-                    console.log("*NO se elimina la venta*");
-                }
-            });
+            if ($('#varios_id').val()) {
+                Swal.fire({
+                    title: "¿Desea Validar?",
+                    text: "Se imprimira una verificación con los detalles",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, aceptar",
+                    cancelButtonText: "Cancelar",
+                }).then((resultado) => {
+                    if (resultado.value) {
+                        $.ajax({
+                            url: "/finalizarVerificacionVarios",
+                            type: "POST",
+                            data: {
+                                id: $("#idboleta").val(),
+                                tipo: $('#tmaterial option:selected').text(),
+                                peso: $('#pesobascula').val(),
+                                variacion1: $('#var').val(),
+                                variacion2: $('#resultado').text(),
+                            },
+                            success: function (response) {
+                                if (response == "vacio") {
+                                    Swal.fire({
+                                        icon: "warning",
+                                        title: "Datos faltantes",
+                                        confirmButtonText: "Ok",
+                                        text: "Esta verificación no posee pesajes",
+                                    }).then((result) => {
+                                        /* Read more about isConfirmed, isDenied below */
+                                        if (result.isConfirmed) {
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Verificación validada",
+                                        confirmButtonText: "Ok",
+                                        text: "Se validó la verificación.",
+                                    }).then((result) => {
+                                        /* Read more about isConfirmed, isDenied below */
+                                        if (result.isConfirmed) {
+                                            window.location = "/home";
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (error) {
+                                // console.log(error);
+                            },
+                        });
+                    } else {
+                        // Dijeron que no
+                        console.log("*NO se elimina la venta*");
+                    }
+                });
+            }
+            else {
+                Swal.fire({
+                    title: "¿Desea Validar?",
+                    text: "Se imprimira una verificación con los detalles",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, aceptar",
+                    cancelButtonText: "Cancelar",
+                }).then((resultado) => {
+                    if (resultado.value) {
+                        $.ajax({
+                            url: "/finalizarVerificacion",
+                            type: "POST",
+                            data: {
+                                id: $("#idboleta").val(),
+                                tipo: $('#tmaterial option:selected').text(),
+                                peso: $('#pesobascula').val(),
+                                variacion1: $('#var').val(),
+                                variacion2: $('#resultado').text(),
+                            },
+                            success: function (response) {
+                                if (response == "vacio") {
+                                    Swal.fire({
+                                        icon: "warning",
+                                        title: "Datos faltantes",
+                                        confirmButtonText: "Ok",
+                                        text: "Esta verificación no posee pesajes",
+                                    }).then((result) => {
+                                        /* Read more about isConfirmed, isDenied below */
+                                        if (result.isConfirmed) {
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Verificación validada",
+                                        confirmButtonText: "Ok",
+                                        text: "Se validó la verificación.",
+                                    }).then((result) => {
+                                        /* Read more about isConfirmed, isDenied below */
+                                        if (result.isConfirmed) {
+                                            window.location = "/home";
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (error) {
+                                // console.log(error);
+                            },
+                        });
+                    } else {
+                        // Dijeron que no
+                        console.log("*NO se elimina la venta*");
+                    }
+                });
+            }
+
+
         } else {
             Swal.fire({
                 icon: "error",
@@ -533,76 +594,153 @@
 
     }
     function finalizarmal() {
-        Swal.fire({
-            title: "¿Desea Validar?",
-            text: "Esta verificaciones no coinciden",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Sí, aceptar",
-            cancelButtonText: "Cancelar",
-        }).then((resultado) => {
-            if (resultado.value) {
-                $.ajax({
-                    url: "/finalizarVerificacionmal",
-                    type: "POST",
-                    data: {
-                        id: $("#idboleta").val(),
-                        tipo: $('#tmaterial option:selected').text(),
-                        peso: $('#pesobascula').val(),
-                        variacion1: $('#var').val(),
-                        variacion2: $('#resultado').text(),
-                    },
-                    success: function (response) {
-                        var link = $('<a></a>').text('Ir a Google');
-                        link.attr('href', 'https://wa.me/50589940240?text=Favor%20cancelar%20esta%20verificación%20\nPO:' + String($("#po").val()) + '.');
-                        link.attr('target', '_blank');
-                        link.attr('class', 'd-none');
-                        link.appendTo('#contener');
-                        setTimeout(function () {
-                            link.get(0).click();
-                            Swal.fire({
-                                icon: "success",
-                                title: "Verificación cancelada",
-                                confirmButtonText: "Ok",
-                                text: "Se canceló la verificación.",
-                            }).then((result) => {
-                                //establece el valor del href utilizando el método attr()
-                                // $('#whatsapp').click();
-                                // /* Read more about isConfirmed, isDenied below */
-                                if (result.isConfirmed) {
+        if ($('#varios_id').val()) {
+            Swal.fire({
+                title: "¿Desea Validar?",
+                text: "Esta verificaciones no coinciden",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sí, aceptar",
+                cancelButtonText: "Cancelar",
+            }).then((resultado) => {
+                if (resultado.value) {
+                    alert($("#idboleta").val())
+                    $.ajax({
+                        url: "/finalizarVerificacionmalVarios",
+                        type: "POST",
+                        data: {
+                            id: $("#idboleta").val(),
+                            tipo: $('#tmaterial option:selected').text(),
+                            peso: $('#pesobascula').val(),
+                            variacion1: $('#var').val(),
+                            variacion2: $('#resultado').text(),
+                        },
+                        success: function (response) {
+                            var link = $('<a></a>').text('Ir a Google');
+                            link.attr('href', 'https://wa.me/50589940240?text=Favor%20cancelar%20esta%20verificación%20\nPO:' + String($("#po").val()) + '.');
+                            link.attr('target', '_blank');
+                            link.attr('class', 'd-none');
+                            link.appendTo('#contener');
+                            setTimeout(function () {
+                                link.get(0).click();
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Verificación cancelada",
+                                    confirmButtonText: "Ok",
+                                    text: "Se canceló la verificación.",
+                                }).then((result) => {
+                                    //establece el valor del href utilizando el método attr()
                                     // $('#whatsapp').click();
-                                    window.location = "/home";
-                                }
-                            });
-                        }, 100);
+                                    // /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        // $('#whatsapp').click();
+                                        window.location = "/home";
+                                    }
+                                });
+                            }, 100);
 
 
-                        // setTimeout(() => {
-                        //     Swal.fire({
-                        //         icon: "success",
-                        //         title: "Verificación cancelada",
-                        //         confirmButtonText: "Ok",
-                        //         text: "Se canceló la verificación.",
-                        //     }).then((result) => {
-                        //         //establece el valor del href utilizando el método attr()
-                        //         // $('#whatsapp').click();
-                        //         // /* Read more about isConfirmed, isDenied below */
-                        //         if (result.isConfirmed) {
-                        //             // $('#whatsapp').click();
-                        //             window.location = "/home";
-                        //         }
-                        //     });
-                        // }, 1000);
-                    },
-                    error: function (error) {
-                        // console.log(error);
-                    },
-                });
-            } else {
-                // Dijeron que no
-                console.log("*NO se elimina la venta*");
-            }
-        });
+                            // setTimeout(() => {
+                            //     Swal.fire({
+                            //         icon: "success",
+                            //         title: "Verificación cancelada",
+                            //         confirmButtonText: "Ok",
+                            //         text: "Se canceló la verificación.",
+                            //     }).then((result) => {
+                            //         //establece el valor del href utilizando el método attr()
+                            //         // $('#whatsapp').click();
+                            //         // /* Read more about isConfirmed, isDenied below */
+                            //         if (result.isConfirmed) {
+                            //             // $('#whatsapp').click();
+                            //             window.location = "/home";
+                            //         }
+                            //     });
+                            // }, 1000);
+                        },
+                        error: function (error) {
+                            // console.log(error);
+                        },
+                    });
+                } else {
+                    // Dijeron que no
+                    console.log("*NO se elimina la venta*");
+                }
+            });
+        }
+        else {
+            Swal.fire({
+                title: "¿Desea Validar?",
+                text: "Esta verificaciones no coinciden",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sí, aceptar",
+                cancelButtonText: "Cancelar",
+            }).then((resultado) => {
+                if (resultado.value) {
+                    $.ajax({
+                        url: "/finalizarVerificacionmal",
+                        type: "POST",
+                        data: {
+                            id: $("#idboleta").val(),
+                            tipo: $('#tmaterial option:selected').text(),
+                            peso: $('#pesobascula').val(),
+                            variacion1: $('#var').val(),
+                            variacion2: $('#resultado').text(),
+                        },
+                        success: function (response) {
+                            var link = $('<a></a>').text('Ir a Google');
+                            link.attr('href', 'https://wa.me/50589940240?text=Favor%20cancelar%20esta%20verificación%20\nPO:' + String($("#po").val()) + '.');
+                            link.attr('target', '_blank');
+                            link.attr('class', 'd-none');
+                            link.appendTo('#contener');
+                            setTimeout(function () {
+                                link.get(0).click();
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Verificación cancelada",
+                                    confirmButtonText: "Ok",
+                                    text: "Se canceló la verificación.",
+                                }).then((result) => {
+                                    //establece el valor del href utilizando el método attr()
+                                    // $('#whatsapp').click();
+                                    // /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        // $('#whatsapp').click();
+                                        window.location = "/home";
+                                    }
+                                });
+                            }, 100);
+
+
+                            // setTimeout(() => {
+                            //     Swal.fire({
+                            //         icon: "success",
+                            //         title: "Verificación cancelada",
+                            //         confirmButtonText: "Ok",
+                            //         text: "Se canceló la verificación.",
+                            //     }).then((result) => {
+                            //         //establece el valor del href utilizando el método attr()
+                            //         // $('#whatsapp').click();
+                            //         // /* Read more about isConfirmed, isDenied below */
+                            //         if (result.isConfirmed) {
+                            //             // $('#whatsapp').click();
+                            //             window.location = "/home";
+                            //         }
+                            //     });
+                            // }, 1000);
+                        },
+                        error: function (error) {
+                            // console.log(error);
+                        },
+                    });
+                } else {
+                    // Dijeron que no
+                    console.log("*NO se elimina la venta*");
+                }
+            });
+
+        }
+
     }
 </script>
 
