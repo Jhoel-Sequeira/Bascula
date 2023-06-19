@@ -1,0 +1,32 @@
+#container {
+    display: flex;
+  }
+  
+  #columnContainer {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-width: 150px;
+  }
+  
+  .draggableColumn {
+    background-color: #f5f5f5;
+    margin-bottom: 5px;
+    padding: 5px;
+    cursor: grab;
+  }
+  
+  #table {
+    border-collapse: collapse;
+    margin-left: 10px;
+  }
+  
+  #table td {
+    border: 1px solid #ccc;
+    padding: 5px;
+  }
+  
+  .droppableCell {
+    min-width: 100px;
+    background-color: #f5f5f5;
+  }
+  

@@ -139,7 +139,7 @@ encabezado %}
             </div>
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
-                <div class="card cartas" onclick="homeDesbloqueo()" style="padding: 5px; background-color: #b4583f">
+                <div class="card cartas" onclick="homeReporteria()" style="padding: 5px; background-color: #b4583f">
                     <div class="inner">
                         <h3>
                             <sup style="font-size: 20px"></sup>
@@ -148,9 +148,9 @@ encabezado %}
                         <br>
                     </div>
                     <div class="icon mr-1">
-                        <box-icon type='solid' name='report'></box-icon>
+                        <i class="fas fa-poll-h delgado fa-solid"></i>
                     </div>
-                    <a href="/desbloqueo" id="home" class="card-footer">
+                    <a href="/reporteria" id="home" class="card-footer">
                         Reportería
                     </a>
                 </div>
@@ -177,6 +177,9 @@ encabezado %}
             <script>
                 function adminErrores() {
                     window.location = '/administracionErrores'
+                }
+                function homeReporteria() {
+                    window.location = '/reporteria'
                 }
             </script>
             <!-- <div class="col-lg-3 col-6" style="padding: 10px;">

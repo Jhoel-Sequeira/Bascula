@@ -5349,6 +5349,14 @@ def misVerificaciones():
     digitador = cur.fetchall()
     return render_template('misverificaciones.html', verificadores=verificador, digitadores=digitador)
 
+# REPORTERIA
+@app.route('/reporteria')
+def reporteria():
+    
+    return render_template('reporteria.html')
+
+
+
 # MIS VERIFICACIONES
 
 

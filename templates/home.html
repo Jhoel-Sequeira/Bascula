@@ -49,8 +49,8 @@ encabezado %}
 
         {%endif%}
         {% if cargo == 5%}
-        <div id="validar_multiples"><button type="button" class="btn btn-warning boton  mt-3" 
-                id="verificar" onclick="obtenerRegistrosSeleccionados()"><i class="fa-solid fa-layer-plus" style="color: #ffffff;"></i>
+        <div id="validar_multiples"><button type="button" class="btn btn-warning boton  mt-3" style="color: #ffffff;"
+                id="verificar" onclick="obtenerRegistrosSeleccionados()"><i class="fas fa-sync-alt"></i>
                 Conciliar</button></div>
         {%endif%}
 
@@ -75,7 +75,7 @@ encabezado %}
 </div>
 <div id="factura"></div>
 <script>
-    
+
     function PonerNumero() {
         $('#buscar').val($('#valorGenerado').text());
         $('#verificar').removeAttr('disabled')
@@ -96,25 +96,33 @@ encabezado %}
                 registrosSeleccionados.push(id);
             }
         }
+        if (registrosSeleccionados.length > 1) {
+            // TRAER LOS IDS SELECCIONADOS
+            $.ajax({
+                url: "/conciliarId",
+                type: "POST",
+                data: {
+                    ids: JSON.stringify({ registrosSeleccionados }),
 
-        // TRAER LOS IDS SELECCIONADOS
-        $.ajax({
-            url: "/conciliarId",
-            type: "POST",
-            data: {
-                ids: JSON.stringify({registrosSeleccionados}),
+                },
+                success: function (response) {
+                    $('#modal-act3').html(response);
+                    $('#modal-act3').append(response.htmlresponse);
+                    $('#launch2').click();
+                },
+                error: function (error) {
+                    //console.log(error);
+                },
+            });
+            // MANDAR LOS IDS CON LOS QUE QUIERE CONCILIAR
+        }else{
+            Swal.fire({ icon: 'warning', title: 'Datos faltantes', text: 'Debe seleccionar mas de 1 registro para unificarlos.' }).then((result) => {
+                if (result.isConfirmed) {
 
-            },
-            success: function (response) {
-                $('#modal-act3').html(response);
-                $('#modal-act3').append(response.htmlresponse);
-                $('#launch2').click();
-            },
-            error: function (error) {
-                //console.log(error);
-            },
-        });
-        // MANDAR LOS IDS CON LOS QUE QUIERE CONCILIAR
+                }
+            })
+        }
+
     }
     function TraerNumero() {
         $.ajax({
