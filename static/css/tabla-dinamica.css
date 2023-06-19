@@ -5,14 +5,30 @@
   #columnContainer {
     border: 1px solid #ccc;
     padding: 10px;
-    min-width: 150px;
+    background-color: #e4e4e4;
+    min-width: 200px;
+    
+    min-height: 65vh;
   }
   
   .draggableColumn {
-    background-color: #f5f5f5;
+    background-color: rgb(228, 128, 62);
     margin-bottom: 5px;
     padding: 5px;
+    border-radius: 5px;
+    color: white;
     cursor: grab;
+  }
+  .add-column{
+    border: 5px solid rgb(179, 179, 179);
+    display: flex;
+    color: rgb(179, 179, 179);
+    font-weight: bold;
+    border-radius: 5px;
+    margin-right: 2px;
+    height: 18vh;
+    font-size: 14px;
+    align-items: center;
   }
   
   #table {

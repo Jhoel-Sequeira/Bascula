@@ -354,6 +354,7 @@
 }
 .fondo-modal{
   background-color: #D8DCFF;
+  height: 89vh;
 }
 .sombra{
   box-shadow: 5px 5px 5px rgb(150, 150, 150);
@@ -368,13 +369,19 @@
 #topbar:hover{
   cursor: pointer;
 }
-
+.lista{
+  background-color: rgb(78, 148, 78);
+  color: white;
+}
 
 @media (max-width: 900px) {
   .bajar{
     margin-top: 0px;
   }
   .borrarletra{
+    display: none;
+  }
+  .userinfo{
     display: none;
   }
 }
@@ -385,6 +392,7 @@
     width: 60% !important; 
     padding-bottom: 5px;
   }
+  
   
   
   .cuadro-comparacion{
