@@ -13,39 +13,39 @@ import datetime
 # PRIMERA PRUEBA
 # CONEXION A LA BASE DE DATOS
 # TENEMOS LOS DATOS DE LA API Y EL USUARIO CON SU CONTRASEÑA
-# url = 'https://recicladora.odoo.com/'
-# db = 'fdelanuez-itc-recicladora-master-668849'
-# username = 'soporte@crn.com.ni'
-# password = 'CRN!2023@bdserver'
-# #HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
-# info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
-# info.version()
-# uid = info.authenticate(db, username, password,{})
-
-# # PRUEBAS PARA INSERCION EN UNA TABLA
-# #PRUEBAS DE PERMISOS DE CADA USUARIO
-# #models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
-# models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
-
-
-
-
-
-
-
-
-# #BASE DE DATOS DE PRUEBA
-url = 'https://recicladora-250523-8393110.dev.odoo.com/'
-db = 'recicladora-250523-8393110'
-
+url = 'https://recicladora.odoo.com/'
+db = 'fdelanuez-itc-recicladora-master-668849'
 username = 'soporte@crn.com.ni'
-password = '123crn123'
-info = xmlrpc.client.ServerProxy(
-        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
+password = 'CRN!2023@bdserver'
+#HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
+info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
+info.version()
+uid = info.authenticate(db, username, password,{})
 
-uid =  info.authenticate(db, username, password, {})
-models= xmlrpc.client.ServerProxy(
-        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
+# PRUEBAS PARA INSERCION EN UNA TABLA
+#PRUEBAS DE PERMISOS DE CADA USUARIO
+#models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
+models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
+
+
+
+
+
+
+
+
+# # #BASE DE DATOS DE PRUEBA
+# url = 'https://recicladora-250523-8393110.dev.odoo.com/'
+# db = 'recicladora-250523-8393110'
+
+# username = 'soporte@crn.com.ni'
+# password = '123crn123'
+# info = xmlrpc.client.ServerProxy(
+#         'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
+
+# uid =  info.authenticate(db, username, password, {})
+# models= xmlrpc.client.ServerProxy(
+#         'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
 
 def conectar(user,contra):
     global username 
@@ -53,11 +53,11 @@ def conectar(user,contra):
     global password 
     password = ''+contra
     # HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
-    # info1 = xmlrpc.client.ServerProxy(
-    #     'https://recicladora.odoo.com/xmlrpc/common')
-    # BASE DE DATOS DE PRUEBA
     info1 = xmlrpc.client.ServerProxy(
-        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
+        'https://recicladora.odoo.com/xmlrpc/common')
+    # BASE DE DATOS DE PRUEBA
+    # info1 = xmlrpc.client.ServerProxy(
+    #     'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
     info1.version()
     global info 
     info = info1
@@ -67,11 +67,11 @@ def conectar(user,contra):
     # PRUEBAS PARA INSERCION EN UNA TABLA
     # PRUEBAS DE PERMISOS DE CADA USUARIO
     # models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
-    # models1 = xmlrpc.client.ServerProxy(
-    #     'https://recicladora.odoo.com/xmlrpc/object')
-    # BASE DE DATOS DE PRUEBA
     models1 = xmlrpc.client.ServerProxy(
-        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
+        'https://recicladora.odoo.com/xmlrpc/object')
+    # BASE DE DATOS DE PRUEBA
+    # models1 = xmlrpc.client.ServerProxy(
+    #     'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
     global models 
     models = models1
     # permisos = models.execute_kw(db, uid, password, 'res.partner', 'check_access_rights', [
@@ -491,7 +491,7 @@ def GenerarExcel_3(contra,ids,uid1,datos,valores_extras):
 
     columnas = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R']
     #APLICAMOS EL FORMATO A LAS CELDAS DEL FOR ENCABEZADOS
-
+    materiales = 0
     for col in columnas:
         border = Border(left=Side(style='thin'), right=Side(style='thin'), top=Side(style='thin'), bottom=Side(style='thin'))
         ws[col+'2'].border = border
@@ -513,10 +513,10 @@ def GenerarExcel_3(contra,ids,uid1,datos,valores_extras):
         print('order_Line: ',order_lines)
         # Sumar las cantidades de cada línea de pedido de compra
         total_cantidad = sum(line['product_qty'] for line in order_lines)
-        for row_num, fila,valor in enumerate(potemp, filaCont,valores_extras):
+        for row_num, fila in enumerate(potemp, filaCont):
             # Une las tres celdas para crear una celda combinada
             #ws.merge_cells('A'+str(row_num)+':C7')
-            print("VALORRR",valor)
+            # print("VALORRR",valores_extras[materiales][2])
             ws.cell(row=row_num, column=1, value=fila['name'])
             ws.cell(row=row_num, column=2, value=fila['partner_id'][1])
             ws.cell(row=row_num, column=3, value=fila['x_studio_field_WLD1C'])
@@ -533,10 +533,31 @@ def GenerarExcel_3(contra,ids,uid1,datos,valores_extras):
             ws.cell(row=row_num, column=13, value=datos[contador][0][2])
             ws.cell(row=row_num, column=14, value=datos[contador][0][0])
             ws.cell(row=row_num, column=15, value='0')
-            ws.cell(row=row_num, column=16, value=valor[0])
-            ws.cell(row=row_num, column=17, value=valor[1])
-            ws.cell(row=row_num, column=18, value=valor[2])
+            try:
+                if valores_extras[materiales][0] is None:
+                    ws.cell(row=row_num, column=16, value="-")
+                else:
+                    ws.cell(row=row_num, column=16, value=valores_extras[materiales][0])
+            except:
+                 ws.cell(row=row_num, column=16, value="-")
+
+            try:
+                if valores_extras[materiales][1] is None:
+                    ws.cell(row=row_num, column=17, value="-")
+                else:
+                    ws.cell(row=row_num, column=17, value=valores_extras[materiales][1])
+            except:
+                ws.cell(row=row_num, column=17, value="-")
+            
+            try:
+                if valores_extras[materiales][2] is None:
+                    ws.cell(row=row_num, column=18, value="-")
+                else:
+                    ws.cell(row=row_num, column=18, value=valores_extras[materiales][2])
+            except:
+                ws.cell(row=row_num, column=18, value="-")
         filaCont += 1
+        materiales+=1
         contador += 1
        
 

@@ -5237,18 +5237,26 @@ def reporteValidador():
         print("json con ids: ",ids)
         #MANDAR A LLAMAR LOS PESOS BASCULAS Y TODOS LAS VARIACIONES
         array_datos = []
+        valores_extras = []
         contador = 0
         for po in ids:
             cur = mysql.connection.cursor()
             cur.execute("select Id_Verificacion from tb_verificacion Where PO = %s group by PO",[po])
             idtemp = cur.fetchone()
+
+
+            cur = mysql.connection.cursor()
+            cur.execute("select Id_Verificacion from tb_verificacion Where PO = %s ORDER by Id_Verificacion DESC limit 1",[po])
+            idtemp1 = cur.fetchone()
+            print("ID TEMP: ",idtemp1)
             #MANDAMOS A TRAER LOS VALORES BASCULA DE ESA PO
            # print(idtemp[0])
            # TRAEMOS LAS FECHAS DE LAS CREACION Y CIERRE
             cur = mysql.connection.cursor()
-            cur.execute("select v.Fecha,con.FechaConciliacion,p.NombrePuntoCompra from tb_verificacion as v inner join tb_conciliacion as con on v.Id_Verificacion = con.IdVerificacion inner join tb_puntocompra as p on v.IdPuntoCompra = p.Id_PuntoCompra Where v.Id_Verificacion = %s",(idtemp))
-            valores_extras = cur.fetchall()
-
+            cur.execute("select v.Fecha,con.FechaConciliacion,p.NombrePuntoCompra from tb_verificacion as v inner join tb_conciliacion as con on v.Id_Verificacion = con.IdVerificacion inner join tb_puntocompra as p on v.IdPuntoCompra = p.Id_PuntoCompra Where v.Id_Verificacion = %s",(idtemp1))
+            valores_extras1 = cur.fetchone()
+            valores_extras.append(valores_extras1)
+           
            #============================================
             cur = mysql.connection.cursor()
             cur.execute("select TipoMaterial,PesoBascula,Variacion1,Variacion2 from tb_validacion Where IdVerificacion = %s",(idtemp))
@@ -5256,6 +5264,7 @@ def reporteValidador():
             array_datos.append(valores)
             contador +=1
         print('arreglo con los datos: ',array_datos)
+        print("VALORES EXTRAS",valores_extras)
         retorno = conexion.GenerarExcel_3(session['pass'], ids, session['uid'],array_datos,valores_extras)
 
 
