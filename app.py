@@ -987,7 +987,7 @@ def listaDesbloqueo():
                 verificaciones.append(verifi)
             print("trae algo")
             print(verificaciones)
-            return render_template('tablas/tabla-desbloqueo.html', verificaciones=verificaciones[0])
+            return render_template('tablas/tabla-desbloqueo.html', verificaciones=verificaciones)
         else:
          
             cur = mysql.connection.cursor()
@@ -1864,7 +1864,7 @@ def listaVariosPesos():
         for id in ids['registrosSeleccionados']:
             print("REGISTROS SELECCIONADOS:",id)
             cur = mysql.connection.cursor()
-            cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto,round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.Id_Verificacion = %s and u.IdCargo = %s Group BY ver.IdMaterial', (id,2))
+            cur.execute('SELECT m.NombreMaterial,round(sum(ver.PesoBruto),2) as bruto,round(sum(ver.PesoTara),2) as tara,round(SUM(ver.PesoNeto),2) as neto,round(SUM(ver.Destare),2) as destare FROM tb_detalleverificacion as ver inner join tb_verificacion as v on ver.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON ver.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.Id_Verificacion = %s Group BY ver.IdMaterial', [id])
             matverificador = cur.fetchall()
             mysql.connection.commit()
             print(matverificador)
@@ -1872,9 +1872,9 @@ def listaVariosPesos():
             lista_total_ver.append(matverificador)
             # MANDAMOS A TRAER LOS PESOS DEL VERIFICADOR PARA SACAR EL TOTAL DE PESADAS DE ESE REGISTRO
             # LLamar los pesos del digitador
-            cur = mysql.connection.cursor()
-            cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.Id_Verificacion = %s and u.IdCargo = %s", (id, 1))
-            pesosdigitador = cur.fetchall()
+            # cur = mysql.connection.cursor()
+            # cur.execute("SELECT dt.Id_DetalleVerificacion,dt.IdVerificacion,m.NombreMaterial,dt.PesoBruto,dt.PesoTara,dt.Destare,dt.PesoNeto FROM tb_detalleverificacion as dt inner join tb_verificacion as ver on dt.IdVerificacion = ver.Id_Verificacion inner join tb_verificacion as v ON dt.IdVerificacion = v.Id_Verificacion inner join tb_material as m ON dt.IdMaterial = m.Id_Material inner join tb_usuarios as u on v.IdUsuarioCreacion = u.Id_Usuario Where v.Id_Verificacion = %s and u.IdCargo = %s", (id, 1))
+            # pesosdigitador = cur.fetchall()
 
         
         print("Materiales resultantes ver: ",lista_total_ver)
@@ -1901,10 +1901,10 @@ def listaVariosPesos():
         suma_columnas = [sum(columna) for columna in zip(*[sublista[1:] for sublista in resultado])]
 
 
-        sumaBrutover = suma_columnas[0]
-        sumaTaraver = suma_columnas[1]
-        sumaDestarever = suma_columnas[3]
-        sumaNetover = suma_columnas[2]
+        sumaBrutover = round(suma_columnas[0],2)
+        sumaTaraver = round(suma_columnas[1],2)
+        sumaDestarever = round(suma_columnas[3],2)
+        sumaNetover = round(suma_columnas[2],2)
         print("========================\n",total_fila)
         lista = []
         lista.append(ids['registrosSeleccionados'])
