@@ -13,19 +13,19 @@ import datetime
 # PRIMERA PRUEBA
 # CONEXION A LA BASE DE DATOS
 # TENEMOS LOS DATOS DE LA API Y EL USUARIO CON SU CONTRASEÑA
-url = 'https://recicladora.odoo.com/'
-db = 'fdelanuez-itc-recicladora-master-668849'
+# url = 'https://recicladora.odoo.com/'
+# db = 'fdelanuez-itc-recicladora-master-668849'
 username = 'soporte@crn.com.ni'
 password = 'CRN!2023@bdserver'
-#HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
-info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
-info.version()
-uid = info.authenticate(db, username, password,{})
+# #HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
+# info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
+# info.version()
+# uid = info.authenticate(db, username, password,{})
 
-# PRUEBAS PARA INSERCION EN UNA TABLA
-#PRUEBAS DE PERMISOS DE CADA USUARIO
-#models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
-models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
+# # PRUEBAS PARA INSERCION EN UNA TABLA
+# #PRUEBAS DE PERMISOS DE CADA USUARIO
+# #models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
+# models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
 
 
 
@@ -35,17 +35,17 @@ models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
 
 
 # # #BASE DE DATOS DE PRUEBA
-# url = 'https://recicladora-250523-8393110.dev.odoo.com/'
-# db = 'recicladora-250523-8393110'
+url = 'https://recicladora-250523-8393110.dev.odoo.com/'
+db = 'recicladora-250523-8393110'
 
 # username = 'soporte@crn.com.ni'
 # password = '123crn123'
-# info = xmlrpc.client.ServerProxy(
-#         'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
+info = xmlrpc.client.ServerProxy(
+        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
 
-# uid =  info.authenticate(db, username, password, {})
-# models= xmlrpc.client.ServerProxy(
-#         'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
+uid =  info.authenticate(db, username, password, {})
+models= xmlrpc.client.ServerProxy(
+        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
 
 def conectar(user,contra):
     global username 
@@ -53,11 +53,11 @@ def conectar(user,contra):
     global password 
     password = ''+contra
     # HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
-    info1 = xmlrpc.client.ServerProxy(
-        'https://recicladora.odoo.com/xmlrpc/common')
-    # BASE DE DATOS DE PRUEBA
     # info1 = xmlrpc.client.ServerProxy(
-    #     'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
+    #     'https://recicladora.odoo.com/xmlrpc/common')
+    # BASE DE DATOS DE PRUEBA
+    info1 = xmlrpc.client.ServerProxy(
+        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
     info1.version()
     global info 
     info = info1
@@ -67,11 +67,11 @@ def conectar(user,contra):
     # PRUEBAS PARA INSERCION EN UNA TABLA
     # PRUEBAS DE PERMISOS DE CADA USUARIO
     # models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
-    models1 = xmlrpc.client.ServerProxy(
-        'https://recicladora.odoo.com/xmlrpc/object')
-    # BASE DE DATOS DE PRUEBA
     # models1 = xmlrpc.client.ServerProxy(
-    #     'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
+    #     'https://recicladora.odoo.com/xmlrpc/object')
+    # BASE DE DATOS DE PRUEBA
+    models1 = xmlrpc.client.ServerProxy(
+        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
     global models 
     models = models1
     # permisos = models.execute_kw(db, uid, password, 'res.partner', 'check_access_rights', [
@@ -169,7 +169,7 @@ def buscarCuadrilla(cuad,cargo):
         return cuadrilla
 
 
-def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,devolucion,liquido,rechazoPet,primera,segunda,uid1,contra1,jefe):
+def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,devolucion,liquido,rechazoPet,primera,segunda,uid1,contra1,jefe,destare):
     
     if jefe:
         print(jumbo)
@@ -183,6 +183,7 @@ def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,devolucion,l
                                             'x_studio_jumbo': jumbo,
                                             'x_studio_rechazo_pet': devolucion,
                                             'x_studio_lquido': liquido,
+                                            'x_studio_destare_lb':destare,
                                             'x_studio_material_de_primera': primera,
                                             'x_studio_material_de_segunda': segunda}])
         
@@ -197,6 +198,7 @@ def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,devolucion,l
                                             'x_studio_field_WLD1C':NoBoleta,
                                             'x_studio_rechazo_1': rechazo,
                                             'x_studio_jumbo': jumbo,
+                                            'x_studio_destare_lb':destare,
                                             'x_studio_rechazo_pet': devolucion,
                                             'x_studio_lquido': liquido,
                                             'x_studio_material_de_primera': primera,
@@ -270,10 +272,12 @@ def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
     
 
 def traerPo(idOrden):
-   
-    po = models.execute_kw(db, uid, password, 'purchase.order', 'search_read', [[['id', '=',''+str(idOrden)]]],{'fields':['name']})
-    return po
-
+    try:
+        po = models.execute_kw(db, uid, password, 'purchase.order', 'search_read', [[['id', '=',''+str(idOrden)]]],{'fields':['name']})
+        return po
+    except:
+        po = models.execute_kw(db, uid, password, 'purchase.order', 'search_read', [[['id', '=',''+str(idOrden)]]],{'fields':['name']})
+        return po
 def GenerarExcel_1(contra,ids,uid1):
     # #GENERANDO UN EXCEL CON LA INFORMACION DE ODDO
     # Crea un libro de trabajo y una hoja de trabajo

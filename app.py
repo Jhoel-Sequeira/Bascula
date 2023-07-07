@@ -2607,7 +2607,10 @@ def finalizarVerificacion():
                                 "SELECT SUM(Destare) FROM tb_detalleverificacion WHERE IdVerificacion = %s", [id])
                             sumaDestare1 = cur.fetchone()
                             mysql.connection.commit()
-                            sumaDestare = round(sumaDestare1[0], 2)
+                            if sumaDestare1:
+                                sumaDestare = round(sumaDestare1[0], 2)
+                            else:
+                                sumaDestare = 0
                             #  SUMA DE LA COLUMNA PESOS NETO
                             cur = mysql.connection.cursor()
                             cur.execute(
@@ -2846,7 +2849,7 @@ def finalizarVerificacion():
                                 if session['punto'] == 'CASETA: Recepciones':
                                     try:
                                         IdOrden = conexion.CrearOrdenCompra(Verificacion[10], Verificacion[11], Verificacion[3],
-                                                                    rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, 1, 1, session['uid'], session['pass'],'')
+                                                                    rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, 1, 1, session['uid'], session['pass'],'',sumaDestare)
                                         app.logger.info('ORDENDE COMPRA CASETA')
                                         #FUNCION PARA MANDAR A ESCRIBIR LA HORA QUE SE FINALIZA LA CREACION DE LA PO
                                         hi = capturarHora()
@@ -2875,7 +2878,7 @@ def finalizarVerificacion():
                                         print("ENTRO IGUAL 2")
                                         try:
                                             IdOrden = conexion.CrearOrdenCompra(Verificacion[10], Verificacion[11], Verificacion[3],
-                                                                    rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, primeraNuevo, segundaNuevo, session['uid'], session['pass'],jefe[0])
+                                                                    rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, primeraNuevo, segundaNuevo, session['uid'], session['pass'],jefe[0],sumaDestare)
                                             app.logger.info('ORDENDE COMPRA PLANTA CON JEFE DE CUADRILLA')
                                             #FUNCION PARA MANDAR A ESCRIBIR LA HORA QUE SE FINALIZA LA CREACION DE LA PO
                                             hi = capturarHora()
@@ -2895,7 +2898,7 @@ def finalizarVerificacion():
                                         print("ENTRO DIFERENTE 2")
                                         try:
                                             IdOrden = conexion.CrearOrdenCompra(Verificacion[10], Verificacion[11], Verificacion[3],
-                                                                    rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, 1, 1, session['uid'], session['pass'],"")
+                                                                    rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, 1, 1, session['uid'], session['pass'],"",sumaDestare)
                                             app.logger.info('ORDENDE COMPRA PLANTA SIN JEFE')
                                             #FUNCION PARA MANDAR A ESCRIBIR LA HORA QUE SE FINALIZA LA CREACION DE LA PO
                                             hi = capturarHora()
