@@ -49,7 +49,7 @@ encabezado %}
 
         {%endif%}
         {% if cargo == 5%}
-        <div id="validar_multiples"><button type="button" class="btn btn-warning boton  mt-3" style="color: #ffffff;"
+        <div id="validar_multiples"><button type="button" class="btn btn-warning boton  mt-3" 
                 id="verificar" onclick="obtenerRegistrosSeleccionados()"><i class="fas fa-sync-alt"></i>
                 Conciliar</button></div>
         {%endif%}
@@ -75,7 +75,7 @@ encabezado %}
 </div>
 <div id="factura"></div>
 <script>
-
+    
     function PonerNumero() {
         $('#buscar').val($('#valorGenerado').text());
         $('#verificar').removeAttr('disabled')
@@ -96,6 +96,7 @@ encabezado %}
                 registrosSeleccionados.push(id);
             }
         }
+
         if (registrosSeleccionados.length > 1) {
             // TRAER LOS IDS SELECCIONADOS
             $.ajax({
@@ -122,7 +123,6 @@ encabezado %}
                 }
             })
         }
-
     }
     function TraerNumero() {
         $.ajax({

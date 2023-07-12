@@ -83,7 +83,7 @@
       </li>
       {%endif%}
       </li>
-      {% if session.user %} {% if session.userrole == 1%}
+      {% if session.user %} {% if session.userrole == 1 or session.userrole == 6%}
       <li>
         <a href="/administracion">
           <i class='bx bx-history'></i>

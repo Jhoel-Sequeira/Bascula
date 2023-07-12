@@ -987,7 +987,7 @@ def listaDesbloqueo():
                 verificaciones.append(verifi)
             print("trae algo")
             print(verificaciones)
-            return render_template('tablas/tabla-desbloqueo.html', verificaciones=verificaciones)
+            return render_template('tablas/tabla-desbloqueo.html', verificaciones=verificaciones[0])
         else:
          
             cur = mysql.connection.cursor()
@@ -5258,13 +5258,19 @@ def reporteValidador():
             cur = mysql.connection.cursor()
             cur.execute("select v.Fecha,con.FechaConciliacion,p.NombrePuntoCompra from tb_verificacion as v inner join tb_conciliacion as con on v.Id_Verificacion = con.IdVerificacion inner join tb_puntocompra as p on v.IdPuntoCompra = p.Id_PuntoCompra Where v.Id_Verificacion = %s",(idtemp1))
             valores_extras1 = cur.fetchone()
-            valores_extras.append(valores_extras1)
-           
+            if valores_extras:
+                valores_extras.append(valores_extras1)
+            else:
+                valores_extras.append(((''), (''), ('')))
+
            #============================================
             cur = mysql.connection.cursor()
             cur.execute("select TipoMaterial,PesoBascula,Variacion1,Variacion2 from tb_validacion Where IdVerificacion = %s",(idtemp))
             valores = cur.fetchall()
-            array_datos.append(valores)
+            if valores:
+                array_datos.append(valores)
+            else:
+                array_datos.append(((('NA'), ('NA'), ('NA'),('NA')),))
             contador +=1
         print('arreglo con los datos: ',array_datos)
         print("VALORES EXTRAS",valores_extras)
@@ -5360,14 +5366,6 @@ def misVerificaciones():
     cur.execute("select * from tb_usuarios Where IdEstado = 1 AND IdCargo = 1")
     digitador = cur.fetchall()
     return render_template('misverificaciones.html', verificadores=verificador, digitadores=digitador)
-
-# REPORTERIA
-@app.route('/reporteria')
-def reporteria():
-    
-    return render_template('reporteria.html')
-
-
 
 # MIS VERIFICACIONES
 
