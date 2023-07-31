@@ -13,19 +13,19 @@ import datetime
 # PRIMERA PRUEBA
 # CONEXION A LA BASE DE DATOS
 # TENEMOS LOS DATOS DE LA API Y EL USUARIO CON SU CONTRASEÑA
-url = 'https://recicladora.odoo.com/'
-db = 'fdelanuez-itc-recicladora-master-668849'
-username = 'soporte@crn.com.ni'
-password = 'CRN!2023@bdserver'
-#HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
-info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
-info.version()
-uid = info.authenticate(db, username, password,{})
+# url = 'https://recicladora.odoo.com/'
+# db = 'fdelanuez-itc-recicladora-master-668849'
+# username = 'soporte@crn.com.ni'
+# password = 'CRN!2023@bdserver'
+# #HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
+# info = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/common')
+# info.version()
+# uid = info.authenticate(db, username, password,{})
 
-# PRUEBAS PARA INSERCION EN UNA TABLA
-#PRUEBAS DE PERMISOS DE CADA USUARIO
-#models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
-models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
+# # PRUEBAS PARA INSERCION EN UNA TABLA
+# #PRUEBAS DE PERMISOS DE CADA USUARIO
+# #models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
+# models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
 
 
 
@@ -35,17 +35,17 @@ models = xmlrpc.client.ServerProxy('https://recicladora.odoo.com/xmlrpc/object')
 
 
 # #BASE DE DATOS DE PRUEBA
-# url = 'https://recicladora-250523-8393110.dev.odoo.com/'
-# db = 'recicladora-250523-8393110'
+url = 'https://recicladora-250523-8393110.dev.odoo.com/'
+db = 'recicladora-250523-8393110'
 
-# username = 'soporte@crn.com.ni'
-# password = '123crn123'
-# info = xmlrpc.client.ServerProxy(
-#         'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
+username = 'soporte@crn.com.ni'
+password = 'CRN!2023@bdserver'
+info = xmlrpc.client.ServerProxy(
+        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
 
-# uid =  info.authenticate(db, username, password, {})
-# models= xmlrpc.client.ServerProxy(
-#         'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
+uid =  info.authenticate(db, username, password, {})
+models= xmlrpc.client.ServerProxy(
+        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
 
 def conectar(user,contra):
     global username 
@@ -53,11 +53,11 @@ def conectar(user,contra):
     global password 
     password = ''+contra
     # HACEMOS EL LINK DE LA CONEXION CON LA API DE ODO FORMATEANDOLO
-    info1 = xmlrpc.client.ServerProxy(
-        'https://recicladora.odoo.com/xmlrpc/common')
-    # BASE DE DATOS DE PRUEBA
     # info1 = xmlrpc.client.ServerProxy(
-    #     'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
+    #     'https://recicladora.odoo.com/xmlrpc/common')
+    # BASE DE DATOS DE PRUEBA
+    info1 = xmlrpc.client.ServerProxy(
+        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
     info1.version()
     global info 
     info = info1
@@ -67,11 +67,11 @@ def conectar(user,contra):
     # PRUEBAS PARA INSERCION EN UNA TABLA
     # PRUEBAS DE PERMISOS DE CADA USUARIO
     # models = xmlrpc.client.ServerProxy('{}/xmlrpc/object'.format(url))
-    models1 = xmlrpc.client.ServerProxy(
-        'https://recicladora.odoo.com/xmlrpc/object')
-    # BASE DE DATOS DE PRUEBA
     # models1 = xmlrpc.client.ServerProxy(
-    #     'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
+    #     'https://recicladora.odoo.com/xmlrpc/object')
+    # BASE DE DATOS DE PRUEBA
+    models1 = xmlrpc.client.ServerProxy(
+        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
     global models 
     models = models1
     # permisos = models.execute_kw(db, uid, password, 'res.partner', 'check_access_rights', [
@@ -169,7 +169,13 @@ def buscarCuadrilla(cuad,cargo):
         return cuadrilla
 
 
-def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,devolucion,liquido,rechazoPet,primera,segunda,uid1,contra1,jefe,destare):
+def BuscarVerificador(nombre):
+    domain = ['|', ['job_title', '=', 'VERIFICADOR'], ['job_title', '=', 'CERTIFICADOR DE INVENTARIO'], ['name', 'ilike', nombre+'%']]
+    datos = models.execute_kw(db,uid,password,'hr.employee','search_read',[domain],{'fields': ['id']}) # ESTA ES PARA BUSCAR POR NOMBRE
+    print(datos)
+    return datos[0]['id']
+
+def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,devolucion,liquido,rechazoPet,primera,segunda,uid1,contra1,jefe,destare,verificador):
     
     if jefe:
         print(jumbo)
@@ -179,6 +185,7 @@ def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,devolucion,l
                                             'partner_id': proveedorId,
                                             'x_studio_field_WLD1C':NoBoleta,
                                             'x_studio_rechazo_1': rechazo,
+                                            'x_studio_verificador': verificador,
                                             'x_studio_field_8Fq79': jefe,
                                             'x_studio_jumbo': jumbo,
                                             'x_studio_destare_lb':destare,
@@ -197,6 +204,7 @@ def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,devolucion,l
                                             'partner_id': proveedorId,
                                             'x_studio_field_WLD1C':NoBoleta,
                                             'x_studio_rechazo_1': rechazo,
+                                            'x_studio_verificador': verificador,
                                             'x_studio_jumbo': jumbo,
                                             'x_studio_destare_lb':destare,
                                             'x_studio_rechazo_pet': devolucion,

@@ -2829,7 +2829,7 @@ def finalizarVerificacion():
                                 contadorWhile += 1
                             app.logger.info('SALIO DEL WHILE')
                             
-                            
+                            verificador = conexion.BuscarVerificador(Verificacion[8])
                             
 
                             # total de materiales del verificador
@@ -2848,8 +2848,9 @@ def finalizarVerificacion():
                                 iguales = 1
                                 if session['punto'] == 'CASETA: Recepciones':
                                     try:
+                                        
                                         IdOrden = conexion.CrearOrdenCompra(Verificacion[10], Verificacion[11], Verificacion[3],
-                                                                    rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, 1, 1, session['uid'], session['pass'],'',sumaDestare)
+                                                                    rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, 1, 1, session['uid'], session['pass'],'',sumaDestare,verificador)
                                         app.logger.info('ORDENDE COMPRA CASETA')
                                         #FUNCION PARA MANDAR A ESCRIBIR LA HORA QUE SE FINALIZA LA CREACION DE LA PO
                                         hi = capturarHora()
@@ -2877,8 +2878,9 @@ def finalizarVerificacion():
                                     if jefe[0] != 2:
                                         print("ENTRO IGUAL 2")
                                         try:
+                                            
                                             IdOrden = conexion.CrearOrdenCompra(Verificacion[10], Verificacion[11], Verificacion[3],
-                                                                    rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, primeraNuevo, segundaNuevo, session['uid'], session['pass'],jefe[0],sumaDestare)
+                                                                    rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, primeraNuevo, segundaNuevo, session['uid'], session['pass'],jefe[0],sumaDestare,verificador)
                                             app.logger.info('ORDENDE COMPRA PLANTA CON JEFE DE CUADRILLA')
                                             #FUNCION PARA MANDAR A ESCRIBIR LA HORA QUE SE FINALIZA LA CREACION DE LA PO
                                             hi = capturarHora()
@@ -2898,7 +2900,7 @@ def finalizarVerificacion():
                                         print("ENTRO DIFERENTE 2")
                                         try:
                                             IdOrden = conexion.CrearOrdenCompra(Verificacion[10], Verificacion[11], Verificacion[3],
-                                                                    rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, 1, 1, session['uid'], session['pass'],"",sumaDestare)
+                                                                    rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, 1, 1, session['uid'], session['pass'],"",sumaDestare,verificador)
                                             app.logger.info('ORDENDE COMPRA PLANTA SIN JEFE')
                                             #FUNCION PARA MANDAR A ESCRIBIR LA HORA QUE SE FINALIZA LA CREACION DE LA PO
                                             hi = capturarHora()
@@ -3838,10 +3840,13 @@ def valorTablaAdmin():
             print(verificaciones)
             return render_template('tablas/tabla-filtracion.html', opc=opc, verificaciones=verificaciones)
         elif opc == "po":
+            fecha_hora_actual = datetime.now()
+            fecha_hora_actual_formateada = fecha_hora_actual.strftime("%Y-%m-%d")
+            print(fecha_hora_actual_formateada)
             po = request.form['po']
             cur = mysql.connection.cursor()
             cur.execute(
-                "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.NoBoleta like %s and v.IdEstado != 3 and v.PO != '--' GROUP BY v.PO,v.NoBoleta", [po+'%'])
+                "select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.NoBoleta like %s and v.IdEstado != 3 and v.PO != '--' and date(v.Fecha) = %s GROUP BY v.PO,v.NoBoleta", (po+'%',fecha_hora_actual_formateada))
             verificaciones = cur.fetchall()
             mysql.connection.commit()
             print(verificaciones)
@@ -4606,7 +4611,7 @@ def addFiltro():
                     consulta += 'v.'+headers[contador]+' = '+value+' AND '
                 contador += 1
                 # consultaBase += ' AND '+data
-            consulta_total = consultaBase+' '+consulta[:-4]+' GROUP BY v.PO'
+            consulta_total = consultaBase+' '+consulta[:-4]+' AND v.IdEstado != 3 GROUP BY v.PO'
             print(consulta_total)
         else:
             consulta_total = 'select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.PO != "--" and v.IdEstado = 9 GROUP BY v.PO'
