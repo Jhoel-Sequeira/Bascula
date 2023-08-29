@@ -35,17 +35,17 @@ import datetime
 
 
 # #BASE DE DATOS DE PRUEBA
-url = 'https://recicladora-250523-8393110.dev.odoo.com/'
-db = 'recicladora-250523-8393110'
+url = 'https://recicladora-15082023-9336507.dev.odoo.com/'
+db = 'recicladora-15082023-9336507'
 
 username = 'soporte@crn.com.ni'
 password = 'CRN!2023@bdserver'
 info = xmlrpc.client.ServerProxy(
-        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
+        'https://recicladora-15082023-9336507.dev.odoo.com/xmlrpc/common')
 
 uid =  info.authenticate(db, username, password, {})
 models= xmlrpc.client.ServerProxy(
-        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
+        'https://recicladora-15082023-9336507.dev.odoo.com/xmlrpc/object')
 
 def conectar(user,contra):
     global username 
@@ -57,7 +57,7 @@ def conectar(user,contra):
     #     'https://recicladora.odoo.com/xmlrpc/common')
     # BASE DE DATOS DE PRUEBA
     info1 = xmlrpc.client.ServerProxy(
-        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/common')
+        'https://recicladora-15082023-9336507.dev.odoo.com/xmlrpc/common')
     info1.version()
     global info 
     info = info1
@@ -71,7 +71,7 @@ def conectar(user,contra):
     #     'https://recicladora.odoo.com/xmlrpc/object')
     # BASE DE DATOS DE PRUEBA
     models1 = xmlrpc.client.ServerProxy(
-        'https://recicladora-250523-8393110.dev.odoo.com/xmlrpc/object')
+        'https://recicladora-15082023-9336507.dev.odoo.com/xmlrpc/object')
     global models 
     models = models1
     # permisos = models.execute_kw(db, uid, password, 'res.partner', 'check_access_rights', [

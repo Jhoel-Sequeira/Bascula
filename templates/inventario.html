@@ -1,0 +1,247 @@
+{% extends "layout.html" %}
+{% block title %}
+Inventario
+{% endblock %}
+{%block head%}
+<!-- ========= DATERANGEPIECKER ========== -->
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+{%endblock%}
+{% block
+encabezado %}
+<div class="row">
+    <div class="col">
+        <h1><a href="/ajustes" style="text-decoration: none;" class="fuente-grande-titulo-principal">Inventario </a>
+        </h1>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="">
+    <input type="hidden" id="cargo" value="{{cargo}}">
+    <div class="d-flex flex-wrap mt-2 justify-content-md-center">
+
+        {%if punto == 'MOVIL: Recepciones'%}
+        <div class="col-10 mb-3 mt-3 mb-lg-0" role="search">
+            <input type="search" class="form-control" id="buscar" onkeyup="this.value=this.value.toUpperCase()"
+                style="text-transform:uppercase;" value="MOVIL" disabled aria-label="Buscar">
+        </div>
+        {%else%}
+        <div class="col-10 mb-3 mt-3 mb-lg-0" role="search">
+            <input type="search" class="form-control" id="buscar" onkeyup="this.value=this.value.toUpperCase()"
+                style="text-transform:uppercase;" placeholder="Número boleta" aria-label="Buscar">
+        </div>
+        {%endif%}
+
+        <br>
+        {%if cargo != 5 and cargo != 6%}
+        {% if punto != 'MOVIL: Recepciones' %}
+        <div class=""><button type="button" class="btn btn-success boton  mt-3" disabled="disabled" id="verificar"
+                onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>
+                Crear</button></div>
+        {%else%}
+        <div class=""><button type="button" class="btn btn-success boton  mt-3" id="verificar"
+                onclick="crearVerificacion()"><i class="fa-solid fa-plus"></i>
+                Crear</button></div>
+        {%endif%}
+
+
+        {%endif%}
+        {% if cargo == 5%}
+        <div id="validar_multiples"><button type="button" class="btn btn-warning boton  mt-3" 
+                id="verificar" onclick="obtenerRegistrosSeleccionados()"><i class="fas fa-sync-alt"></i>
+                Conciliar</button></div>
+        {%endif%}
+
+    </div>
+    {%if cargo == 1%}
+    <p>Sugerencia de Boleta: <a onclick="PonerNumero()" id="valorGenerado"></a></p>
+    {%endif%}
+
+    <script>
+        function ver() {
+            var selected = $('#filtro').val();
+            alert(selected);
+        }
+    </script>
+
+
+    <div class="row justify-content-md-center">
+        <div class="col mt-3 overflow-auto rounded bg-light" id="tabla-prov" style="height: 77vh;">
+
+        </div>
+    </div>
+</div>
+<div id="factura"></div>
+<script>
+    
+    function PonerNumero() {
+        $('#buscar').val($('#valorGenerado').text());
+        $('#verificar').removeAttr('disabled')
+    }
+    $(document).ready(function () {
+        cargarLista();
+        TraerNumero();
+        //$('#validar_multiples').hide();
+    });
+    function obtenerRegistrosSeleccionados() {
+        const checkboxes = document.getElementsByClassName('seleccionar');
+        var registrosSeleccionados = [];
+
+        for (let i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                const fila = checkboxes[i].parentNode.parentNode;
+                const id = checkboxes[i].id;
+                registrosSeleccionados.push(id);
+            }
+        }
+
+        if (registrosSeleccionados.length > 1) {
+            // TRAER LOS IDS SELECCIONADOS
+            $.ajax({
+                url: "/conciliarId",
+                type: "POST",
+                data: {
+                    ids: JSON.stringify({ registrosSeleccionados }),
+
+                },
+                success: function (response) {
+                    $('#modal-act3').html(response);
+                    $('#modal-act3').append(response.htmlresponse);
+                    $('#launch2').click();
+                },
+                error: function (error) {
+                    //console.log(error);
+                },
+            });
+            // MANDAR LOS IDS CON LOS QUE QUIERE CONCILIAR
+        }else{
+            Swal.fire({ icon: 'warning', title: 'Datos faltantes', text: 'Debe seleccionar mas de 1 registro para unificarlos.' }).then((result) => {
+                if (result.isConfirmed) {
+
+                }
+            })
+        }
+    }
+    function TraerNumero() {
+        $.ajax({
+            url: "/traerNumeroInv",
+            type: "POST",
+            data: {
+                data: '',
+
+            },
+            success: function (response) {
+                $('#valorGenerado').text(response);
+            },
+            error: function (error) {
+                //console.log(error);
+            },
+        });
+    }
+
+    function verFiltros() {
+        if ($('#filtros').is(':visible')) {
+            $('#filtros').hide();
+        } else {
+            $('#filtros').show();
+        }
+    }
+
+    function cargarLista() {
+        $.ajax({
+            url: "/listaProveedoresInv",
+            type: "POST",
+            data: {
+                proveedor: $('#buscar').text(),
+
+            },
+            success: function (response) {
+                $('#tabla-prov').html(response);
+                $('#tabla-prov').append(response.htmlresponse);
+            },
+            error: function (error) {
+                //console.log(error);
+            },
+        });
+    }
+    function crearVerificacion() {
+        var proveedor = $('#buscar').val();
+        if (proveedor != "" && proveedor.length >= 3) {
+            $.ajax({
+                url: "/listaProveedoresInv",
+                type: "POST",
+                data: {
+                    proveedor: proveedor,
+
+                },
+                success: function (response) {
+                    $('#tabla-prov').html(response);
+                    $('#tabla-prov').append(response.htmlresponse);
+                    if (proveedor == "MOVIL") {
+                        $('#buscar').val("MOVIL");
+                    } else {
+                        $('#buscar').val("");
+                    }
+                    if (proveedor == $('#valorGenerado').text()) {
+                        TraerNumero();
+                    } else {
+                        TraerNumero();
+                    }
+
+
+
+                },
+                error: function (error) {
+                    //console.log(error);
+                },
+            });
+        } else {
+            Swal.fire({ icon: 'error', title: 'Datos Inválidos', text: 'Debe de ingresar un número de boleta válido.' }).then((result) => {
+                if (result.isConfirmed) {
+
+                }
+            })
+        }
+    }
+    // Funcion para poner lista de resultados
+    // Funcion para poner lista de resultados
+    var buscarBoleta = function () {
+        if ($('#cargo').val() != 5) {
+            if ($('#buscar').val() != "") {
+                $('#verificar').removeAttr('disabled')
+            } else {
+                $('#verificar').attr('disabled', 'true');
+            }
+
+        } else {
+            $.ajax({
+                url: "/listaProveedoresInv",
+                type: "POST",
+                data: {
+                    proveedor: $('#buscar').val(),
+
+                },
+                success: function (response) {
+
+                    $('#tabla-prov').html(response);
+                    $('#tabla-prov').append(response.htmlresponse);
+                },
+                error: function (error) {
+                    //console.log(error);
+                },
+            });
+        }
+
+
+
+
+    }
+    $("#buscar").on('keyup', buscarBoleta);
+
+
+</script>
+
+
+</div>{% endblock %}

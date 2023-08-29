@@ -1,0 +1,65 @@
+<table class="table rounded" id="tabla-filtracion" style=" width:100vw">
+    <thead>
+        <!-- <tr>
+            <th colspan="6" class="" style="text-align: center; font-size: 35px;">
+                Tabla</th>
+        </tr> -->
+        <tr class="fuente-tabla">
+            <th>Id</th>
+            <th style="width: 350px">Proveedor</th>
+            <th style="width: 200px; padding-left: 80px;">Fecha</th>
+            <th style="width: 200px; padding-left: 60px;">Po</th>
+            <th style="width: 200px; padding-left: 20px;">NoBoleta</th>
+            <th style="width: 200px; padding-left: 10px;">P. Compra</th>
+            <th style="padding-left:50px ;">Estado</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {%for i in verificaciones%}
+            <tr class="fuente-tabla">
+                <td >{{i[0]}}</td>
+                <td >{{i[6]}}</td>
+                <td align="center" style="width: 500px">{%if i[1] == None%}--{%else%}{{i[1]}}{%endif%}</td>
+                <td align="center" style="width: 200px" id="{{i[0]}}">{%if i[2] == None%}--{%else%}{{i[2]}}{%endif%}</td>
+                <td align="center" style="width: 200px">{%if i[3] == None%}--{%else%}{{i[3]}}{%endif%}</td>
+                <td align="center" style="width: 200px">{%if i[4] == None%}--{%else%}{{i[4]}}{%endif%}</td>
+                <td align="center" style="width: 200px">{%if i[5] == None%}--{%else%}{{i[5]}}{%endif%}</td>
+
+                <td>
+                    <button type="button" class="btn btn-primary" value="{{i[0]}}" id="detallever1" name="detallever1">
+                        <i class="fa-sharp fa-solid fa-eye"></i>
+                    </button>
+                </td>
+            </tr>
+        {%endfor%}
+
+    </tbody>
+</table>
+<input id="launch3" type="hidden" data-bs-toggle="modal" data-bs-target="#detalleVerificacionInv">
+
+<div id="modal-act3">
+
+</div>
+<script>
+
+
+    $("#tabla-filtracion button[name=detallever1]").click(function () {
+        id = $(this).val();
+        $.ajax({
+            url: "/detalleVerificacionAdminInv",
+            type: "POST",
+            data: {
+                id: id
+            },
+            success: function (response) {
+                $('#modal-act3').html(response);
+                $('#modal-act3').append(response.htmlresponse);
+                $('#launch3').click();
+            },
+            error: function (error) {
+                //console.log(error);
+            },
+        });
+    });
+</script>

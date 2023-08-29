@@ -71,6 +71,30 @@ encabezado %}
                     window.location = '/misVerificaciones'
                 }
             </script>
+            <div class="col-lg-3 col-6" style="padding: 10px;">
+                <!-- small box -->
+                <div class="card cartas" onclick="inventarioMenu()" style="padding: 5px; background-color: #b4583f">
+                    <div class="inner">
+                        <h3>
+                            <sup style="font-size: 20px"></sup>
+                        </h3>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="icon mr-1">
+                        <i class="fa-solid fa-cart-flatbed" style="margin-right: 15px;"></i>
+                    </div>
+                    <a href="/inventario" id="home" class="card-footer">
+                        Inventario
+                    </a>
+                </div>
+            </div>
+            <script>
+                function inventarioMenu() {
+                    window.location = '/inventario'
+                }
+                
+            </script>
             {% endif %}{% endif %}
             <br>
             {% if session.user %} {% if session.userrole == 1%}
@@ -179,6 +203,30 @@ encabezado %}
                     window.location = '/administracionErrores'
                 }
             </script>
+            <div class="col-lg-3 col-6" style="padding: 10px;">
+                <!-- small box -->
+                <div class="card cartas" onclick="inventarioHistorial()" style="padding: 5px; background-color: #b4583f">
+                    <div class="inner">
+                        <h3>
+                            <sup style="font-size: 20px"></sup>
+                        </h3>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="icon mr-1">
+                        <i class="fa-solid fa-cart-flatbed" style="margin-right: 15px;"></i>
+                    </div>
+                    <a href="/administracionInv" id="home" class="card-footer">
+                        Inventario
+                    </a>
+                </div>
+            </div>
+            <script>
+                function inventarioHistorial() {
+                    window.location = '/administracionInv'
+                }
+                
+            </script>
             <!-- <div class="col-lg-3 col-6" style="padding: 10px;">
                 
                 <div class="card cartas" onclick="verProveedores()" style="padding: 5px; background-color: #b4583f">
@@ -197,6 +245,7 @@ encabezado %}
                     </a>
                 </div>
             </div> -->
+            
             {% endif %}{% endif %}
         </div>
     </div>

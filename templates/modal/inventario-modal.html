@@ -1,0 +1,1098 @@
+{% for verifi in verificacion %}
+
+<div class="modal fade" id="detalleVerificacionmodal" data-bs-focus="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
+        <div class="modal-content" style="background-color: #e4e9f7">
+            <div class="modal-header encabezado_modales">
+                <h5 class="modal-title fuente-grande-titulo" id="exampleModalLabel">
+                    Detalle de verificación
+                </h5>
+                <button type="button" class="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close"
+                    onclick="cargarLista()"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="id" value="{{ verifi[0] }}" />
+                <div class="tab-pane fade show active mt-3" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="form-group" id="detalles">
+                        <div class="row mt-2">
+                            <div class="col-5">
+                                <div class="form-outline">
+                                    <label class="form-label fuentelabel" for="proveedor"><strong>Proveedor
+                                        </strong></label>
+                                    {% if verifi[6] %}
+                                    <input type="text" id="proveedor" name="proveedor" style="text-transform: uppercase"
+                                        onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                                        required="required" disabled class="form-control" value="{{ verifi[6] }}" />
+
+                                    {% else %}
+                                    <select name="proveedor" class="form-select"  id="proveedor">
+                                        <option value="1017">CASETA MOVIL</option>
+                                        <option value="1018">CASETA</option>
+                                        <option value="1019">CASETA BATERIA</option>
+                                    </select>
+                                   
+
+                                    {% endif %}
+
+                                </div>
+                                
+                            </div>
+
+
+                            <div class="col-4">
+                                <div class="form-outline">
+                                    <label class="form-label fuentelabel" for="form3Example3"><strong>Punto de
+                                            compra</strong></label>
+                                    <input type="text" value="{{punto}}" name="" id="" disabled="disabled"
+                                        required="required" class="form-control" />
+                                    <input type="hidden" value="{{idpunto}}" name="" id="idpunto" />
+                                </div>
+                            </div>
+                            <div class="col pt-4">
+                                <button type="button" class="btn btn-primary bajar" id="bloquear" onclick="bloquear()">
+                                    <a style="text-decoration: none;"><i class="fa-solid fa-lock"></i> Bloquear</a>
+                                </button>
+                            </div>
+                        </div>
+                        {% if session.punto == 'GRANEL/PLANTA: Receipts'%}
+                        <div class="row mt-2">
+                            
+
+
+                        </div>
+                        {%else%}
+                        <input type="hidden" id="cuadrilla" name="proveedor" style="text-transform: uppercase"
+                            onkeyup="this.value=this.value.toUpperCase()" placeholder="Nombre proveedor"
+                            required="required" disabled class="form-control" value="" />
+
+                        {%endif%}
+                        <div class="row mt-2">
+                            <!-- PONEMOS UN INPUT CON EL CARGO PARA USARLO COMO BANDERA PARA EL MOMENTO DE BLOQUEAR -->
+                            <input type="hidden" name="" value="{{usuariolog[1]}}" id="banderaRol">
+                            <div class="col-6">
+                                <div class="form-outline">
+                                    <label class="form-label fuentelabel"
+                                        for="form3Example3"><strong>Verificador</strong></label>
+                                    {% if verifi[8] %}
+                                    <input type="text" id="idusuariolog" name="digitador" placeholder="Punto de Compra"
+                                        required="required" class="form-control" disabled value="{{ verifi[8] }}" />
+                                    {% else %}
+                                    {%if usuariolog[1] == 'Verificador'%}
+                                    <input type="text" value="{{usuariolog[2]}}" name="" id="" disabled="disabled"
+                                        required="required" class="form-control" />
+                                    <input type="hidden" value="{{usuariolog[0]}}" name="" id="idusuariolog" />
+                                    <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
+                                                                                                                                                                                                                                                                                                                                                                                                                style="display: none;">Las
+                                                                                                                                                                                                                                                                                                                                                                                                                constraseñas no coinciden</label> -->
+                                    {%else%}
+                                    <select class="form-select" id="verificador" aria-label="Default select example">
+                                        <option selected="selected" hidden>
+                                            Seleccionar Verificador
+                                        </option>
+                                        {% for ver in Verificador %}
+                                        <option value="{{ ver[0] }}">{{ ver[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {%endif%}
+                                    {%endif%}
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-outline">
+                                    <label class="form-label fuentelabel"
+                                        for="form3Example3"><strong>Digitador</strong></label>
+
+
+
+                                    {% if verifi[7] %}
+                                    <input type="text" id="digitador" name="digitador" placeholder="Punto de Compra"
+                                        required="required" class="form-control" disabled value="{{ verifi[7] }}" />
+                                    {% else %}
+                                    {%if usuariolog[1] == 'Digitador'%}
+                                    <input type="text" value="{{usuariolog[2]}}" name="" id="" disabled="disabled"
+                                        required="required" class="form-control" />
+                                    <input type="hidden" value="{{usuariolog[0]}}" name="" id="digitador" />
+                                    <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
+                                                                                                                                                                                                                                                                                                                                                                                                                style="display: none;">Las
+                                                                                                                                                                                                                                                                                                                                                                                                                constraseñas no coinciden</label> -->
+                                    {%else%}
+                                    <select class="form-select" id="digitador" aria-label="Default select example">
+                                        <option selected="selected" hidden>
+                                            Seleccionar Digitador
+                                        </option>
+                                        {% for digi in Digitador %}
+                                        <option value="{{ digi[0] }}">{{ digi[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {% endif %}
+                                    {% endif %}
+
+                                    <!-- <label id="mensaje_error_input_c" class="control-label col-md-12 text-danger"
+                                                                                                                                                                                                                                                                                                                                                                                                        style="display: none;">Las
+                                                                                                                                                                                                                                                                                                                                                                                                        constraseñas no coinciden</label> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div id="form">
+                            <div class="row mt-2">
+                                <div class="col-3 d-none">
+                                    <div class="form-outline">
+                                        <label class="form-label fuentelabel"
+                                            for="form3Example1"><strong>PO</strong></label>
+                                        {% if verifi[2] %}
+                                        <input type="text" id="po" name="nombre" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="PO"
+                                            required="required" class="form-control" value="{{ verifi[2] }}" />
+                                        {% else %}
+                                        <input type="text" id="po" value="--" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" name="nombre" placeholder="PO"
+                                            disabled required="required" class="form-control" />
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-outline">
+                                        <label class="form-label fuentelabel"
+                                            for="form3Example1"><strong>Fecha</strong></label>
+                                        <input type="text" id="fecha" disabled name="nombre" placeholder="nombres"
+                                            required="required" class="form-control" value="{{ verifi[1] }}" />
+                                        <!-- <label id="mensaje_error_input" class="control-label col-md-12 text-danger"
+                                                                                                                                                                                                                                                                                                                                                                                                            style="display: block;">Las
+                                                                                                                                                                                                                                                                                                                                                                                                            constraseñas no coinciden</label> -->
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class="form-outline">
+                                        <label class="form-label fuentelabel" for="form3Example2"><strong>No
+                                                Boleta</strong></label>
+                                        {% if verifi[3] %}
+                                        <input type="text" id="nboleta" name="nboleta" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" disabled placeholder="PO"
+                                            required="required" class="form-control" value="{{ verifi[3] }}" />
+                                        {% else %}
+                                        <input type="text" id="nboleta" style="text-transform: uppercase"
+                                            onkeyup="this.value=this.value.toUpperCase()" name="nboleta"
+                                            required="required" placeholder="No Boleta" class="form-control" />
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <label class="form-label fuentelabel"
+                                            for="form3Example2"><strong>Bahia</strong></label>
+                                        {% if verifi[9] %}
+                                        <input type="text" id="bahia" name="bahia" disabled placeholder="PO"
+                                            required="required" class="form-control" value="{{ verifi[9] }}" />
+                                        {% else %}
+                                        <select class="form-select" id="bahia" aria-label="Default select example">
+                                            <option selected="selected" hidden>
+                                                Seleccionar Bahia
+                                            </option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                        </select>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <!-- <div class="col" id="idDocumento" style="display: none;">
+                                    <div class="form-outline">
+                                        <label class="form-label fuentelabel"
+                                            for="form3Example2"><strong>Id Documento</strong></label>
+                                        {% if verifi[9] %}
+                                        <input type="text" id="doc" name="doc" disabled placeholder="PO"
+                                            required="required" class="form-control" value="{{ verifi[9] }}" />
+                                        {% else %}
+                                        <select class="form-select" id="bahia" aria-label="Default select example">
+                                            <option selected="selected" hidden>
+                                                Seleccionar Bahia
+                                            </option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                        </select>
+                                        {% endif %}
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4 mt-3" style="display: none;">
+                        <label for="" class="fuentelabel"><input type="checkbox" name="cambio" id="verTaras" disabled />
+                            Ver Taras</label>
+                    </div>
+                    <div class="row" id="tabla-tara" style="display: none;">
+                        <div class="col">
+                            <div class="row">
+                                <!-- <div class="col-11">
+                                    <label class="form-label fuentelabel" for="form3Example3"><strong>Peso
+                                            Tara</strong></label>
+                                    <input type="search" class="form-control" id="taras" placeholder="Ingrese las taras"
+                                        aria-label="Buscar" />
+                                </div>
+                                <div class="col-1 mt-3 pt-3">
+                                    <button type="button" disabled id="" class="btn btn-success mt-3 ml-5"
+                                        id="boton-enviar" onclick="añadirTara()">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mt-3 bg-light" id="tabla-taras"></div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-3">
+                            <div class="form-outline">
+                                <!-- <label class="form-label" for="form3Example3">Material</label>
+                                                                                                                <select class="form-select" id="material" disabled aria-label="Default select example">
+                                                                                                                    <option selected="selected" disabled hidden>Seleccionar Material</option>
+                                                                                                                    {% for i in Material %}
+                                                                                                                    <option value="{{ i[0] }}">{{ i[1] }}</option>
+                                                                                                                    {% endfor %}
+                                                                                                                </select> -->
+                                <label class="form-label fuentelabel"
+                                    for="form3Example3"><strong>Material</strong></label>
+                                <input type="search" class="form-control" id="buscarmat" disabled
+                                    placeholder="Buscar material..." aria-label="Buscar" />
+                            </div>
+                            <div style="
+                  background-color: #fff;
+                  position: relative;
+                  height: 70%;
+                  width: 100%;
+                " id="totalmat">
+                                <div class="info" id="listamat"></div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-outline">
+                                <label class="form-label fuentelabel"
+                                    for="form3Example3"><strong>P.Bruto</strong></label>
+                                <input type="number" id="bruto" value="0" disabled maxlength="8" name="celular"
+                                    required="required" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-outline">
+                                <label class="form-label fuentelabel"
+                                    for="form3Example3"><strong>P.Tara</strong></label>
+                                <input type="number" id="tara" value="0" disabled maxlength="8" name="celular"
+                                    required="required" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-outline">
+                                <label class="form-label fuentelabel"
+                                    for="form3Example3"><strong>Destare</strong></label>
+                                <input type="number" id="destare" disabled maxlength="8" value="0" name="celular"
+                                    required="required" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="col  pt-3">
+                            <button type="button" disabled id="agregar" class="btn btn-success mt-3 ml-5"
+                                id="boton-enviar" onclick="añadir()">
+                                <i class="fas fa-calendar-check" style="margin-right: 5px"></i>Añadir
+                            </button>
+                            <button type="button" class="btn btn-link border-light mt-3 pt-2"
+                                onclick="mostrarDetalle()">
+                                <i class="fa-sharp fa-solid fa-circle-info"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mt-3 bg-light overflow-scroll" id="tabla-peso"></div>
+                    </div>
+                    <div id="content" class="col-lg-12"></div>
+                </div>
+
+                <!-- INICIO DE LA FUNCIONALIDAD DE LOS BOTONES CON JQUERY  DE LA PRIMERA PANTALLA-->
+                <script>
+                    flagbloquear = 0;
+                    inicio = 1;
+                    $("#listaproveedor").hide();
+                    $("#totalprov").hide();
+                    //validar los campos de entrada
+                    if (
+                        $("#proveedor").val() !=
+                        "" &&
+                        $("#idpunto").val() != "" &&
+                        $("#idusuariolog").val() != "" &&
+                        $("#digitador").val() !=
+                        "" &&
+                        $("#po").val() != "" &&
+                        $("#fecha").val() != "" &&
+                        $("#nboleta").val() != "" &&
+                        $("#bahia option:selected").val() != "Seleccionar Bahia" &&
+                        flagbloquear == 0 &&
+                        $("#id").val() != ""
+                    ) {
+                        $("#proveedor").attr("disabled", "true");
+                        $("#cuadrilla").attr("disabled", "true");
+                        $("#idpunto").attr("disabled", "true");
+                        $("#idusuariolog").attr("disabled", "true");
+                        $("#digitador").attr("disabled", "true");
+                        $("#po").attr("disabled", "true");
+                        $("#fecha").attr("disabled", "true");
+                        $("#nboleta").attr("disabled", "true");
+                        $("#bahia").attr("disabled", "true");
+                        $("#buscarmat").removeAttr("disabled");
+                        $("#verTaras").removeAttr("disabled");
+                        $("#destare").removeAttr("disabled");
+                        $("#bruto").removeAttr("disabled");
+                        $("#tara").removeAttr("disabled");
+                        $("#agregar").removeAttr("disabled");
+                        $("#finalizar").removeAttr("disabled");
+                    }
+
+
+                    // Funcion para poner lista de resultados
+                    var buscarProveedor = function () {
+                        if ($("#proveedor").val() != "") {
+
+                            $.ajax({
+                                url: "/buscarProveedorApi",
+                                type: "POST",
+                                data: {
+                                    proveedor: $("#proveedor").val(),
+                                },
+                                success: function (response) {
+                                    $("#listaproveedor").html(response);
+                                    $("#listaproveedor").append(response.htmlresponse);
+                                    $("#listaproveedor").show();
+                                    $("#totalprov").show();
+                                    $("#busqueda button[name=det]").click(function () {
+                                        $("#proveedor").val($(this).text());
+                                        $("#listaproveedor").hide();
+                                        $("#totalprov").hide();
+                                    });
+                                },
+                                error: function (error) {
+                                    // console.log(error);
+                                },
+                            });
+                        } else {
+                            $("#listaproveedor").hide();
+                            $("#totalprov").hide();
+                        }
+
+
+
+
+                    }
+                    $("#proveedor").on('keyup', buscarProveedor);
+                    //BUSCAR EL JEFE DE CUADRILLA
+                    var buscarCuadrilla = function () {
+                        if ($("#cuadrilla").val() != "") {
+
+                            $.ajax({
+                                url: "/buscarCuadrillaApi",
+                                type: "POST",
+                                data: {
+                                    cuadrilla: $("#cuadrilla").val(),
+                                },
+                                success: function (response) {
+                                    $("#listacuadrilla").html(response);
+                                    $("#listacuadrilla").append(response.htmlresponse);
+                                    $("#listacuadrilla").show();
+                                    $("#listcuadrilla").show();
+                                    $("#busquedacuadrilla button[name=cuad]").click(function () {
+                                        $("#cuadrilla").val($(this).text());
+                                        $("#listacuadrilla").hide();
+                                        $("#listcuadrilla").hide();
+                                    });
+                                },
+                                error: function (error) {
+                                    // console.log(error);
+                                },
+                            });
+                        } else {
+                            $("#listacuadrilla").hide();
+                            $("#listcuadrilla").hide();
+                        }
+
+
+
+
+                    }
+                    $("#cuadrilla").on('keyup', buscarCuadrilla);
+                    // FUNCION PARA LA TABLA DE PROVEEDORES
+                    //FUNCION PARA EL BOTON DE PESOS DE TARAS
+                    $("#verTaras").on("click", function () {
+                        if ($(this).is(":checked")) {
+                            // Hacer algo si el checkbox ha sido seleccionado
+                            $("#tabla-tara").show();
+                        } else {
+                            $("#tabla-tara").hide();
+                        }
+                    });
+
+                    $(document).ready(function () {
+                        $("#totalmat").hide();
+                        $("#listcuadrilla").hide();
+                        // if ($("#nboleta").val() == 'CASETA'){
+                        //     $('#idDocumento').show();  
+                        // }else{
+                        //     $('#idDocumento').hide(); 
+
+                        // }
+                        // MANDAR A LLAMAR LA TABLA
+
+                        cargarPesos();
+                        //
+
+                    });
+
+                    $(document).on("change", "#proveedor", function (event) {
+                        valor = $("#proveedor option:selected").val();
+                    });
+                    //funcion para agregar las taras extras
+
+                    function añadirTara() {
+                        idDet = $(this).val();
+                        alert(idDet)
+
+
+                    }
+                    function bloquear() {
+                        var flagRol = $('#banderaRol').val();
+                        //AQUI VAN LAS OPCIONES SI EL USUARIO ES VERIFICADOR
+                        if (flagRol == "Verificador") {
+                            if (
+                                $("#proveedor").val() !=
+                                "" &&
+                                $("#idpunto").val() != "" &&
+                                $("#idusuariolog").val() != "" &&
+                                $("#digitador option:selected").val() != "Seleccionar Digitador" &&
+                                $("#po").val() != "" &&
+                                $("#fecha").val() != "" &&
+                                $("#nboleta").val() != "" &&
+                                $("#bahia option:selected").val() != "Seleccionar Bahia" &&
+                                flagbloquear == 0 &&
+                                $("#id").val() != ""
+                            ) {
+                                $("#proveedor").attr("disabled", "true");
+                                $("#idpunto").attr("disabled", "true");
+                                $("#cuadrilla").attr("disabled", "true");
+                                $("#idusuariolog").attr("disabled", "true");
+                                $("#digitador").attr("disabled", "true");
+                                $("#po").attr("disabled", "true");
+                                $("#fecha").attr("disabled", "true");
+                                $("#nboleta").attr("disabled", "true");
+                                $("#bahia").attr("disabled", "true");
+                                $("#buscarmat").removeAttr("disabled");
+                                $("#verTaras").removeAttr("disabled");
+                                $("#destare").removeAttr("disabled");
+                                $("#bruto").removeAttr("disabled");
+                                $("#tara").removeAttr("disabled");
+                                $("#agregar").removeAttr("disabled");
+                                $("#finalizar").removeAttr("disabled");
+
+                                flagbloquear = 1;
+                                //MANDAR A PREGUNTAR EL ID 
+                                $.ajax({
+                                    url: "/datosGeneralesVerificacionInv",
+                                    type: "POST",
+                                    data: {
+                                        id: $("#id").val(),
+                                        proveedor: $("#proveedor option:selected").val(),
+                                        puntoCompra: $("#idpunto").val(),
+                                        verificador: $("#idusuariolog").val(),
+                                        digitador: $("#digitador").val(),
+                                        po: $("#po").val(),
+                                        nboleta: $("#nboleta").val(),
+                                        bahia: $("#bahia").val(),
+                                    },
+                                    success: function (response) {
+                                        Swal.fire({
+                                            icon: "success",
+                                            title: "Éxito",
+                                            confirmButtonText: "Ok",
+                                            text: "Verificación registrada exitosamente",
+                                        }).then((result) => {
+                                            /* Read more about isConfirmed, isDenied below */
+                                            if (result.isConfirmed) {
+                                            }
+                                        });
+                                    },
+                                    error: function (error) {
+                                        // console.log(error);
+                                    },
+                                });
+                            } else if (
+                                $("#id").val() != "" &&
+                                $("#po").val() != "" &&
+                                flagbloquear == 1
+                            ) {
+                                $("#proveedor").attr("disabled", "true");
+                                $("#cuadrilla").attr("disabled", "true");
+                                $("#idpunto").attr("disabled", "true");
+                                $("#idusuariolog").attr("disabled", "true");
+                                $("#digitador").attr("disabled", "true");
+                                $("#po").attr("disabled", "true");
+                                $("#fecha").attr("disabled", "true");
+                                $("#nboleta").attr("disabled", "true");
+                                $("#bahia").attr("disabled", "true");
+                                $("#verTaras").removeAttr("disabled");
+                                $("#buscarmat").removeAttr("disabled");
+                                $("#destare").removeAttr("disabled");
+                                $("#bruto").removeAttr("disabled");
+                                $("#tara").removeAttr("disabled");
+                                $("#agregar").removeAttr("disabled");
+                                $("#finalizar").removeAttr("disabled");
+                            } else if (
+                                !(
+                                    $("#proveedor option:selected").val() !=
+                                    "Seleccionar Proveedor" &&
+                                    $("#idpunto").val() != "" &&
+                                    $("#idusuariolog").val() != "" &&
+                                    $("#digitador option:selected").val() !=
+                                    "Seleccionar Digitador" &&
+                                    $("#po").val() != "" &&
+                                    $("#fecha").val() != "" &&
+                                    $("#nboleta").val() != "" &&
+                                    $("#bahia option:selected").val() != "Seleccionar Bahia" &&
+                                    flagbloquear != 0
+                                )
+                            ) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Datos faltantes",
+                                    confirmButtonText: "Ok",
+                                    text: "Debe Añadir los datos faltantes",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                    }
+                                });
+                            }
+                        } else if (flagRol == "Digitador") {
+                            if (
+                                $("#proveedor").val() !=
+                                "" &&
+                                $("#idpunto").val() != "" &&
+                                $("#digitador").val() !=
+                                "" &&
+                                $("#po").val() != "" &&
+                                $("#fecha").val() != "" &&
+                                $("#nboleta").val() != "" &&
+                                $("#verificador option:selected").val() != "Seleccionar Verificador" &&
+                                $("#bahia option:selected").val() != "Seleccionar Bahia" &&
+                                flagbloquear == 0 &&
+                                $("#id").val() != ""
+                            ) {
+                                $("#proveedor").attr("disabled", "true");
+                                $("#cuadrilla").attr("disabled", "true");
+                                $("#idpunto").attr("disabled", "true");
+                                $("#idusuariolog").attr("disabled", "true");
+                                $("#digitador").attr("disabled", "true");
+                                $("#po").attr("disabled", "true");
+                                $("#fecha").attr("disabled", "true");
+                                $("#nboleta").attr("disabled", "true");
+                                $("#bahia").attr("disabled", "true");
+                                $("#verificador").attr("disabled", "true");
+                                $("#buscarmat").removeAttr("disabled");
+                                $("#verTaras").removeAttr("disabled");
+                                $("#destare").removeAttr("disabled");
+                                $("#bruto").removeAttr("disabled");
+                                $("#tara").removeAttr("disabled");
+                                $("#agregar").removeAttr("disabled");
+                                $("#finalizar").removeAttr("disabled");
+
+                                flagbloquear = 1;
+
+                                //MANDAR A PREGUNTAR EL ID DEL VERIFICADOR
+                                $.ajax({
+                                    url: "/datosGeneralesVerificacionInv",
+                                    type: "POST",
+                                    data: {
+                                        id: $("#id").val(),
+                                        proveedor: $("#proveedor").val(),
+                                        cuadrilla: $("#cuadrilla").val(),
+                                        puntoCompra: $("#idpunto").val(),
+                                        verificador: $("#verificador option:selected").val(),
+                                        digitador: $("#digitador").val(),
+                                        po: $("#po").val(),
+                                        nboleta: $("#nboleta").val(),
+                                        bahia: $("#bahia").val(),
+                                    },
+                                    success: function (response) {
+                                        Swal.fire({
+                                            icon: "success",
+                                            title: "Éxito",
+                                            confirmButtonText: "Ok",
+                                            text: "Verificación registrada exitosamente",
+                                        }).then((result) => {
+                                            /* Read more about isConfirmed, isDenied below */
+                                            if (result.isConfirmed) {
+                                            }
+                                        });
+                                    },
+                                    error: function (error) {
+                                        // console.log(error);
+                                    },
+                                });
+                            } else if (
+                                $("#id").val() != "" &&
+                                $("#po").val() != "" &&
+                                flagbloquear == 1
+                            ) {
+                                $("#proveedor").attr("disabled", "true");
+                                $("#cuadrilla").attr("disabled", "true");
+                                $("#idpunto").attr("disabled", "true");
+                                $("#idusuariolog").attr("disabled", "true");
+                                $("#digitador").attr("disabled", "true");
+                                $("#po").attr("disabled", "true");
+                                $("#fecha").attr("disabled", "true");
+                                $("#nboleta").attr("disabled", "true");
+                                $("#bahia").attr("disabled", "true");
+                                $("#verTaras").removeAttr("disabled");
+                                $("#buscarmat").removeAttr("disabled");
+                                $("#destare").removeAttr("disabled");
+                                $("#bruto").removeAttr("disabled");
+                                $("#tara").removeAttr("disabled");
+                                $("#agregar").removeAttr("disabled");
+                                $("#finalizar").removeAttr("disabled");
+                            } else if (
+                                !(
+                                    $("#proveedor option:selected").val() !=
+                                    "Seleccionar Proveedor" &&
+                                    $("#idpunto").val() != "" &&
+                                    $("#idusuariolog").val() != "" &&
+                                    $("#digitador option:selected").val() !=
+                                    "Seleccionar Digitador" &&
+                                    $("#po").val() != "" &&
+                                    $("#fecha").val() != "" &&
+                                    $("#nboleta").val() != "" &&
+                                    $("#bahia option:selected").val() != "Seleccionar Bahia" &&
+                                    flagbloquear != 0
+                                )
+                            ) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Datos faltantes",
+                                    confirmButtonText: "Ok",
+                                    text: "Debe Añadir los datos faltantes",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                    }
+                                });
+                            }
+                        } else if (flagRol == "ADMINISTRADOR DE SISTEMA") {
+                            if (
+                                $("#proveedor").val() !=
+                                "" &&
+                                $("#idpunto").val() != "" &&
+                                $("#digitador option:selected").val() != "Seleccionar Digitador" &&
+                                $("#po").val() != "" &&
+                                $("#fecha").val() != "" &&
+                                $("#nboleta").val() != "" &&
+                                $("#verificador option:selected").val() != "Seleccionar Verificador" &&
+                                $("#bahia option:selected").val() != "Seleccionar Bahia" &&
+                                flagbloquear == 0 &&
+                                $("#id").val() != ""
+                            ) {
+                                $("#proveedor").attr("disabled", "true");
+                                $("#cuadrilla").attr("disabled", "true");
+                                $("#idpunto").attr("disabled", "true");
+                                $("#idusuariolog").attr("disabled", "true");
+                                $("#digitador").attr("disabled", "true");
+                                $("#po").attr("disabled", "true");
+                                $("#fecha").attr("disabled", "true");
+                                $("#nboleta").attr("disabled", "true");
+                                $("#bahia").attr("disabled", "true");
+                                $("#verificador").attr("disabled", "true");
+                                $("#buscarmat").removeAttr("disabled");
+                                $("#verTaras").removeAttr("disabled");
+                                $("#destare").removeAttr("disabled");
+                                $("#bruto").removeAttr("disabled");
+                                $("#tara").removeAttr("disabled");
+                                $("#agregar").removeAttr("disabled");
+                                $("#finalizar").removeAttr("disabled");
+
+                                flagbloquear = 1;
+                                $.ajax({
+                                    url: "/datosGeneralesVerificacionInv",
+                                    type: "POST",
+                                    data: {
+                                        id: $("#id").val(),
+                                        proveedor: $("#proveedor").val(),
+                                        cuadrilla: $("#cuadrilla").val(),
+                                        puntoCompra: $("#idpunto").val(),
+                                        verificador: $("#verificador option:selected").val(),
+                                        digitador: $("#digitador option:selected").val(),
+                                        po: $("#po").val(),
+                                        nboleta: $("#nboleta").val(),
+                                        bahia: $("#bahia").val(),
+                                    },
+                                    success: function (response) {
+                                        Swal.fire({
+                                            icon: "success",
+                                            title: "Éxito",
+                                            confirmButtonText: "Ok",
+                                            text: "Verificación registrada exitosamente",
+                                        }).then((result) => {
+                                            /* Read more about isConfirmed, isDenied below */
+                                            if (result.isConfirmed) {
+                                            }
+                                        });
+                                    },
+                                    error: function (error) {
+                                        // console.log(error);
+                                    },
+                                });
+                            } else if (
+                                $("#id").val() != "" &&
+                                $("#po").val() != "" &&
+                                flagbloquear == 1
+                            ) {
+                                $("#proveedor").attr("disabled", "true");
+                                $("#cuadrilla").attr("disabled", "true");
+                                $("#idpunto").attr("disabled", "true");
+                                $("#idusuariolog").attr("disabled", "true");
+                                $("#digitador").attr("disabled", "true");
+                                $("#po").attr("disabled", "true");
+                                $("#fecha").attr("disabled", "true");
+                                $("#nboleta").attr("disabled", "true");
+                                $("#bahia").attr("disabled", "true");
+                                $("#verTaras").removeAttr("disabled");
+                                $("#buscarmat").removeAttr("disabled");
+                                $("#destare").removeAttr("disabled");
+                                $("#bruto").removeAttr("disabled");
+                                $("#tara").removeAttr("disabled");
+                                $("#agregar").removeAttr("disabled");
+                                $("#finalizar").removeAttr("disabled");
+                            } else if (
+                                !(
+                                    $("#proveedor option:selected").val() !=
+                                    "Seleccionar Proveedor" &&
+                                    $("#idpunto").val() != "" &&
+                                    $("#idusuariolog").val() != "" &&
+                                    $("#digitador option:selected").val() !=
+                                    "Seleccionar Digitador" &&
+                                    $("#po").val() != "" &&
+                                    $("#fecha").val() != "" &&
+                                    $("#nboleta").val() != "" &&
+                                    $("#bahia option:selected").val() != "Seleccionar Bahia" &&
+                                    flagbloquear != 0
+                                )
+                            ) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Datos faltantes",
+                                    confirmButtonText: "Ok",
+                                    text: "Debe Añadir los datos faltantes",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                    }
+                                });
+                            }
+                        }
+
+                    }
+                    function mostrarDetalle() {
+                        if ($("#detalles").is(":hidden")) $("#detalles").show();
+                        else $("#detalles").hide();
+                    }
+                    function cargarPesos() {
+                        $.ajax({
+                            url: "/listaPesos",
+                            type: "POST",
+                            data: {
+                                id: $("#id").val(),
+                            },
+                            success: function (response) {
+                                $("#tabla-peso").html(response);
+                                $("#tabla-peso").append(response.htmlresponse);
+                            },
+                            error: function (error) {
+                                // console.log(error);
+                            },
+                        });
+                    }
+                    // Funcion para poner lista de resultados
+                    var buscarMaterial = function () {
+                        var material = $("#buscarmat").val();
+                        if (material != "") {
+                            $.ajax({
+                                url: "/buscarMaterial",
+                                type: "POST",
+                                data: {
+                                    material: material,
+                                },
+                                success: function (response) {
+                                    if (response == "No") {
+                                    } else {
+                                        $("#listamat").html(response);
+                                        $("#listamat").append(response.htmlresponse);
+                                        $("#totalmat").show();
+                                        $("#listamat").show();
+
+                                        $("#busqueda button[name=det]").click(function () {
+                                            $("#buscarmat").val($(this).text());
+                                            $("#listamat").hide();
+                                            $("#totalmat").hide();
+                                        });
+                                    }
+                                },
+                                error: function (error) {
+                                    // console.log(error);
+                                },
+                            });
+                        } else {
+                            $("#listamat").hide();
+                            $("#totalmat").hide();
+                        }
+                    };
+                    $("#buscarmat").on("keyup", buscarMaterial);
+
+                    function añadir() {
+                        var bruto = parseFloat($("#bruto").val());
+                        var tara = parseFloat($("#tara").val());
+                        var destare = parseFloat($("#destare").val());
+
+                        if (
+                            $("#buscarmat").val() == "" ||
+                            $("#bruto").val() == "" ||
+                            $("#tara").val() == "" ||
+                            $("#destare").val() == ""
+                        ) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Datos faltantes",
+                                confirmButtonText: "Ok",
+                                text: "Debe Añadir los datos faltantes",
+                            }).then((result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                }
+                            });
+                        } else if (bruto < 0 || tara < 0 || destare < 0) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Datos Inválidos",
+                                confirmButtonText: "Ok",
+                                text: "El valor de los pesos es menor a 0.",
+                            }).then((result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                }
+                            });
+                        } else if (destare < 0.5 && $("#buscarmat").val() == "ALUMINIO MIXTO") {
+
+                            Swal.fire({
+                                icon: "error",
+                                title: "Datos Inválidos" + destare,
+                                confirmButtonText: "Ok",
+                                text: "El valor del destare no puede ser menor o igual a 0.",
+                            }).then((result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                }
+                            });
+                        } else {
+                            $.ajax({
+                                url: "/insertarPesos",
+                                type: "POST",
+                                data: {
+                                    id: $("#id").val(),
+                                    material: $("#buscarmat").val(),
+                                    destare: $("#destare").val(),
+                                    pBruto: $("#bruto").val(),
+                                    pTara: $("#tara").val(),
+                                },
+                                success: function (response) {
+                                    $("#tabla-peso").html(response);
+                                    $("#tabla-peso").append(response.htmlresponse);
+                                    
+                                    $("#bruto").val(0);
+                                    $("#tara").val(0);
+                                    $("#destare").val(0);
+                                    $("#agregar").removeAttr("disabled");
+                                },
+                                error: function (error) {
+                                    // console.log(error);
+                                },
+                            });
+                        }
+                    }
+                </script>
+            </div>
+            <div class="p-2">
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" class="btn btn-primary col-12" style="height: 50px" id="finalizar"
+                            disabled onclick="finalizar()">
+                            Bloquear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .loader {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url('images/pageLoader.gif') 50% 50% no-repeat rgb(249, 249, 249);
+        opacity: .8;
+    }
+</style>
+
+<script>
+    var bruto = parseInt($("#bruto").val());
+    var tara = parseInt($("#tara").val());
+    var destare = parseInt($("#destare").val());
+    $(document).ready(function () {
+        $("#bruto").val(0);
+        $("#tara").val(0);
+        $("#destare").val(0);
+    });
+
+    function finalizar() {
+        var flagRol = $('#banderaRol').val();
+
+        Swal.fire({
+            title: "¿Desea guardar?",
+            text: "Se compararan ambos documentos",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, aceptar",
+            cancelButtonText: "Cancelar",
+        }).then((resultado) => {
+            if (resultado.value) {
+                $.ajax({
+                    url: "/finalizarVerificacionInv",
+                    type: "POST",
+                    beforeSend: function () {
+                        Swal.fire({
+                            html: '<div class="col-lg-12" style="z-index:99999; display:absolute; width"><img src="../../static/img/loader.gif" alt="loading" /><br/>Generando orden de compra...</div>',
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            backdrop: 'static'
+
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                            }
+                        });
+
+                    },
+                    data: {
+                        id: $("#id").val(),
+                    },
+                    success: function (response) {
+                        if (response == "vacio") {
+                            Swal.fire({
+                                icon: "warning",
+                                title: "Datos faltantes",
+                                confirmButtonText: "Ok",
+                                text: "Esta verificación no posee pesajes",
+                            }).then((result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                }
+                            });
+                        } else if (response == "ValoresErroneos") {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Las verificaciones son Diferentes.",
+                                confirmButtonText: "Ok",
+                                text: "La verificación se bloqueará.",
+                            }).then((result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                    window.location = "/inventario";
+                                }
+                            });
+                        } else {
+                            if (response == "Iguales") {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Las verificaciones son correctas",
+                                    confirmButtonText: "Ok",
+                                    text: "Se guardó la verificación",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        window.location = "/inventario";
+                                    }
+                                });
+                            } else if (response == "Diferentes") {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Las verificaciones son Diferentes.",
+                                    confirmButtonText: "Ok",
+                                    text: "La verificación se bloqueará.",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        window.location = "/inventario";
+                                    }
+                                });
+
+                            } else if (response == "ErrorRed") {
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: "Error de Red",
+                                    confirmButtonText: "Ok",
+                                    text: "Bloquee nuevamente las verificaciones.",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        // window.location = "/home";
+                                    }
+                                });
+
+                            } else {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Las verificaciones se creó exitosamente.",
+                                    confirmButtonText: "Ok",
+                                    text: "Se generó la verificación.",
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        window.location = "/inventario";
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Maneja el error aquí
+                        alert(xhr.responseText);  // Muestra el mensaje de error en la consola
+                    }
+                });
+            } else {
+                // Dijeron que no
+                console.log("*NO se elimina la venta*");
+            }
+        });
+
+    }
+</script>
+
+{% endfor %}
