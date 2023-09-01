@@ -71,6 +71,7 @@ encabezado %}
                     window.location = '/misVerificaciones'
                 }
             </script>
+            {%if session.cargo == 2%}
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->
                 <div class="card cartas" onclick="inventarioMenu()" style="padding: 5px; background-color: #b4583f">
@@ -95,8 +96,36 @@ encabezado %}
                 }
                 
             </script>
+            {% endif %}
             {% endif %}{% endif %}
             <br>
+        {%if session.user %}{%if session.cargo == 5 %}
+            <div class="col-lg-3 col-6" style="padding: 10px;">
+                <!-- small box -->
+                <div class="card cartas" onclick="inventarioHistorial()" style="padding: 5px; background-color: #b4583f">
+                    <div class="inner">
+                        <h3>
+                            <sup style="font-size: 20px"></sup>
+                        </h3>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="icon mr-1">
+                        <i class="fa-solid fa-cart-flatbed" style="margin-right: 15px;"></i>
+                    </div>
+                    <a href="/administracionInv" id="home" class="card-footer">
+                        Inventario
+                    </a>
+                </div>
+            </div>
+            <script>
+                function inventarioHistorial() {
+                    window.location = '/administracionInv'
+                }
+                
+            </script>
+            {%endif%}
+            {%endif%}
             {% if session.user %} {% if session.userrole == 1%}
             <div class="col-lg-3 col-6" style="padding: 10px;">
                 <!-- small box -->

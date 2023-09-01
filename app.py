@@ -563,7 +563,7 @@ def login():
                     #     return render_template('login.html', errorlogin=1)
                 except:
 
-                    return render_template('login.html', errorlogin=1)
+                   return render_template('login.html', errorlogin=1)
 
         return render_template('login.html', errorlogin=1)
 
@@ -4694,7 +4694,7 @@ def administracion():
 @app.route('/administracionInv')
 def administracionInv():
     try:
-        if session['userrole'] == 1:
+        if session['userrole'] == 1 or session['userrole'] == 2 :
             # NECESITAMOS LA LISTA DE VERIFICADORES, DIGITADORES
             # CONSULTA PARA LOS VERIFICADORES
             cur = mysql.connection.cursor()
@@ -5714,7 +5714,7 @@ def addFiltroInv():
                     consulta += 'v.'+headers[contador]+' = '+value+' AND '
                 contador += 1
                 # consultaBase += ' AND '+data
-            consulta_total = consultaBase+' '+consulta[:-4]+' AND v.IdEstado != 3 GROUP BY v.NoBoleta'
+            consulta_total = consultaBase+' '+consulta[:-4]+' AND v.IdEstado != 3 AND NoBoleta like "INV%" GROUP BY v.NoBoleta'
             print(consulta_total)
         else:
             consulta_total = 'select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,e.NombreEstado, p.NombreProveedor from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_estado as e on v.IdEstado = e.Id_Estado where v.PO != "--" and v.IdEstado = 9 GROUP BY v.NoBoleta'
@@ -6423,7 +6423,7 @@ def reporteInv():
         celda.border = border
 
         # Une las tres celdas para crear una celda combinada
-        ws.merge_cells('A1:E1')
+        ws.merge_cells('A1:F1')
 
 
         # Inserta la imagen en la celda combinada B2:D4
@@ -6439,13 +6439,15 @@ def reporteInv():
         ws['B2'] = 'PROVEEDOR'
         ws['C2'] = 'NO BOLETA'
         ws['D2'] = 'FECHA/HORA'
-        ws['E2'] = 'PESO'
+        ws['E2'] = 'MATERIAL'
+        ws['F2'] = 'PESO'
 
         ws.column_dimensions['A'].width = 11
         ws.column_dimensions['B'].width = 14
         ws.column_dimensions['C'].width = 40
         ws.column_dimensions['D'].width = 40
         ws.column_dimensions['E'].width = 40
+        ws.column_dimensions['F'].width = 40
 
         ws.row_dimensions[2].height = 15
         ws.row_dimensions[1].height = 44
@@ -6465,23 +6467,26 @@ def reporteInv():
         contador = 0
         # Añade los datos a la hoja de trabajo
         for id in ids:
-            print('id del for: ',id)
+            # print('id del for: ',id)
+            
             # Sumar las cantidades de cada línea de pedido de compra
             cur = mysql.connection.cursor()
             cur.execute(
-                    'select v.Id_Verificacion,v.NoBoleta,v.Fecha,pc.NombrePuntoCompra, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador, SUM(dt.PesoNeto) from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario INNER JOIN tb_detalleverificacion as dt on v.Id_Verificacion = dt.IdVerificacion Where v.Id_Verificacion = %s', [id])
+                    'select v.Id_Verificacion,v.NoBoleta,v.Fecha,pc.NombrePuntoCompra, p.NombreProveedor,digi.NombreUsuario as digitador,veri.NombreUsuario as verificador,mat.NombreMaterial,dt.PesoNeto from tb_verificacion as v inner join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra inner join tb_usuarios as digi on v.IdDigitador = digi.Id_Usuario inner join tb_usuarios as veri on v.IdVerificador = veri.Id_Usuario INNER JOIN tb_detalleverificacion as dt on v.Id_Verificacion = dt.IdVerificacion inner JOIN tb_material as mat on dt.IdMaterial = mat.Id_Material Where v.Id_Verificacion = %s', [id])
             potemp = cur.fetchall()
             for row_num, fila in enumerate(potemp, filaCont):
                 # Une las tres celdas para crear una celda combinada
                 #ws.merge_cells('A'+str(row_num)+':C7')
-                print(fila)
+                print(row_num)
                 ws.cell(row=row_num, column=1, value=fila[0])
                 ws.cell(row=row_num, column=2, value=fila[4])
                 ws.cell(row=row_num, column=3, value=fila[1])
                 ws.cell(row=row_num, column=4, value=fila[2])
                 ws.cell(row=row_num, column=5, value=fila[7])
-            filaCont += 1
+                ws.cell(row=row_num, column=6, value=fila[8])
+            filaCont += len(potemp) + 1
             contador += 1
+            print('CONTODAR : ',contador)
 
 
 
