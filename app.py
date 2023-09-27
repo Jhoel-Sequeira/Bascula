@@ -498,7 +498,7 @@ def login():
                     print("else")
                     cur = mysql.connection.cursor()
                     cur.execute(
-                        "select * from tb_credenciales Where Usuarios = %s", [usuario])
+                        "SELECT c.* FROM `tb_credenciales` as c inner join tb_usuarios as u on c.Id_Credenciales = u.Id_Usuario where Usuarios = %s and c.IdRol = 2", [usuario])
                     results = cur.fetchone()
                     print("aaaa")
                     print(results)
@@ -558,9 +558,9 @@ def login():
                             return render_template('login.html', errorlogin=2)
                         return render_template('ajustes.html', Proveedores=Proveedores, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
 
-                    # else:
-                    #     #VIENE VACIO
-                    #     return render_template('login.html', errorlogin=1)
+                    else:
+                        #VIENE VACIO
+                        return render_template('login.html', errorlogin=1)
                 except:
 
                    return render_template('login.html', errorlogin=1)
