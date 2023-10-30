@@ -35,17 +35,17 @@ import datetime
 
 
 # #BASE DE DATOS DE PRUEBA
-url = 'https://recicladora-15082023-9336507.dev.odoo.com/'
-db = 'recicladora-15082023-9336507'
+url = 'https://crnicaragua-121023-10123240.dev.odoo.com/'
+db = 'crnicaragua-121023-10123240'
 
 username = 'soporte@crn.com.ni'
 password = 'CRN!2023@bdserver'
 info = xmlrpc.client.ServerProxy(
-        'https://recicladora-15082023-9336507.dev.odoo.com/xmlrpc/common')
+        'https://crnicaragua-121023-10123240.dev.odoo.com/xmlrpc/common')
 
 uid =  info.authenticate(db, username, password, {})
 models= xmlrpc.client.ServerProxy(
-        'https://recicladora-15082023-9336507.dev.odoo.com/xmlrpc/object')
+        'https://crnicaragua-121023-10123240.dev.odoo.com/xmlrpc/object')
 
 def conectar(user,contra):
     global username 
@@ -57,7 +57,7 @@ def conectar(user,contra):
     #     'https://recicladora.odoo.com/xmlrpc/common')
     # BASE DE DATOS DE PRUEBA
     info1 = xmlrpc.client.ServerProxy(
-        'https://recicladora-15082023-9336507.dev.odoo.com/xmlrpc/common')
+        'https://crnicaragua-121023-10123240.dev.odoo.com/xmlrpc/common')
     info1.version()
     global info 
     info = info1
@@ -71,7 +71,7 @@ def conectar(user,contra):
     #     'https://recicladora.odoo.com/xmlrpc/object')
     # BASE DE DATOS DE PRUEBA
     models1 = xmlrpc.client.ServerProxy(
-        'https://recicladora-15082023-9336507.dev.odoo.com/xmlrpc/object')
+        'https://crnicaragua-041023-9960068.dev.odoo.com/xmlrpc/object')
     global models 
     models = models1
     # permisos = models.execute_kw(db, uid, password, 'res.partner', 'check_access_rights', [
@@ -99,7 +99,7 @@ def obtenerUid(user,contra):
 
 def Autenticar(user, contra,uid):
     cargo = models.execute_kw(db, uid, contra, 'res.users', 'search_read', 
-                              [[['login', '=', ''+user]]], {'fields': ['x_studio_field_xql4c','almacen']})
+                              [[['login', '=', ''+user]]], {'fields': ['x_studio_many2one_field_K41z9','x_studio_many2one_field_S7bVc']})
     # mandamos a llamar el cargo del usuario logueado
     print(cargo)
     return cargo
@@ -109,8 +109,7 @@ def conectarTemp(user, contra,prov):
     uidtemp = info.authenticate(db, user, contra, {})
     #BUSCAMOS EL PROVEEDOR
     proveedores = models.execute_kw(db, uidtemp, contra, 'res.partner', 'search_read', [
-                                        [['supplier', '=', True], ['name', 'ilike', ''+prov+'%']]], {'fields': ['id', 'name'], 'limit': 5})
-    models.execute_kw(db, uid, password, "res.users", "write", [[uidtemp], {'session_ids': [(1, uidtemp, {'active': False})]}])
+                                        [ ['name', 'ilike', ''+prov+'%']]], {'fields': ['id', 'name'], 'limit': 5})
     return proveedores
 
 def conectarTempCuadrilla(user, contra,prov):
@@ -118,8 +117,7 @@ def conectarTempCuadrilla(user, contra,prov):
     uidtemp = info.authenticate(db, user, contra, {})
     #BUSCAMOS EL PROVEEDOR
     proveedores = models.execute_kw(db, uidtemp, contra, 'res.partner', 'search_read', [
-                                        [['supplier', '=', True],['category_id','=',25], ['name', 'ilike', ''+prov+'%']]], {'fields': ['id', 'name'], 'limit': 5})
-    models.execute_kw(db, uid, password, "res.users", "write", [[uidtemp], {'session_ids': [(1, uidtemp, {'active': False})]}])
+                                        [['category_id','=',10], ['name', 'ilike', ''+prov+'%']]], {'fields': ['id', 'name'], 'limit': 5})
     return proveedores
 
 
@@ -127,12 +125,12 @@ def conectarTempCuadrilla(user, contra,prov):
 
 def buscarIdProveedor(prov):
     id = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
-                           [['supplier', '=', True], ['name', '=', ''+prov]]], {'fields': ['id']})
+                           [ ['name', '=', ''+prov]]], {'fields': ['id']})
     return id[0]['id']
 
 def buscarIdCuadrilla(prov):
     id = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
-                           [['supplier', '=', True],['category_id','=',25], ['name', '=', ''+prov]]], {'fields': ['id']})
+                           [['category_id','=',10], ['name', '=', ''+prov]]], {'fields': ['id']})
     return id[0]['id']
 
 
@@ -149,7 +147,7 @@ def TraerUsuario(id,uid1,password1):
 def buscarProveedor(prov,cargo):
     if cargo != 2:
         proveedores = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
-                                        [['supplier', '=', True], ['name', 'ilike', ''+prov+'%']]], {'fields': ['id', 'name'], 'limit': 5})
+                                        [ ['name', 'ilike', ''+prov+'%']]], {'fields': ['id', 'name'], 'limit': 5})
 
         return proveedores
     else:
@@ -160,7 +158,7 @@ def buscarProveedor(prov,cargo):
 def buscarCuadrilla(cuad,cargo):
     if cargo != 2:
         cuadrilla = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [
-                                        [['supplier', '=', True],['category_id','=',25], ['name', 'ilike', ''+cuad+'%']]], {'fields': ['id', 'name'], 'limit': 5})
+                                        [['category_id','=',10], ['name', 'ilike', ''+cuad+'%']]], {'fields': ['id', 'name'], 'limit': 5})
 
         return cuadrilla
     else:
@@ -176,98 +174,114 @@ def BuscarVerificador(nombre):
     return datos[0]['id']
 
 def CrearOrdenCompra(proveedorId,puntoCompra,NoBoleta,rechazo,jumbo,devolucion,liquido,rechazoPet,primera,segunda,uid1,contra1,jefe,destare,verificador):
-    
+    print('JEFEEEEEE:',jefe)
     if jefe:
-        print(jumbo)
-        pOrder = models.execute_kw(db, uid1, contra1, 'purchase.order',
-                                'create', [{'picking_type_id': puntoCompra,
-                                            'supplier': True,
-                                            'partner_id': proveedorId,
-                                            'x_studio_field_WLD1C':NoBoleta,
-                                            'x_studio_rechazo_1': rechazo,
-                                            'x_studio_verificador': verificador,
-                                            'x_studio_field_8Fq79': jefe,
-                                            'x_studio_jumbo': jumbo,
-                                            'x_studio_destare_lb':destare,
-                                            'x_studio_rechazo_pet': devolucion,
-                                            'x_studio_lquido': liquido,
-                                            'x_studio_material_de_primera': primera,
-                                            'x_studio_material_de_segunda': segunda}])
-        
-        
-        return pOrder
+        try:
+            pOrder = models.execute_kw(db, uid1, contra1, 'purchase.order',
+                                    'create', [{'picking_type_id': puntoCompra,
+                                                # 'supplier': True,
+                                                'partner_id': proveedorId,
+                                                'x_studio_no_de_boleta':NoBoleta,
+                                                'x_studio_rechazo': rechazo,
+                                                'x_studio_many2one_field_h9gpB': verificador,
+                                                'x_studio_jefe_de_cuadrilla': jefe,
+                                                'x_studio_jumbo': jumbo,
+                                                'pricelist_id': 1,
+                                                'currency_id' : 119,
+                                                'x_studio_destare_lb':destare,
+                                                'x_studio_devolucin_pet': devolucion,
+                                                'x_studio_material_de_primera': primera,
+                                                'x_studio_material_de_segunda': segunda}])
+            
+            
+            return pOrder
+        except xmlrpc.client.Fault as e:
+            # Capturar y manejar errores de la API de Odoo
+            return(e.faultCode)
     else:
-        print(jumbo)
-        pOrder = models.execute_kw(db, uid1, contra1, 'purchase.order',
-                                'create', [{'picking_type_id': puntoCompra,
-                                            'supplier': True,
-                                            'partner_id': proveedorId,
-                                            'x_studio_field_WLD1C':NoBoleta,
-                                            'x_studio_rechazo_1': rechazo,
-                                            'x_studio_verificador': verificador,
-                                            'x_studio_jumbo': jumbo,
-                                            'x_studio_destare_lb':destare,
-                                            'x_studio_rechazo_pet': devolucion,
-                                            'x_studio_lquido': liquido,
-                                            'x_studio_material_de_primera': primera,
-                                            'x_studio_material_de_segunda': segunda}])
-        
-        
-        return pOrder
+        try:
+            print(jumbo)
+            pOrder = models.execute_kw(db, uid1, contra1, 'purchase.order',
+                                    'create', [{'picking_type_id': puntoCompra,
+                                                # 'supplier': True,
+                                                'partner_id': proveedorId,
+                                                'x_studio_no_de_boleta':NoBoleta,
+                                                'x_studio_rechazo': rechazo,
+                                                'x_studio_many2one_field_h9gpB': verificador,
+                                                'x_studio_jefe_de_cuadrilla': jefe,
+                                                'x_studio_jumbo': jumbo,
+                                                'pricelist_id': 1,
+                                                'currency_id' : 119,
+                                                'x_studio_destare_lb':destare,
+                                                'x_studio_devolucin_pet': devolucion,
+                                                'x_studio_material_de_primera': primera,
+                                                'x_studio_material_de_segunda': segunda}])
+            
+            
+            return pOrder
+        except xmlrpc.client.Fault as e:
+            # Capturar y manejar errores de la API de Odoo
+            return(e.faultCode)
+    
 def CrearAlbaran(pOrder,uid1,contra1):
     models.execute_kw(db, uid1, contra1, 'purchase.order', 'button_confirm', [[pOrder]])
 
 
 def IngresarMaterialOrdenCompra(material,monto,pOrder,uid1,contra1):
     print("material:",material)
-    id = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['name', '=',material],['purchase_ok','=',True]]],{'fields':['pricelist_id']}) 
+    id = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['name', '=',material],['purchase_ok','=',True]]]) 
     print("id vacio")
     print(id)
     if id:
         idMaterial = id[0]['id']
     else:
         
-        id1 = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['name', '=',material+' '],['purchase_ok','=',True]]],{'fields':['pricelist_id']}) 
+        id1 = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['name', '=',material+' '],['purchase_ok','=',True]]]) 
         print(id)
         if id1:
 
             idMaterial = id1[0]['id']
         else:
-            id2 = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['product_tmpl_id','=',([material+'  '])],['pricelist_id','=',9]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+            id2 = models.execute_kw(db, uid1, contra1, 'product.product', 'search_read', [[['product_tmpl_id','=',([material+'  '])],['pricelist_id','=',1]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
             idMaterial = id2[0]['id']
         
 
 
-    precio = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material])],['pricelist_id','=',9]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+    precio = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material])],['pricelist_id','=',1]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
 
     if precio:
         precioUnidad = precio[0]['price']
         Id = precio[0]['id']
-        print(precio)
+        print('precio1:',precio)
     else:
-        precio1 = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+' '])],['pricelist_id','=',9]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+        precio1 = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+' '])],['pricelist_id','=',1]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
         if precio1:
 
             precioUnidad = precio1[0]['price']
             Id = precio1[0]['id']
             print("id dentro del if: ",precio1)
         else:
-            precio2 = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+'  '])],['pricelist_id','=',9]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
+            precio2 = models.execute_kw(db, uid1, contra1, 'product.pricelist.item', 'search_read', [[['product_tmpl_id','=',([material+'  '])],['pricelist_id','=',1]]],{'fields':['price'],'limit':1}) #AQUI AGARRAMOS EL PRICE LIST PUBLICO
             precioUnidad = precio2[0]['price']
             Id = precio2[0]['id']
+            print('segundo else:',precio2)
         
         
 
 
     #FORMATEAR EL STRING
-    print(float(precioUnidad[0:10]))
+    precio_limpio = precioUnidad.replace('C$', '').replace(',', '')
+
+    # Convertir a un número de punto flotante
+    precio_float = float(precio_limpio)
+    print(precio_float)
     fecha_plan = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     line_data = {
         'order_id':pOrder,
         'name':material,
         'date_planned':fecha_plan,
-        'product_uom':12, #valor de libras es constante
-        'price_unit':float(precioUnidad[0:10]),
+        'product_uom':15, #valor de libras es constante
+        'price_unit':precio_float,
         'product_qty':monto, #aqui van las libras totales
         'company_id':1,
         'state':'done',

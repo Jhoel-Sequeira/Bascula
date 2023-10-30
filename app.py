@@ -110,7 +110,7 @@ def login():
                 session['uid'] = uid[0]['id']
                 print("verrr")
                 print(uid)
-                cargo = uid[0]['x_studio_field_xql4c']
+                cargo = uid[0]['x_studio_many2one_field_S7bVc']
                 print(cargo[1])
                 # session["puntoid"] = uid[0]['almacen'][0]
                 # session["punto"] = uid[0]['almacen'][1]
@@ -209,16 +209,16 @@ def login():
                     return render_template('ajustes.html', Proveedores=Proveedores, Punto=punto, Material=material, Verificador=verificador, Digitador=digitador)
                 elif cargo[1] == "DIGITADOR":
                     # ESTE ES DIGITADOR
-                    session["puntoid"] = uid[0]['almacen'][0]
-                    session["punto"] = uid[0]['almacen'][1]
-
+                    session["puntoid"] = uid[0]['x_studio_many2one_field_K41z9'][0]
+                    session["punto"] = uid[0]['x_studio_many2one_field_K41z9'][1]
+                    print('PUNTO: ',session['punto'])
                     # SELECCIONAMOS LOS PUNTOS QUE TENEMOS EN LA BASE DE DATOS PARA
                     cur = mysql.connection.cursor()
                     cur.execute(
                         "SELECT * FROM tb_puntocompra Where NombrePuntoCompra = %s", [session["punto"]])
                     puntoexiste = cur.fetchall()
                     mysql.connection.commit()
-
+                    print('PUNTO : ', puntoexiste)
                     if not puntoexiste:
                         cur = mysql.connection.cursor()
                         cur.execute("INSERT INTO tb_puntocompra (Id_PuntoCompra,NombrePuntoCompra,IdEstado) VALUES (%s,%s,%s)", (
@@ -243,7 +243,7 @@ def login():
                         "SELECT * FROM tb_credenciales Where Usuarios = %s", [session["user"]])
                     usuarioExistente = cur.fetchall()
                     mysql.connection.commit()
-
+                    print('USUARIO EXISTENTE:', usuarioExistente)
                     user_info = conexion.TraerUsuario(
                         str(uid[0]['id']), session['uid'], session['pass'])
                     print("user info:", user_info)
@@ -315,7 +315,7 @@ def login():
                     session["user"] = usuario
                     session["userrole"] = 2
                     session["puntoid"] = 1
-                    session["punto"] = "GRANEL/PLANTA: Receipts"
+                    session["punto"] = "GRANEL/PLANTA: Recepciones"
                     # ESTA CONSULTA ERA PARA SABER EL CARGO DEL USUARIO LOGUEADO
                     # cur = mysql.connection.cursor()
                     # cur.execute("select IdCargo from tb_usuarios Where Id_Usuario = %s",[session["userId"]])
@@ -1062,7 +1062,7 @@ def listaProveedores():
                 print(session['cargo'])
                 # LLamar la verificacion de ese proveedor
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s  AND v.NoBoleta NOT LIKE %s", (
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s  AND v.NoBoleta NOT LIKE %s order by v.Id_Verificacion DESC", (
                             session["userId"],'INV'+'%'))
                 verificaciones = cur.fetchall()
                 return render_template('tablas/tabla-proveedores.html', verificaciones=verificaciones)
@@ -1108,7 +1108,7 @@ def listaProveedores():
                     proveedornuevo = cur.fetchone()
                 # LLAMAMOS LAS VERIFICACIONES DEL USUARIO
                 cur = mysql.connection.cursor()
-                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s  AND v.NoBoleta NOT LIKE %s", (
+                cur.execute("select v.Id_Verificacion,v.Fecha,v.PO,v.NoBoleta,pc.NombrePuntoCompra,v.IdEstado,p.NombreProveedor,v.Bahia from tb_verificacion as v inner join tb_puntocompra as pc ON v.IdPuntoCompra = pc.Id_PuntoCompra left join tb_proveedor as p ON v.IdProveedor = p.Id_Proveedor Where v.IdEstado = 3 AND v.IdUsuarioCreacion = %s  AND v.NoBoleta NOT LIKE %s order by v.Id_Verificacion DESC", (
                             session["userId"],'INV'+'%'))
                 verificaciones = cur.fetchall()
                 mysql.connection.commit()
@@ -1923,7 +1923,7 @@ def datosGeneralesVerificacion():
 
         # BUSCAR EL JEFE
         print("NOmbre cuad,:",cuadrilla)
-        if session['punto'] == 'GRANEL/PLANTA: Receipts' and cuadrilla != '':
+        if session['punto'] == 'GRANEL/PLANTA: Recepciones' and cuadrilla != '':
             print('entroooooooo aqui')
             #ESTA ES DE PLANTA Y CON CUADRILLA
             cur = mysql.connection.cursor()
@@ -1947,7 +1947,7 @@ def datosGeneralesVerificacion():
                 digitador = cur.fetchall()
                 mysql.connection.commit()
             else:
-                    if session['punto'] == 'GRANEL/PLANTA: Receipts' and cuadrilla != '':
+                    if session['punto'] == 'GRANEL/PLANTA: Recepciones' and cuadrilla != '':
                         # llamar el id de oddo
                         idOddocuad = conexion.buscarIdCuadrilla(cuadrilla)
                         # INSERTAMOS EL PROVEEDOR DE ODDO EN LA BASE
@@ -1998,7 +1998,7 @@ def datosGeneralesVerificacion():
                 mysql.connection.commit()
             else:
                 #SINO ENCONTRAMOS A NINGUNO DE LOS DOS
-                if session['punto'] == 'GRANEL/PLANTA: Receipts' and cuadrilla != '':
+                if session['punto'] == 'GRANEL/PLANTA: Recepciones' and cuadrilla != '':
                         #llamar el id de oddo
                         idOddocuad = conexion.buscarIdCuadrilla(cuadrilla)
                         # INSERTAMOS LA CUADRILLA DE ODDO EN LA BASE
@@ -2258,6 +2258,20 @@ def desbloquear():
                     ( idver[0],fecha))
         mysql.connection.commit()
         return "Done"
+
+
+@app.route('/desbloquearError', methods=["POST", "GET"])
+def desbloquearError():
+    if request.method == "POST":
+        nboleta = request.form['nboleta']
+
+        cur = mysql.connection.cursor()
+        cur.execute(
+                    'Update tb_verificacion set IdEstado = 3 Where NoBoleta = %s and (IdEstado = 7 or IdEstado = 8)', [nboleta])
+        mysql.connection.commit()
+
+        return "Done"
+
 
 # AQIUI VA LA FUNCION DE LISTA DE VARIOS IDS
 @app.route('/listaVariosPesos', methods=["POST", "GET"])
@@ -3263,6 +3277,8 @@ def finalizarVerificacion():
                                         
                                         IdOrden = conexion.CrearOrdenCompra(Verificacion[10], Verificacion[11], Verificacion[3],
                                                                     rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, 1, 1, session['uid'], session['pass'],'',sumaDestare,verificador)
+                                        if not isinstance(IdOrden, int):
+                                            return IdOrden
                                         app.logger.info('ORDENDE COMPRA CASETA')
                                         #FUNCION PARA MANDAR A ESCRIBIR LA HORA QUE SE FINALIZA LA CREACION DE LA PO
                                         hi = capturarHora()
@@ -3293,6 +3309,8 @@ def finalizarVerificacion():
                                             
                                             IdOrden = conexion.CrearOrdenCompra(Verificacion[10], Verificacion[11], Verificacion[3],
                                                                     rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, primeraNuevo, segundaNuevo, session['uid'], session['pass'],jefe[0],sumaDestare,verificador)
+                                            if not isinstance(IdOrden, int):
+                                                return IdOrden
                                             app.logger.info('ORDENDE COMPRA PLANTA CON JEFE DE CUADRILLA')
                                             #FUNCION PARA MANDAR A ESCRIBIR LA HORA QUE SE FINALIZA LA CREACION DE LA PO
                                             hi = capturarHora()
@@ -3313,6 +3331,8 @@ def finalizarVerificacion():
                                         try:
                                             IdOrden = conexion.CrearOrdenCompra(Verificacion[10], Verificacion[11], Verificacion[3],
                                                                     rechazoNuevo, jumboNuevo,devolucionNuevo, 0, 0, 1, 1, session['uid'], session['pass'],"",sumaDestare,verificador)
+                                            if not isinstance(IdOrden, int):
+                                                return IdOrden
                                             app.logger.info('ORDENDE COMPRA PLANTA SIN JEFE')
                                             #FUNCION PARA MANDAR A ESCRIBIR LA HORA QUE SE FINALIZA LA CREACION DE LA PO
                                             hi = capturarHora()
@@ -6535,7 +6555,7 @@ def traerNumero():
             #resultado = int(contador[0])+1
             print('entrastes aqui')
             return 'CS'+str(resultado)
-        elif session['punto'] == 'GRANEL/PLANTA: Receipts':
+        elif session['punto'] == 'GRANEL/PLANTA: Recepciones':
             # cur = mysql.connection.cursor()
             # cur.execute("select ROUND(COUNT(NoBoleta)/2,0) from tb_verificacion Where NoBoleta like 'GR%'")
             # contador = cur.fetchone()

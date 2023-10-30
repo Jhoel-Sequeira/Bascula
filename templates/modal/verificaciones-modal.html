@@ -56,7 +56,7 @@
                                 </button>
                             </div>
                         </div>
-                        {% if session.punto == 'GRANEL/PLANTA: Receipts'%}
+                        {% if session.punto == 'GRANEL/PLANTA: Recepciones'%}
                         <div class="row mt-2">
                             <div class="col-11">
                                 <div class="form-outline">
@@ -1231,7 +1231,31 @@
                     },
                     error: function (xhr, status, error) {
                         // Maneja el error aquí
-                        alert(xhr.responseText);  // Muestra el mensaje de error en la consola
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Error de Conexión",
+                            confirmButtonText: "Ok",
+                            text: "Bloquee nuevamente las verificaciones.",
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                    url: "/desbloquearError",
+                                    type: "POST",
+                                    data: {
+                                        nboleta: $("#nboleta").val(),
+                                    },
+                                    success: function (response) {
+                                        window.location = "/home";
+                                    },
+                                    error: function (error) {
+                                        // console.log(error);
+                                    },
+                                });
+
+                            }
+                        });
+                        //alert(xhr.responseText);  // Muestra el mensaje de error en la consola
                     }
                 });
             } else {
